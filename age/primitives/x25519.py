@@ -1,6 +1,6 @@
 from .eccsnacks_x25519 import scalarmult, pack, unpack, P as CURVE_25519_PRIME
 
-__all__ = ['CURVE_25519_BASEPOINT', 'x25519', 'reduce']
+__all__ = ["CURVE_25519_BASEPOINT", "x25519", "reduce"]
 
 # according to RFC 7748, sec. 4.1
 # hexadecimal: 0900000000000000000000000000000000000000000000000000000000000000

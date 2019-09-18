@@ -27,23 +27,28 @@ def test_chunk():
 
 def test_pack_nonce():
     assert _pack_nonce(0x03, False) == bytes.fromhex(
-        "00 00 00 00 00 00 00 00 00 00 03 00")
+        "00 00 00 00 00 00 00 00 00 00 03 00"
+    )
     assert _pack_nonce(0x5544332211, False) == bytes.fromhex(
-        "00 00 00 00 00 00 55 44 33 22 11 00")
+        "00 00 00 00 00 00 55 44 33 22 11 00"
+    )
     assert _pack_nonce(0x5544332211, True) == bytes.fromhex(
-        "00 00 00 00 00 00 55 44 33 22 11 01")
-    assert _pack_nonce(0x5544332211aabbccddeeff, False) == bytes.fromhex(
-        "55 44 33 22 11 aa bb cc dd ee ff 00")
-    assert _pack_nonce(0x5544332211aabbccddeeff, True) == bytes.fromhex(
-        "55 44 33 22 11 aa bb cc dd ee ff 01")
+        "00 00 00 00 00 00 55 44 33 22 11 01"
+    )
+    assert _pack_nonce(0x5544332211AABBCCDDEEFF, False) == bytes.fromhex(
+        "55 44 33 22 11 aa bb cc dd ee ff 00"
+    )
+    assert _pack_nonce(0x5544332211AABBCCDDEEFF, True) == bytes.fromhex(
+        "55 44 33 22 11 aa bb cc dd ee ff 01"
+    )
 
     with raises(AssertionError):
-        _pack_nonce(0x665544332211aabbccddeeff, True)
+        _pack_nonce(0x665544332211AABBCCDDEEFF, True)
 
 
 def test_stream():
     key = os.urandom(32)
-    data = os.urandom(100*1024)
+    data = os.urandom(100 * 1024)
 
     ciphertext = stream_encrypt(key, data)
     assert ciphertext != data

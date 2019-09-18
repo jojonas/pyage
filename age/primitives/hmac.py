@@ -4,7 +4,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.hmac import HMAC
 
-__all__ = ['hmac_generate', 'hmac_verify']
+__all__ = ["hmac_generate", "hmac_verify"]
 
 
 def _reduce_key(key: bytes) -> bytes:
@@ -16,10 +16,7 @@ def _reduce_key(key: bytes) -> bytes:
 
 
 def _hmac_obj(key: bytes) -> HMAC:
-    return HMAC(
-        key=key,
-        algorithm=hashes.SHA256(),
-        backend=default_backend())
+    return HMAC(key=key, algorithm=hashes.SHA256(), backend=default_backend())
 
 
 def hmac_generate(key: bytes) -> typing.Callable[[bytes], bytes]:
@@ -31,6 +28,7 @@ def hmac_generate(key: bytes) -> typing.Callable[[bytes], bytes]:
     def func(message: bytes) -> bytes:
         mac.update(message)
         return mac.finalize()
+
     return func
 
 

@@ -1,7 +1,7 @@
 import base64
 import textwrap
 
-__all__ = ['encode', 'decode']
+__all__ = ["encode", "decode"]
 
 
 def encode(data: bytes) -> str:

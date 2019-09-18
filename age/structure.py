@@ -1,7 +1,7 @@
 import enum
 import typing
 
-__all__ = ['AgeRecipient', 'AgeAuthenticationTag', 'AgeFile']
+__all__ = ["AgeRecipient", "AgeAuthenticationTag", "AgeFile"]
 
 
 class AgeRecipient:
@@ -12,8 +12,7 @@ class AgeRecipient:
         SSH_RSA = "ssh-rsa"
         SSH_ED25519 = "ssh-ed25519"
 
-    def __init__(self, type_: Type,
-                 arguments: typing.Collection[str] = None):
+    def __init__(self, type_: Type, arguments: typing.Collection[str] = None):
         self.type_: AgeRecipient.Type = type_
         self.arguments: typing.Collection[str] = arguments if arguments else []
 
@@ -29,10 +28,13 @@ class AgeAuthenticationTag:
 
 
 class AgeFile:
-    def __init__(self, age_version: int,
-                 recipients: typing.Collection[AgeRecipient],
-                 authentication_tag: AgeAuthenticationTag,
-                 encrypted_data: bytes):
+    def __init__(
+        self,
+        age_version: int,
+        recipients: typing.Collection[AgeRecipient],
+        authentication_tag: AgeAuthenticationTag,
+        encrypted_data: bytes,
+    ):
         self.age_version: int = age_version
         self.recipients: typing.Collection[AgeRecipient] = recipients
         self.authentication_tag: AgeAuthenticationTag = authentication_tag

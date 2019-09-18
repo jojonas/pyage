@@ -1,6 +1,6 @@
 import os
 
-__all__ = ['random']
+__all__ = ["random"]
 
 
 def random(n: int) -> bytes:

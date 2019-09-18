@@ -1,4 +1,7 @@
+*.egg-info/
 __pycache__
 *.pyc
 .mypy_cache
 .pytest_cache
+.vscode/.ropeproject
+tests

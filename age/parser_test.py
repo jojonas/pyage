@@ -32,6 +32,5 @@ def test_parse_google_doc_test_file():
     assert len(parsed.recipients) == 5
     assert parsed.recipients[0].type_ == AgeRecipient.Type.X25519
     assert len(parsed.recipients[0].arguments) == 2
-    assert parsed.authentication_tag.type_ == \
-        AgeAuthenticationTag.Type.CHACHAPOLY
+    assert parsed.authentication_tag.type_ == AgeAuthenticationTag.Type.CHACHAPOLY
     assert parsed.encrypted_data == b"[BINARY ENCRYPTED PAYLOAD]"

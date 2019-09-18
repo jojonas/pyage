@@ -2,16 +2,28 @@ import typing
 
 from cryptography.exceptions import InvalidTag
 
-from age.primitives import encode, decode, random, hkdf, encrypt, decrypt, \
-    hmac, x25519, CURVE_25519_BASEPOINT, scrypt, rsa_encrypt, sha256
+from age.primitives import (
+    encode,
+    decode,
+    random,
+    hkdf,
+    encrypt,
+    decrypt,
+    hmac,
+    x25519,
+    CURVE_25519_BASEPOINT,
+    scrypt,
+    rsa_encrypt,
+    sha256,
+)
 from age.structure import AgeRecipient
 from age.algorithms import x25519_decrypt_file_key, scrypt_decrypt_file_key
 from age.keys import AgePrivateKey
 
 
-def try_decrypt_file_key(recipients: typing.Collection[AgeRecipient],
-                         keys: typing.Collection[typing.Any]) -> bytes:
-
+def try_decrypt_file_key(
+    recipients: typing.Collection[AgeRecipient], keys: typing.Collection[typing.Any]
+) -> bytes:
     def filter_keys(type_: type):
         return filter(lambda k: isinstance(k, type_), keys)
 

@@ -1,6 +1,6 @@
 import hashlib
 
-__all__ = ['sha256']
+__all__ = ["sha256"]
 
 
 def sha256(data: bytes) -> bytes:

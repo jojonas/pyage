@@ -1,5 +1,7 @@
-from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey,\
-    X25519PublicKey
+from cryptography.hazmat.primitives.asymmetric.x25519 import (
+    X25519PrivateKey,
+    X25519PublicKey,
+)
 from cryptography.hazmat.primitives import serialization
 
 from age.primitives import encode, decode
@@ -14,7 +16,7 @@ class AgePrivateKey:
 
     def __repr__(self) -> str:
         clsname = self.__class__.__name__
-        return f'<{clsname} {self.public_key().public_string()}>'
+        return f"<{clsname} {self.public_key().public_string()}>"
 
     @classmethod
     def generate(cls):
@@ -26,9 +28,10 @@ class AgePrivateKey:
         """Read an age key from a private key string"""
         if not data.startswith(cls.PRIVATE_KEY_PREFIX):
             raise ValueError(
-                f"Private keys must start with '{cls.PRIVATE_KEY_PREFIX}'.")
+                f"Private keys must start with '{cls.PRIVATE_KEY_PREFIX}'."
+            )
 
-        key = data[len(cls.PRIVATE_KEY_PREFIX):]
+        key = data[len(cls.PRIVATE_KEY_PREFIX) :]
         bytes_ = decode(key)
 
         return cls(X25519PrivateKey.from_private_bytes(bytes_))
@@ -41,7 +44,7 @@ class AgePrivateKey:
         return self._key.private_bytes(
             encoding=serialization.Encoding.Raw,
             format=serialization.PrivateFormat.Raw,
-            encryption_algorithm=serialization.NoEncryption()
+            encryption_algorithm=serialization.NoEncryption(),
         )
 
     def public_key(self):
@@ -57,16 +60,15 @@ class AgePublicKey:
 
     def __repr__(self):
         clsname = self.__class__.__name__
-        return f'<{clsname} {self.public_string()}>'
+        return f"<{clsname} {self.public_string()}>"
 
     @classmethod
     def from_public_string(cls, data: str):
         """Read an age public key from a public key string"""
         if not data.startswith(cls.PUBLIC_KEY_PREFIX):
-            raise ValueError(
-                f"Public keys must start with '{cls.PUBLIC_KEY_PREFIX}'.")
+            raise ValueError(f"Public keys must start with '{cls.PUBLIC_KEY_PREFIX}'.")
 
-        key = data[len(cls.PUBLIC_KEY_PREFIX):]
+        key = data[len(cls.PUBLIC_KEY_PREFIX) :]
         bytes_ = decode(key)
 
         return cls(X25519PublicKey.from_public_bytes(bytes_))
@@ -77,5 +79,5 @@ class AgePublicKey:
 
     def public_bytes(self) -> bytes:
         return self._key.public_bytes(
-            encoding=serialization.Encoding.Raw,
-            format=serialization.PublicFormat.Raw)
+            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+        )

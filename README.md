@@ -21,7 +21,7 @@ To remove pipenv installation:
     $ pipenv --rm
 
 ## Development
-* Enforce PEP8 with [flake8](http://flake8.pycqa.org/en/latest/) and [autopep8](https://github.com/hhatto/autopep8)
+* Enforce PEP8 with [black](https://github.com/psf/black)
 * Run unit tests ([pytest](https://docs.pytest.org/en/latest/))
 * Hint native types ([Python typing](https://docs.python.org/3/library/typing.html)), enforce with [mypy](http://mypy-lang.org/)
 

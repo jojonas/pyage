@@ -1,7 +1,7 @@
 import hashlib
 import typing
 
-__all__ = ['scrypt']
+__all__ = ["scrypt"]
 
 
 def scrypt(salt: bytes, N: int) -> typing.Callable[[bytes], bytes]:
@@ -12,6 +12,8 @@ def scrypt(salt: bytes, N: int) -> typing.Callable[[bytes], bytes]:
             n=N,
             r=8,
             p=1,
-            maxmem=1024*1024*1024,
-            dklen=32)
+            maxmem=1024 * 1024 * 1024,
+            dklen=32,
+        )
+
     return func

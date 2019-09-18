@@ -5,10 +5,11 @@ import typing
 from age.primitives import decode
 from age.structure import AgeFile, AgeRecipient, AgeAuthenticationTag
 
-__all__ = ['parse_bytes', 'parse_file']
+__all__ = ["parse_bytes", "parse_file"]
 
 FILE_SIGNATURE_RE = re.compile(
-    rb"This is a file encrypted with age-tool\.com, version (\d+)")
+    rb"This is a file encrypted with age-tool\.com, version (\d+)"
+)
 
 
 def parse_bytes(data: bytes) -> AgeFile:
@@ -66,13 +67,13 @@ def parse_bytes(data: bytes) -> AgeFile:
         age_version=age_version,
         recipients=recipients,
         authentication_tag=AgeAuthenticationTag(aead_type, aead_value),
-        encrypted_data=stream.read()
+        encrypted_data=stream.read(),
     )
 
 
 def parse_file(file: typing.Union[str, typing.BinaryIO]):
     if isinstance(file, str):
-        with open(file, 'rb') as f:
+        with open(file, "rb") as f:
             data = f.read()
     else:
         data = file.read()

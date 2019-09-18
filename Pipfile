@@ -5,10 +5,9 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "<=5.0.1"
-autopep8 = "*"
 mypy = "*"
-flake8 = "*"
 rope = "*"
+black = "*"
 
 [packages]
 cryptography = ">=2.7"

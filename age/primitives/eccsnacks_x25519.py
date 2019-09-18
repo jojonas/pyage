@@ -1,10 +1,11 @@
 # curve25519.py from https://github.com/nnathan/eccsnacks
 
 import sys
+
 if sys.version_info >= (3,):
     xrange = range
 
-__all__ = ['scalarmult', 'scalarmult_base']
+__all__ = ["scalarmult", "scalarmult_base"]
 
 # implementation is a translation of the pseudocode
 # specified in RFC7748: https://tools.ietf.org/html/rfc7748
@@ -64,10 +65,10 @@ def X25519(k, u):
         CB = C * B
         CB %= P
 
-        x_3 = ((DA + CB) % P)**2
+        x_3 = ((DA + CB) % P) ** 2
         x_3 %= P
 
-        z_3 = x_1 * (((DA - CB) % P)**2) % P
+        z_3 = x_1 * (((DA - CB) % P) ** 2) % P
         z_3 %= P
 
         x_2 = AA * BB
@@ -85,9 +86,9 @@ def X25519(k, u):
 # Equivalent to RFC7748 decodeUCoordinate followed by decodeLittleEndian
 def unpack(s):
     if len(s) != 32:
-        raise ValueError('Invalid Curve25519 scalar (len=%d)' % len(s))
+        raise ValueError("Invalid Curve25519 scalar (len=%d)" % len(s))
     t = sum(s[i] << (8 * i) for i in range(31))
-    t += ((s[31] & 0x7f) << 248)
+    t += (s[31] & 0x7F) << 248
     return t
 
 
@@ -103,12 +104,12 @@ def clamp(n):
 
 
 def scalarmult(n, p):
-    '''
+    """
        Expects n and p in the form as 32-byte strings.
 
        Multiplies group element p by integer n. Returns the resulting group
        element as 32-byte string.
-    '''
+    """
 
     n = clamp(unpack(n))
     p = unpack(p)
@@ -116,12 +117,12 @@ def scalarmult(n, p):
 
 
 def scalarmult_base(n):
-    '''
+    """
        Expects n in the form as 32-byte string.
 
        Computes scalar product of standard group element (9) and n.
        Returns the resulting group element as 32-byte string.
-    '''
+    """
 
     n = clamp(unpack(n))
     return pack(X25519(n, 9))
