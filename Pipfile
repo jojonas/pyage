@@ -8,9 +8,11 @@ pytest = "<=5.0.1"
 autopep8 = "*"
 mypy = "*"
 flake8 = "*"
+rope = "*"
 
 [packages]
 cryptography = ">=2.7"
+pyage = {editable = true,path = "."}
 
 [requires]
 python_version = "3.7"

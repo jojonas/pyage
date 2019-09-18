@@ -1,4 +1,5 @@
-from age.parser import parse_bytes, RecipientType
+from age.parser import parse_bytes
+from age.structure import AgeRecipient, AgeAuthenticationTag
 
 # This is almost the test file from age-tool.com (18.09.2019).
 # However, I modified the lines to include spaces between the arguments.
@@ -27,9 +28,10 @@ AYspeRKI9MJ--Xg9i7rutU34ZM-1BL6KgZfJ9FSm-GFHiVWpr1MfYCo_w
 def test_parse_google_doc_test_file():
     parsed = parse_bytes(GOOGLE_DOC_TEST_FILE)
 
-    assert parsed.age_version == "1"
+    assert parsed.age_version == 1
     assert len(parsed.recipients) == 5
-    assert parsed.recipients[0].type_ == RecipientType.X25519
+    assert parsed.recipients[0].type_ == AgeRecipient.Type.X25519
     assert len(parsed.recipients[0].arguments) == 2
-    assert parsed.aead_tag.type_ == "ChaChaPoly"
+    assert parsed.authentication_tag.type_ == \
+        AgeAuthenticationTag.Type.CHACHAPOLY
     assert parsed.encrypted_data == b"[BINARY ENCRYPTED PAYLOAD]"

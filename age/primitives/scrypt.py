@@ -12,5 +12,6 @@ def scrypt(salt: bytes, N: int) -> typing.Callable[[bytes], bytes]:
             n=N,
             r=8,
             p=1,
-            maxmem=1024*1024*1024)
+            maxmem=1024*1024*1024,
+            dklen=32)
     return func

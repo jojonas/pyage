@@ -7,8 +7,8 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 __all__ = ['hkdf']
 
 
-def hkdf(salt: bytes, label: bytes) -> typing.Callable[[bytes, bytes], bytes]:
-    def func(key: bytes, len: bytes) -> bytes:
+def hkdf(salt: bytes, label: bytes) -> typing.Callable[[bytes, int], bytes]:
+    def func(key: bytes, len: int) -> bytes:
         return HKDF(
             algorithm=hashes.SHA256(),
             length=len,

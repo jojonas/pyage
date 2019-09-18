@@ -1,44 +1,14 @@
-import enum
 import io
 import re
 import typing
 
 from age.primitives import decode
+from age.structure import AgeFile, AgeRecipient, AgeAuthenticationTag
 
-__all__ = ['RecipientType', 'Recipient', 'AEADTag',
-           'AgeFile', 'parse_bytes', 'parse_file']
+__all__ = ['parse_bytes', 'parse_file']
 
 FILE_SIGNATURE_RE = re.compile(
-    rb"This is a file encrypted with age-tool.com, version (\d+)")
-
-
-class RecipientType(enum.Enum):
-    X25519 = "X25519"
-    SCRYPT = "scrypt"
-    SSH_RSA = "ssh-rsa"
-    SSH_ED25519 = "ssh-ed25519"
-
-
-class Recipient:
-    def __init__(self, type_: RecipientType,
-                 arguments: typing.List[str] = None):
-        self.type_: RecipientType = type_
-        self.arguments: typing.List[str] = arguments if arguments else []
-
-
-class AEADTag:
-    def __init__(self, type_: str, value: bytes):
-        self.type_: str = type_
-        self.value: bytes = value
-
-
-class AgeFile:
-    def __init__(self, age_version: str, recipients: typing.List[Recipient],
-                 aead_tag: AEADTag, encrypted_data: bytes):
-        self.age_version: str = age_version
-        self.recipients: typing.List[Recipient] = recipients
-        self.aead_tag: AEADTag = aead_tag
-        self.encrypted_data: bytes = encrypted_data
+    rb"This is a file encrypted with age-tool\.com, version (\d+)")
 
 
 def parse_bytes(data: bytes) -> AgeFile:
@@ -57,7 +27,8 @@ def parse_bytes(data: bytes) -> AgeFile:
     if not match:
         raise ValueError("Age file signature not found.")
 
-    age_version = match.group(1).decode("ascii")
+    # this is not officially defined to be an int...
+    age_version = int(match.group(1).decode("ascii"))
 
     joined_lines = []
 
@@ -76,19 +47,25 @@ def parse_bytes(data: bytes) -> AgeFile:
     joined_lines.append(buffer)
 
     assert line.startswith("--- ")
-    _, aead_type, aead_tag = line.split()
-    aead_value = decode(aead_tag)
+    _, aead_type_name, encoded_aead_value = line.split()
+    aead_type = AgeAuthenticationTag.Type(aead_type_name)
+    aead_value = decode(encoded_aead_value)
 
     recipients = []
     for line in joined_lines:
         _, type_name, *arguments = line.split()
-        type_ = RecipientType(type_name)
-        recipients.append(Recipient(type_, arguments=arguments))
+
+        try:
+            type_ = AgeRecipient.Type(type_name)
+        except ValueError:
+            # unknown recipient type, ignore
+            continue
+        recipients.append(AgeRecipient(type_, arguments=arguments))
 
     return AgeFile(
         age_version=age_version,
         recipients=recipients,
-        aead_tag=AEADTag(aead_type, aead_value),
+        authentication_tag=AgeAuthenticationTag(aead_type, aead_value),
         encrypted_data=stream.read()
     )
 

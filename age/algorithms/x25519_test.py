@@ -1,20 +1,16 @@
 import os
 
-from age.algorithms.x25519 import X25519Encryption, X25519Decryption
+from age.algorithms.x25519 import x25519_encrypt_file_key, \
+    x25519_decrypt_file_key
 from age.keys import AgePrivateKey
 
 
 def test_all():
     key = AgePrivateKey.generate()
 
-    file_secret = os.urandom(32)
+    file_key = os.urandom(16)
 
-    encryption = X25519Encryption(key.public_key())
+    _, *args = x25519_encrypt_file_key(key.public_key(), file_key)
+    decrypted = x25519_decrypt_file_key(key, *args)
 
-    recipient = encryption.generate_recipient(file_secret)
-    print(recipient)
-
-    decryption = X25519Decryption(key)
-    decrypted = decryption.parse_recipient(recipient)
-
-    assert decrypted == file_secret
+    assert decrypted == file_key
