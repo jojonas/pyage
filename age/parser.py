@@ -3,7 +3,7 @@ import re
 import typing
 
 from age.primitives import decode
-from age.structure import AgeFile, AgeRecipient, AgeAuthenticationTag
+from age.structure import AgeFile, AgeRecipient, EncryptionAlgorithm
 
 __all__ = ["parse_bytes", "parse_file"]
 
@@ -48,9 +48,17 @@ def parse_bytes(data: bytes) -> AgeFile:
     joined_lines.append(buffer)
 
     assert line.startswith("--- ")
-    _, aead_type_name, encoded_aead_value = line.split()
-    aead_type = AgeAuthenticationTag.Type(aead_type_name)
-    aead_value = decode(encoded_aead_value)
+    _, encryption_algorithm_name, encoded_authentication_tag = line.split()
+
+    assert encryption_algorithm_name == "ChaChaPoly"
+    encryption_algorithm = EncryptionAlgorithm(encryption_algorithm_name)
+
+    authentication_tag = decode(encoded_authentication_tag)
+
+    # header (for authentication) is the entire header up to AEAD (= ChaChaPoly) included
+    search = b"\n--- ChaChaPoly"
+    index = data.index(search) + len(search)
+    header = data[:index]
 
     recipients = []
     for line in joined_lines:
@@ -66,8 +74,10 @@ def parse_bytes(data: bytes) -> AgeFile:
     return AgeFile(
         age_version=age_version,
         recipients=recipients,
-        authentication_tag=AgeAuthenticationTag(aead_type, aead_value),
-        encrypted_data=stream.read(),
+        authentication_tag=authentication_tag,
+        encryption_algorithm=encryption_algorithm,
+        authenticated_header=header,
+        body=stream.read(),
     )
 
 

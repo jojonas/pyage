@@ -1,7 +1,7 @@
 import enum
 import typing
 
-__all__ = ["AgeRecipient", "AgeAuthenticationTag", "AgeFile"]
+__all__ = ["AgeRecipient", "AgeFile", "EncryptionAlgorithm"]
 
 
 class AgeRecipient:
@@ -17,14 +17,9 @@ class AgeRecipient:
         self.arguments: typing.Collection[str] = arguments if arguments else []
 
 
-class AgeAuthenticationTag:
-    @enum.unique
-    class Type(enum.Enum):
-        CHACHAPOLY = "ChaChaPoly"
-
-    def __init__(self, type_: Type, value: bytes):
-        self.type_: AgeAuthenticationTag.Type = type_
-        self.value: bytes = value
+@enum.unique
+class EncryptionAlgorithm(enum.Enum):
+    CHACHAPOLY = "ChaChaPoly"
 
 
 class AgeFile:
@@ -32,10 +27,17 @@ class AgeFile:
         self,
         age_version: int,
         recipients: typing.Collection[AgeRecipient],
-        authentication_tag: AgeAuthenticationTag,
-        encrypted_data: bytes,
+        encryption_algorithm: EncryptionAlgorithm,
+        authentication_tag: bytes,
+        authenticated_header: bytes,
+        body: bytes,
     ):
         self.age_version: int = age_version
+
         self.recipients: typing.Collection[AgeRecipient] = recipients
-        self.authentication_tag: AgeAuthenticationTag = authentication_tag
-        self.encrypted_data: bytes = encrypted_data
+
+        self.encryption_algorithm: EncryptionAlgorithm = encryption_algorithm
+        self.authentication_tag: bytes = authentication_tag
+        self.authenticated_header: bytes = authenticated_header
+
+        self.body: bytes = body
