@@ -1,0 +1,18 @@
+{
+    "editor.formatOnSave": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "files.exclude": {
+        ".*_cache": true,
+        "**/__pycache__": true
+    },
+    "python.analysis.openFilesOnly": false,
+    "python.linting.pylintEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.pythonPath": "/home/jonas/.local/share/virtualenvs/pyage-zGSayd2o/bin/python",
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false
+}

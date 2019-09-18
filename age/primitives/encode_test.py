@@ -2,7 +2,7 @@ import os
 
 from pytest import raises
 
-from pyage.primitives import encode, decode
+from .encode import encode, decode
 
 
 def test_encode_types():
