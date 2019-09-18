@@ -4,10 +4,11 @@ from age.algorithms.scrypt import (
     scrypt_encrypt_file_key,
     scrypt_decrypt_file_key,
 )
+from age.keys import PasswordKey
 
 
 def test_all():
-    password = os.urandom(10)
+    password = PasswordKey(os.urandom(10))
 
     file_key = os.urandom(16)
 

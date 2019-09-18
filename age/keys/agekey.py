@@ -5,9 +5,10 @@ from cryptography.hazmat.primitives.asymmetric.x25519 import (
 from cryptography.hazmat.primitives import serialization
 
 from age.primitives import encode, decode
+from .base import EncryptionKey, DecryptionKey
 
 
-class AgePrivateKey:
+class AgePrivateKey(DecryptionKey):
     PRIVATE_KEY_PREFIX = "AGE_SECRET_KEY_"
 
     def __init__(self, key: X25519PrivateKey):
@@ -51,7 +52,7 @@ class AgePrivateKey:
         return AgePublicKey(self._key.public_key())
 
 
-class AgePublicKey:
+class AgePublicKey(EncryptionKey):
     PUBLIC_KEY_PREFIX = "pubkey:"
 
     def __init__(self, key):

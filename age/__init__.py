@@ -18,8 +18,14 @@ from age.primitives import (
     sha256,
 )
 from age.structure import AgeFile, AgeRecipient
-from age.algorithms import x25519_decrypt_file_key, scrypt_decrypt_file_key
-from age.keys import AgePrivateKey
+from age.algorithms import (
+    x25519_decrypt_file_key,
+    scrypt_decrypt_file_key,
+    x25519_encrypt_file_key,
+    scrypt_encrypt_file_key,
+)
+from age.keys import AgePrivateKey, AgePublicKey, PasswordKey
+from age.keys.base import EncryptionKey, DecryptionKey
 from age.stream import stream_decrypt
 
 
@@ -27,13 +33,9 @@ class NoMatchingKey(Exception):
     pass
 
 
-class InvalidSignature(Exception):
-    pass
-
-
 def match_key_recipient(
     recipients: typing.Collection[AgeRecipient],
-    keys: typing.Collection[typing.Any],
+    keys: typing.Collection[DecryptionKey],
 ) -> bytes:
     def filter_keys(type_: type):
         return filter(lambda k: isinstance(k, type_), keys)
@@ -47,7 +49,7 @@ def match_key_recipient(
                     continue
 
         elif recipient.type_ == AgeRecipient.Type.SCRYPT:
-            for key in filter_keys(bytes):
+            for key in filter_keys(PasswordKey):
                 try:
                     return scrypt_decrypt_file_key(key, *recipient.arguments)
                 except InvalidTag:
@@ -64,7 +66,7 @@ def authenticate_header(
 
 
 def decrypt_file(
-    age_file: AgeFile, keys: typing.Collection[typing.Any]
+    age_file: AgeFile, keys: typing.Collection[DecryptionKey]
 ) -> bytes:
 
     file_key = match_key_recipient(age_file.recipients, keys)
@@ -78,6 +80,15 @@ def decrypt_file(
     key = hkdf(nonce, b"payload")(file_key, 32)
     plaintext = stream_decrypt(key, ciphertext)
     return plaintext
+
+
+def generate_recipient(key: EncryptionKey, file_key: bytes) -> AgeRecipient:
+    if isinstance(key, AgePublicKey):
+        _, *arguments = x25519_encrypt_file_key(key, file_key)
+        return AgeRecipient(AgeRecipient.Type.X25519, arguments)
+    elif isinstance(key, PasswordKey):
+        _, *arguments = scrypt_encrypt_file_key(key, file_key)
+        return AgeRecipient(AgeRecipient.Type.SCRYPT, arguments)
 
 
 def encrypt_body(file_key, data):
