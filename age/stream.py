@@ -29,7 +29,9 @@ def stream_encrypt(key: bytes, data: bytes) -> bytes:
         last_block = nonce == blocks - 1
         packed_nonce = _pack_nonce(nonce, last_block=last_block)
 
-        encrypted += aead.encrypt(nonce=packed_nonce, data=block, associated_data=None)
+        encrypted += aead.encrypt(
+            nonce=packed_nonce, data=block, associated_data=None
+        )
 
     return encrypted
 
@@ -45,6 +47,8 @@ def stream_decrypt(key: bytes, data: bytes) -> bytes:
         last_block = nonce == blocks - 1
         packed_nonce = _pack_nonce(nonce, last_block=last_block)
 
-        decrypted += aead.decrypt(nonce=packed_nonce, data=block, associated_data=None)
+        decrypted += aead.decrypt(
+            nonce=packed_nonce, data=block, associated_data=None
+        )
 
     return decrypted

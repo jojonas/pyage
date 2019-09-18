@@ -1,6 +1,9 @@
 import os
 
-from age.algorithms.x25519 import x25519_encrypt_file_key, x25519_decrypt_file_key
+from age.algorithms.x25519 import (
+    x25519_encrypt_file_key,
+    x25519_decrypt_file_key,
+)
 from age.keys import AgePrivateKey
 
 

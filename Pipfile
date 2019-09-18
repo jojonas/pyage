@@ -8,6 +8,7 @@ pytest = "<=5.0.1"
 mypy = "*"
 rope = "*"
 black = "*"
+flake8 = "*"
 
 [packages]
 cryptography = ">=2.7"

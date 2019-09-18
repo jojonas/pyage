@@ -1,6 +1,9 @@
 import os
 
-from age.algorithms.scrypt import scrypt_encrypt_file_key, scrypt_decrypt_file_key
+from age.algorithms.scrypt import (
+    scrypt_encrypt_file_key,
+    scrypt_decrypt_file_key,
+)
 
 
 def test_all():

@@ -4,7 +4,9 @@ from .hkdf import hkdf
 def test_hkdf():
     """Test Case 1, RFC 5869, section A.1"""
 
-    keying_material = bytes.fromhex("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b")
+    keying_material = bytes.fromhex(
+        "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b"
+    )
     assert len(keying_material) == 22
 
     salt = bytes.fromhex("000102030405060708090a0b0c")
@@ -63,7 +65,9 @@ def test_hkdf_long():
 def test_hkdf_zerosalt():
     """Test Case 3, RFC 5869, section A.3"""
 
-    keying_material = bytes.fromhex("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b")
+    keying_material = bytes.fromhex(
+        "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b"
+    )
     assert len(keying_material) == 22
 
     salt = b""

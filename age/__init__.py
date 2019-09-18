@@ -21,8 +21,13 @@ from age.algorithms import x25519_decrypt_file_key, scrypt_decrypt_file_key
 from age.keys import AgePrivateKey
 
 
+class NoMatchingKey(Exception):
+    pass
+
+
 def try_decrypt_file_key(
-    recipients: typing.Collection[AgeRecipient], keys: typing.Collection[typing.Any]
+    recipients: typing.Collection[AgeRecipient],
+    keys: typing.Collection[typing.Any],
 ) -> bytes:
     def filter_keys(type_: type):
         return filter(lambda k: isinstance(k, type_), keys)
@@ -41,6 +46,8 @@ def try_decrypt_file_key(
                     return scrypt_decrypt_file_key(key, *recipient.arguments)
                 except InvalidTag:
                     continue
+
+    raise NoMatchingKey
 
 
 def header_aead(header, file_key):

@@ -9,7 +9,6 @@ def test_hmac_vector_1():
 
     key = b"\x0B" * 20
     data = b"Hi There"
-    mac = hmac_generate(key)(data)
     assert hmac_generate(key)(data) == bytes.fromhex(
         "b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7"
     )

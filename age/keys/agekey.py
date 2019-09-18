@@ -66,7 +66,9 @@ class AgePublicKey:
     def from_public_string(cls, data: str):
         """Read an age public key from a public key string"""
         if not data.startswith(cls.PUBLIC_KEY_PREFIX):
-            raise ValueError(f"Public keys must start with '{cls.PUBLIC_KEY_PREFIX}'.")
+            raise ValueError(
+                f"Public keys must start with '{cls.PUBLIC_KEY_PREFIX}'."
+            )
 
         key = data[len(cls.PUBLIC_KEY_PREFIX) :]
         bytes_ = decode(key)
@@ -79,5 +81,6 @@ class AgePublicKey:
 
     def public_bytes(self) -> bytes:
         return self._key.public_bytes(
-            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+            encoding=serialization.Encoding.Raw,
+            format=serialization.PublicFormat.Raw,
         )
