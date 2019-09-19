@@ -2,8 +2,10 @@
     "editor.formatOnSave": true,
     "python.linting.mypyEnabled": true,
     "files.exclude": {
-        ".*_cache": true,
-        "**/__pycache__": true
+        "**/__pycache__": true,
+        "**/.*_cache": true,
+        "**/.ropeproject": true,
+        "**/*.egg-info": true
     },
     "python.analysis.openFilesOnly": false,
     "python.linting.pylintEnabled": false,

@@ -7,12 +7,12 @@ from age.algorithms.x25519 import (
 from age.keys import AgePrivateKey
 
 
-def test_all():
+def test_x25519_algorithm():
     key = AgePrivateKey.generate()
 
     file_key = os.urandom(16)
 
-    _, *args = x25519_encrypt_file_key(key.public_key(), file_key)
+    args = x25519_encrypt_file_key(key.public_key(), file_key)
     decrypted = x25519_decrypt_file_key(key, *args)
 
     assert decrypted == file_key

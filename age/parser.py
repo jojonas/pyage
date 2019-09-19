@@ -1,9 +1,11 @@
 import io
 import re
+import sys
 import typing
 
 from age.primitives import decode
-from age.structure import AgeFile, AgeRecipient, EncryptionAlgorithm
+from age.header import EncryptionAlgorithm, PreliminaryHeader
+from age.recipients import parse_recipient_line
 
 __all__ = ["parse_bytes", "parse_file"]
 
@@ -12,7 +14,7 @@ FILE_SIGNATURE_RE = re.compile(
 )
 
 
-def parse_bytes(data: bytes) -> AgeFile:
+def parse_bytes(data: bytes) -> typing.Tuple[PreliminaryHeader, bytes]:
     # I know this parser is a mess!
 
     # But so far there are some inconsistencies in Filippo's age spec
@@ -22,6 +24,7 @@ def parse_bytes(data: bytes) -> AgeFile:
     # (https://github.com/erikrose/parsimonious/).
 
     stream = io.BytesIO(data)
+    header = PreliminaryHeader()
 
     first_line = stream.readline()[:-1]
     match = FILE_SIGNATURE_RE.match(first_line)
@@ -29,7 +32,7 @@ def parse_bytes(data: bytes) -> AgeFile:
         raise ValueError("Age file signature not found.")
 
     # this is not officially defined to be an int...
-    age_version = int(match.group(1).decode("ascii"))
+    header.age_version = int(match.group(1).decode("ascii"))
 
     joined_lines = []
 
@@ -51,34 +54,31 @@ def parse_bytes(data: bytes) -> AgeFile:
     _, encryption_algorithm_name, encoded_authentication_tag = line.split()
 
     assert encryption_algorithm_name == "ChaChaPoly"
-    encryption_algorithm = EncryptionAlgorithm(encryption_algorithm_name)
+    header.encryption_algorithm = EncryptionAlgorithm(
+        encryption_algorithm_name
+    )
 
-    authentication_tag = decode(encoded_authentication_tag)
+    header.authentication_tag = decode(encoded_authentication_tag)
 
     # header (for authentication) is the entire header up to AEAD (= ChaChaPoly) included
     search = b"\n--- ChaChaPoly"
     index = data.index(search) + len(search)
-    header = data[:index]
+    header.data_to_authenticate = data[:index]
 
-    recipients = []
     for line in joined_lines:
-        _, type_name, *arguments = line.split()
-
         try:
-            type_ = AgeRecipient.Type(type_name)
+            recipient = parse_recipient_line(line)
         except ValueError:
             # unknown recipient type, ignore
-            continue
-        recipients.append(AgeRecipient(type_, arguments=arguments))
+            print(
+                f"Ignoring unknown recipient type in line: {line}",
+                file=sys.stderr,
+            )
+        header.recipients.append(recipient)
 
-    return AgeFile(
-        age_version=age_version,
-        recipients=recipients,
-        authentication_tag=authentication_tag,
-        encryption_algorithm=encryption_algorithm,
-        authenticated_header=header,
-        body=stream.read(),
-    )
+    body = stream.read()
+
+    return header, body
 
 
 def parse_file(file: typing.Union[str, typing.BinaryIO]):

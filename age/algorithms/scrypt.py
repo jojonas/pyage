@@ -13,26 +13,20 @@ SCRYPT_RECIPIENT_LABEL = "scrypt"
 
 def scrypt_encrypt_file_key(
     password: PasswordKey, file_key: bytes
-) -> typing.Tuple[str, str, str, str]:
+) -> typing.Tuple[bytes, int, bytes]:
 
     salt = random(19)
     cost = 32768  # whats an appropriate cost?
 
     key = scrypt(salt, cost)(password.value)
     assert len(key) == 32
-    encrypted = encrypt(key)(file_key)
+    encrypted_file_key = encrypt(key)(file_key)
 
-    return SCRYPT_RECIPIENT_LABEL, encode(salt), str(cost), encode(encrypted)
+    return salt, cost, encrypted_file_key
 
 
 def scrypt_decrypt_file_key(
-    password: PasswordKey, salt: str, cost: str, encrypted: str
+    password: PasswordKey, salt: bytes, cost: int, encrypted_file_key: bytes
 ) -> bytes:
-
-    salt_bytes = decode(salt)
-    encrypted_bytes = decode(encrypted)
-
-    key = scrypt(salt_bytes, int(cost))(password.value)
-    decrypted = decrypt(key)(encrypted_bytes)
-
-    return decrypted
+    key = scrypt(salt, cost)(password.value)
+    return decrypt(key)(encrypted_file_key)

@@ -7,12 +7,12 @@ from age.algorithms.scrypt import (
 from age.keys import PasswordKey
 
 
-def test_all():
+def test_scrypt_algorithm():
     password = PasswordKey(os.urandom(10))
 
     file_key = os.urandom(16)
 
-    _, *args = scrypt_encrypt_file_key(password, file_key)
+    args = scrypt_encrypt_file_key(password, file_key)
     decrypted = scrypt_decrypt_file_key(password, *args)
 
     assert decrypted == file_key
