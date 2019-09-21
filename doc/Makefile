@@ -1,0 +1,30 @@
+# Minimal makefile for Sphinx documentation
+#
+
+# You can set these variables from the command line, and also
+# from the environment for the first two.
+SPHINXOPTS    ?=
+SPHINXBUILD   ?= sphinx-build
+SPHINXAPIDOC  ?= sphinx-apidoc
+SOURCEDIR     = source
+BUILDDIR      = build
+MODULEDIR	  = ../age
+
+PYTHON_FILES  = $(shell find $(MODULEDIR) -type f -name '*.py')
+
+.DEFAULT_GOAL := html
+
+.PHONY: Makefile
+
+# Apidoc: automatically generate everything in source/api
+apidoc: $(PYTHON_FILES)
+	rm -rf $(SOURCEDIR)/api/*.rst
+	$(SPHINXAPIDOC)  -f --ext-todo --ext-autodoc -o "$(SOURCEDIR)/api" "$(MODULEDIR)" "$(MODULEDIR)/*_test.py" "$(MODULEDIR)/**/*_test.py"
+
+# Build HTML files
+html: apidoc Makefile
+	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+clean:
+	rm -rf $(SOURCEDIR)/api/*.rst
+	rm -rf $(BUILDDIR)/*

@@ -2,9 +2,10 @@ import typing
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.hmac import HMAC
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.hmac import HMAC as CryptoHMAC
 
-__all__ = ["hmac_generate", "hmac_verify"]
+__all__ = ["HMAC"]
 
 
 def _reduce_key(key: bytes) -> bytes:
@@ -15,31 +16,38 @@ def _reduce_key(key: bytes) -> bytes:
     return key
 
 
-def _hmac_obj(key: bytes) -> HMAC:
-    return HMAC(key=key, algorithm=hashes.SHA256(), backend=default_backend())
+class HMAC:
+    """HMAC-SHA256 from :rfc:`2104`
 
+    :param key: Shared symmetrical key, used for authentication, needed for authentication checks
+    """
 
-def hmac_generate(key: bytes) -> typing.Callable[[bytes], bytes]:
-    key = _reduce_key(key)
-    assert len(key) <= 32
+    def __init__(self, key: bytes):
+        key = _reduce_key(key)
+        self.mac: CryptoHMAC = CryptoHMAC(
+            key=key, algorithm=hashes.SHA256(), backend=default_backend()
+        )
 
-    mac = _hmac_obj(key)
+    def generate(self, message: bytes) -> bytes:
+        """Generate authentication value for the given message"""
+        self.mac.update(message)
+        return self.mac.finalize()
 
-    def func(message: bytes) -> bytes:
-        mac.update(message)
-        return mac.finalize()
+    def verify(self, message: bytes, tag: bytes) -> None:
+        """Verify authenticaion value for the given message
 
-    return func
+        Raises :class:`cryptography.exceptions.InvalidSignature` on failed validation."""
+        self.mac.update(message)
+        self.mac.verify(tag)
 
+    def is_valid(self, message: bytes, tag: bytes) -> bool:
+        """Check whether authentication value for the given message is correct
 
-def hmac_verify(key: bytes, message: bytes) -> typing.Callable[[bytes], None]:
-    key = _reduce_key(key)
-    assert len(key) <= 32
+        :returns: `True` if validation succeeds, `False` otherwise"""
+        try:
+            self.verify(message, tag)
+        except InvalidSignature:
+            return False
+        else:
+            return True
 
-    mac = _hmac_obj(key)
-    mac.update(message)
-
-    def func(tag: bytes) -> None:
-        mac.verify(tag)
-
-    return func

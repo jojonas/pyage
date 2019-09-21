@@ -2,11 +2,10 @@ import typing
 
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.serialization import (
-    load_ssh_public_key,
-    load_pem_private_key,
-)
 from cryptography.hazmat.backends import default_backend
+
+from age.keys import RSAPrivateKey, RSAPublicKey
+from age.openssh_keys import load_openssh_private_key
 
 __all__ = ["rsa_encrypt", "rsa_decrypt"]
 
@@ -20,30 +19,19 @@ def _padding(label: bytes) -> padding.OAEP:
 
 
 def rsa_encrypt(
-    ssh_key: bytes, label: bytes
-) -> typing.Callable[[bytes], bytes]:
-
-    public_key = load_ssh_public_key(data=ssh_key, backend=default_backend())
-
-    def func(plaintext: bytes) -> bytes:
-        return public_key.encrypt(plaintext=plaintext, padding=_padding(label))
-
-    return func
+    public_key: RSAPublicKey, label: bytes, plaintext: bytes
+) -> bytes:
+    """Encrypt `plaintext` using RSA with OAEP padding (:rfc:`8017`)"""
+    return public_key._key.encrypt(
+        plaintext=plaintext, padding=_padding(label)
+    )
 
 
 def rsa_decrypt(
-    pem_data: bytes, label: bytes
-) -> typing.Callable[[bytes], bytes]:
+    private_key: RSAPrivateKey, label: bytes, ciphertext: bytes
+) -> bytes:
+    """Deccrypt `ciphertext` using RSA with OAEP padding (:rfc:`8017`)"""
 
-    # TODO: Add support for password-protected private keys
-
-    private_key = load_pem_private_key(
-        pem_data, password=None, backend=default_backend()
+    return private_key._key.decrypt(
+        ciphertext=ciphertext, padding=_padding(label)
     )
-
-    def func(ciphertext: bytes) -> bytes:
-        return private_key.decrypt(
-            ciphertext=ciphertext, padding=_padding(label)
-        )
-
-    return func

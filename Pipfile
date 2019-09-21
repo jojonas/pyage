@@ -9,10 +9,15 @@ mypy = "*"
 rope = "*"
 black = "*"
 flake8 = "*"
+sphinx = "*"
+doc8 = "*"
+sphinx-autodoc-typehints = "*"
 
 [packages]
 cryptography = ">=2.7"
 pyage = {editable = true,path = "."}
+bcrypt = "*"
+pynacl = "*"
 
 [requires]
 python_version = "3.7"

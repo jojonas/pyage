@@ -1,17 +1,33 @@
-from .eccsnacks_x25519 import scalarmult, pack, unpack, P as CURVE_25519_PRIME
+import typing
 
-__all__ = ["CURVE_25519_BASEPOINT", "x25519", "reduce"]
+from nacl.bindings import crypto_scalarmult, crypto_scalarmult_base
 
-# according to RFC 7748, sec. 4.1
-# hexadecimal: 0900000000000000000000000000000000000000000000000000000000000000
-CURVE_25519_BASEPOINT: bytes = pack(9)
+from age.utils.libsodium import crypto_core_ed25519_scalar_reduce
+
+__all__ = [
+    "x25519_scalarmult",
+    "x25519_scalarmult_base",
+    "x25519_reduce",
+    "ECScalar",
+    "ECPoint",
+]
 
 
-def x25519(secret: bytes, point: bytes) -> bytes:
-    k = scalarmult(secret, point)
+ECScalar = typing.NewType("ECScalar", bytes)
+ECPoint = typing.NewType("ECPoint", bytes)
+
+
+def x25519_scalarmult(secret_scalar: ECScalar, point: ECPoint) -> ECPoint:
+    """Scalar multiplication of ``point`` with (secret) ``scalar``"""
+
+    k = crypto_scalarmult(secret_scalar, point)
     assert any(k), "All-zeros-check failed (see RFC 7748, section 6.1)"
     return k
 
 
-def reduce(k: bytes) -> bytes:
-    return pack(unpack(k) % CURVE_25519_PRIME)
+def x25519_scalarmult_base(scalar: ECScalar) -> ECPoint:
+    return crypto_scalarmult_base(scalar)
+
+
+def x25519_reduce(k: ECScalar) -> ECScalar:
+    return crypto_core_ed25519_scalar_reduce(k)

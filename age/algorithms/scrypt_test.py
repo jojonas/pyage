@@ -4,7 +4,7 @@ from age.algorithms.scrypt import (
     scrypt_encrypt_file_key,
     scrypt_decrypt_file_key,
 )
-from age.keys import PasswordKey
+from age.keys.password import PasswordKey
 
 
 def test_scrypt_algorithm():

@@ -7,14 +7,13 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 __all__ = ["hkdf"]
 
 
-def hkdf(salt: bytes, label: bytes) -> typing.Callable[[bytes, int], bytes]:
-    def func(key: bytes, len: int) -> bytes:
-        return HKDF(
-            algorithm=hashes.SHA256(),
-            length=len,
-            salt=salt,
-            info=label,
-            backend=default_backend(),
-        ).derive(key)
+def hkdf(salt: bytes, label: bytes, key: bytes, len: int) -> bytes:
+    """Derive a key of len `len` using HKDF (:rfc:`5869`) with SHA-256"""
+    return HKDF(
+        algorithm=hashes.SHA256(),
+        length=len,
+        salt=salt,
+        info=label,
+        backend=default_backend(),
+    ).derive(key)
 
-    return func

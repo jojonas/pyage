@@ -1,4 +1,4 @@
-from .x25519 import x25519, CURVE_25519_BASEPOINT
+from .x25519 import x25519_scalarmult, x25519_scalarmult_base
 
 
 def test_vector1():
@@ -15,7 +15,10 @@ def test_vector1():
         "c3da55379de9c6908e94ea4df28d084f32eccf03491c71f754b4075577a28552"
     )
 
-    assert x25519(input_scalar, input_u_coordinate) == output_u_coordinate
+    assert (
+        x25519_scalarmult(input_scalar, input_u_coordinate)
+        == output_u_coordinate
+    )
 
 
 def test_vector2():
@@ -32,7 +35,10 @@ def test_vector2():
         "95cbde9476e8907d7aade45cb4b873f88b595a68799fa152e6f8f7647aac7957"
     )
 
-    assert x25519(input_scalar, input_u_coordinate) == output_u_coordinate
+    assert (
+        x25519_scalarmult(input_scalar, input_u_coordinate)
+        == output_u_coordinate
+    )
 
 
 def test_repeated():
@@ -44,7 +50,7 @@ def test_repeated():
 
     i = 0
     while i < 1:
-        k, u = x25519(k, u), k
+        k, u = x25519_scalarmult(k, u), k
         i += 1
 
     assert i == 1
@@ -81,7 +87,7 @@ def test_private_public():
         "8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a"
     )
 
-    assert x25519(alice_priv, CURVE_25519_BASEPOINT) == alice_public
+    assert x25519_scalarmult_base(alice_priv) == alice_public
 
     bob_priv = bytes.fromhex(
         "5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb"
@@ -90,14 +96,14 @@ def test_private_public():
         "de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f"
     )
 
-    assert x25519(bob_priv, CURVE_25519_BASEPOINT) == bob_public
+    assert x25519_scalarmult_base(bob_priv) == bob_public
 
     k = bytes.fromhex(
         "4a5d9d5ba4ce2de1728e3bf480350f25e07e21c947d19e3376f09b3c1e161742"
     )
 
-    alice_k = x25519(alice_priv, bob_public)
-    bob_k = x25519(bob_priv, alice_public)
+    alice_k = x25519_scalarmult(alice_priv, bob_public)
+    bob_k = x25519_scalarmult(bob_priv, alice_public)
 
     assert alice_k == bob_k
     assert alice_k == k

@@ -1,5 +1,6 @@
-from age.parser import parse_bytes
-from age.header import EncryptionAlgorithm
+import io
+
+from age.file import LockedFile, EncryptionAlgorithm
 from age.recipients import X25519Recipient
 
 # This is almost the test file from age-tool.com (18.09.2019).
@@ -12,7 +13,7 @@ GOOGLE_DOC_TEST_FILE = b"""This is a file encrypted with age-tool.com, version 1
 -> X25519 ytazqsbmUnPwVWMVx0c1X9iUtGdY4yAB08UQTY2hNCI
  N3pgrXkbIn_RrVt0T0G3sQr1wGWuclqKxTSWHSqGdkc
 -> scrypt bBjlhJVYZeE4aqUdmtRHfw 32768
-ZV_AhotwSGqaPCU43cepl4WYUouAa17a3xpu4G2yi5k
+ ZV_AhotwSGqaPCU43cepl4WYUouAa17a3xpu4G2yi5k
 -> ssh-rsa mhir0Q
  xD7o4VEOu1t7KZQ1gDgq2FPzBEeSRqbnqvQEXdLRYy143BxR6oFxsUUJC
 RB0ErXAmgmZq7tIm5ZyY89OmqZztOgG2tEB1TZvX3Q8oXESBuFjBBQkKa
@@ -27,10 +28,12 @@ AYspeRKI9MJ--Xg9i7rutU34ZM-1BL6KgZfJ9FSm-GFHiVWpr1MfYCo_w
 
 
 def test_parse_google_doc_test_file():
-    header, body = parse_bytes(GOOGLE_DOC_TEST_FILE)
+    stream = io.BytesIO(GOOGLE_DOC_TEST_FILE)
 
-    assert header.age_version == 1
-    assert len(header.recipients) == 5
-    assert isinstance(header.recipients[0], X25519Recipient)
-    assert header.encryption_algorithm == EncryptionAlgorithm.CHACHAPOLY
-    assert body == b"[BINARY ENCRYPTED PAYLOAD]"
+    locked_file = LockedFile.from_file(stream)
+
+    assert locked_file.age_version == 1
+    assert len(set(locked_file.recipients)) == 5
+    assert isinstance(locked_file.recipients[0], X25519Recipient)
+    assert locked_file.encryption_algorithm == EncryptionAlgorithm.CHACHAPOLY
+    assert stream.read() == b"[BINARY ENCRYPTED PAYLOAD]"

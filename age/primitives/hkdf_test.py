@@ -17,7 +17,7 @@ def test_hkdf():
 
     L = 42
 
-    key = hkdf(salt, info)(keying_material, L)
+    key = hkdf(salt, info, keying_material, L)
     assert len(key) == L
 
     assert key == bytes.fromhex(
@@ -52,7 +52,7 @@ def test_hkdf_long():
 
     L = 82
 
-    key = hkdf(salt, info)(keying_material, L)
+    key = hkdf(salt, info, keying_material, L)
     assert len(key) == L
 
     assert key == bytes.fromhex(
@@ -75,7 +75,7 @@ def test_hkdf_zerosalt():
 
     L = 42
 
-    key = hkdf(salt, info)(keying_material, L)
+    key = hkdf(salt, info, keying_material, L)
     assert len(key) == L
 
     assert key == bytes.fromhex(

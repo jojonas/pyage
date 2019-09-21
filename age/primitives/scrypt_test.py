@@ -10,7 +10,7 @@ def test_scrypt_vector3():
     salt = b"SodiumChloride"
     N = 16384
 
-    assert scrypt(salt, N)(password) == bytes.fromhex(
+    assert scrypt(salt, N, password) == bytes.fromhex(
         "7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2"
     )
 

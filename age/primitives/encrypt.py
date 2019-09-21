@@ -12,19 +12,13 @@ def _cipher(key: bytes) -> ChaCha20Poly1305:
     return ChaCha20Poly1305(key=key)
 
 
-def encrypt(key: bytes) -> typing.Callable[[bytes], bytes]:
-    cipher = _cipher(key)
-
-    def func(plaintext: bytes) -> bytes:
-        return cipher.encrypt(ZERO_NONCE, plaintext, None)
-
-    return func
+def encrypt(key: bytes, plaintext: bytes) -> bytes:
+    """Encrypt `plaintext` with the 32 byte `key` using ChaCha20 + Poly1305 (:rfc:`7539`) using a zero nonce."""
+    return _cipher(key).encrypt(ZERO_NONCE, plaintext, None)
 
 
-def decrypt(key: bytes) -> typing.Callable[[bytes], bytes]:
-    cipher = _cipher(key)
+def decrypt(key: bytes, ciphertext: bytes) -> bytes:
+    """Decrypt `plaintext` with the 32 byte `key` ChaCha20 + Poly1305 (:rfc:`7539`) using a zero nonce.
 
-    def func(ciphertext: bytes) -> bytes:
-        return cipher.decrypt(ZERO_NONCE, ciphertext, None)
-
-    return func
+    Raises :class:`cryptography.exceptions.InvalidTag` if authentication fails"""
+    return _cipher(key).decrypt(ZERO_NONCE, ciphertext, None)

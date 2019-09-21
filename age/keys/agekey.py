@@ -1,10 +1,12 @@
+import typing
+
 from cryptography.hazmat.primitives.asymmetric.x25519 import (
     X25519PrivateKey,
     X25519PublicKey,
 )
 from cryptography.hazmat.primitives import serialization
 
-from age.primitives import encode, decode
+from age.primitives import encode, decode, ECScalar, ECPoint
 from .base import EncryptionKey, DecryptionKey
 
 
@@ -13,7 +15,8 @@ class AgePrivateKey(DecryptionKey):
 
     def __init__(self, key: X25519PrivateKey):
         """Do not call directly"""
-        self._key = key
+        assert isinstance(key, X25519PrivateKey)
+        self._key: X25519PrivateKey = key
 
     def __repr__(self) -> str:
         clsname = self.__class__.__name__
@@ -35,13 +38,17 @@ class AgePrivateKey(DecryptionKey):
         key = data[len(cls.PRIVATE_KEY_PREFIX) :]
         bytes_ = decode(key)
 
-        return cls(X25519PrivateKey.from_private_bytes(bytes_))
+        return cls.from_private_bytes(ECScalar(bytes_))
+
+    @classmethod
+    def from_private_bytes(cls, data: ECScalar):
+        return cls(X25519PrivateKey.from_private_bytes(data))
 
     def private_string(self) -> str:
         """Generate a private (secret) key string for this key"""
         return self.PRIVATE_KEY_PREFIX + encode(self.private_bytes())
 
-    def private_bytes(self) -> bytes:
+    def private_bytes(self) -> ECScalar:
         return self._key.private_bytes(
             encoding=serialization.Encoding.Raw,
             format=serialization.PrivateFormat.Raw,
@@ -55,9 +62,10 @@ class AgePrivateKey(DecryptionKey):
 class AgePublicKey(EncryptionKey):
     PUBLIC_KEY_PREFIX = "pubkey:"
 
-    def __init__(self, key):
+    def __init__(self, key: X25519PublicKey):
         """Do not call directly"""
-        self._key = key
+        assert isinstance(key, X25519PublicKey)
+        self._key: X25519PublicKey = key
 
     def __repr__(self):
         clsname = self.__class__.__name__
@@ -74,13 +82,17 @@ class AgePublicKey(EncryptionKey):
         key = data[len(cls.PUBLIC_KEY_PREFIX) :]
         bytes_ = decode(key)
 
-        return cls(X25519PublicKey.from_public_bytes(bytes_))
+        return cls.from_public_bytes(ECPoint(bytes_))
+
+    @classmethod
+    def from_public_bytes(cls, data: ECPoint):
+        return cls(X25519PublicKey.from_public_bytes(data))
 
     def public_string(self) -> str:
         """Generate a public key string for this key"""
         return self.PUBLIC_KEY_PREFIX + encode(self.public_bytes())
 
-    def public_bytes(self) -> bytes:
+    def public_bytes(self) -> ECPoint:
         return self._key.public_bytes(
             encoding=serialization.Encoding.Raw,
             format=serialization.PublicFormat.Raw,
