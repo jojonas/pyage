@@ -71,7 +71,7 @@ To remove pipenv installation:
     This is a file encrypted with age-tool.com, version 1
     -> X25519 rcRwcN5b4CRM9Yrs5BHk79jkBFZlyCeNEPT-q5BM5UY uqLE2n1jU_FSgM7EqB6w5k6StDasW_tDiLAB7yWiESE
     -> ssh-rsa LSAPYQ Fq6OA0fpQFmnZdEFwW2dBSKOHvl9LUnNWPD0-FjX5iVVUYcHQ3fxv4nNx
-    [...]]
+    [...]
     -> ssh-rsa tPGDUw oRVbWD4eJ2NzuomR9_0CPh13Ej4c2I2oE4O0wvNfjU5F2jQ9oiNLkSAqO
     [...]
     --- ChaChaPoly J94r7YaZLMSE2yvEkuFo9iPAhLPb-4GBBUyMyHhZy6E
