@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
 
 import datetime
+import os
+import stat
 import sys
 
 import click
 
 from age.file import File, LockedFile
-from age.keyloader import resolve_public_key, load_keys_txt, load_ssh_keys
+from age.keyloader import resolve_public_key, load_keys_txt, load_ssh_keys, load_aliases
 from age.keys.password import PasswordKey
 from age.keys.agekey import AgePrivateKey
 
 
 @click.group()
-def cli():
+def main():
     pass
 
 
-@cli.command()
+@main.command()
 @click.option("-i", "--infile", type=click.File("rb"), default=sys.stdin.buffer)
 @click.option("-o", "--outfile", type=click.File("wb"), default=sys.stdout.buffer)
 @click.option("-p", "--password", is_flag=True)
@@ -26,22 +28,28 @@ def encrypt(infile, outfile, password, recipients):
         print("Refusing to encrypt to a TTY.", file=sys.stderr)
         sys.exit(1)
 
+    aliases = load_aliases()
+
     age_file = File.new()
 
     for recipient in recipients:
-        keys = resolve_public_key(recipient)
+        keys = resolve_public_key(recipient, aliases=aliases)
         for key in keys:
             age_file.add_recipient(key)
 
     if password:
-        password = click.prompt("Type passphrase:", hide_input=True).decode("utf-8")
+        password = click.prompt("Type passphrase", hide_input=True).encode("utf-8")
         age_file.add_recipient(PasswordKey(password))
+
+    if not age_file.recipients:
+        print("You must specify at least one recipient.", file=sys.stderr)
+        sys.exit(1)
 
     age_file.serialize_header(outfile)
     age_file.encrypt(plaintext_stream=infile, ciphertext_stream=outfile)
 
 
-@cli.command()
+@main.command()
 @click.option("-i", "--infile", type=click.File("rb"), default=sys.stdin.buffer)
 @click.option("-o", "--outfile", type=click.File("wb"), default=sys.stdout.buffer)
 @click.option("-p", "--password", is_flag=True)
@@ -50,14 +58,13 @@ def decrypt(infile, outfile, password, keyfiles):
     locked_age_file = LockedFile.from_file(infile)
 
     keys = []
-
     keys.extend(load_keys_txt())
     keys.extend(load_ssh_keys())
     for keyfile in keyfiles:
         keys.extend(load_keys_txt(keyfile))
 
     if password:
-        password = click.prompt("Type passphrase:", hide_input=True).decode("utf-8")
+        password = click.prompt("Type passphrase", hide_input=True).encode("utf-8")
         keys.append(PasswordKey(password))
 
     if not keys:
@@ -68,7 +75,7 @@ def decrypt(infile, outfile, password, keyfiles):
     age_file.decrypt(infile, outfile)
 
 
-@cli.command()
+@main.command()
 @click.option("-o", "--outfile", type=click.File("w"), default=sys.stdout)
 def generate(outfile):
     key = AgePrivateKey.generate()
@@ -78,6 +85,15 @@ def generate(outfile):
     outfile.write("# " + key.public_key().public_string() + "\n")
     outfile.write(key.private_string() + "\n")
 
+    if os.path.isfile(outfile.name):
+        stat_result = os.stat(outfile.name)
+        permissions = stat_result[stat.ST_MODE]
+        if permissions & stat.S_IRWXO:
+            print(
+                f"Warning: The file permissions indicate that other users may have access to the key file '{outfile.name}'.",
+                file=sys.stderr,
+            )
+
 
 if __name__ == "__main__":
-    cli()
+    main()

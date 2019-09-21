@@ -6,3 +6,4 @@ __pycache__
 .vscode/.ropeproject
 tests
 doc/build
+pip-wheel-metadata/

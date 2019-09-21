@@ -19,10 +19,10 @@ from age.openssh_keys import InvalidKeyFile, load_openssh_private_key
 
 
 def load_keys_txt(filename="~/.config/age/keys.txt") -> typing.Collection[DecryptionKey]:
+    filename = os.path.expanduser(filename)
+
     if not os.path.isfile(filename):
         return []
-
-    filename = os.path.expanduser(filename)
 
     keys = []
 
@@ -79,15 +79,18 @@ AliasDict = typing.Dict[str, typing.List[str]]
 def load_aliases(filename="~/.config/age/aliases.txt") -> AliasDict:
     aliases: AliasDict = collections.defaultdict(list)
 
-    with open(filename, "r") as file:
-        for line in file:
-            line = line.strip()
-            if line.startswith("#"):
-                continue
+    filename = os.path.expanduser(filename)
 
-            label, _, values = line.split(":")
-            public_keys = values.split()
-            aliases[label].extend(public_keys)
+    if os.path.isfile(filename):
+        with open(filename, "r") as file:
+            for line in file:
+                line = line.strip()
+                if line.startswith("#"):
+                    continue
+
+                label, _, values = line.partition(":")
+                public_keys = values.split()
+                aliases[label].extend(public_keys)
 
     return dict(aliases)
 
@@ -102,7 +105,10 @@ def resolve_public_key(
     if read_aliases and aliases is not None and keystr in aliases:
         resolved_from_alias: typing.List[EncryptionKey] = []
         for alias in aliases[keystr]:
-            resolved_from_alias.extend(resolve_public_key(alias))
+            resolved_alias = resolve_public_key(alias)
+            if not resolved_alias:
+                raise ValueError(f"Could not resolve alias {alias}")
+            resolved_from_alias.extend(resolved_alias)
         return resolved_from_alias
 
     # resolve "github:" links

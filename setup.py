@@ -1,13 +1,11 @@
-from setuptools import setup
+# -*- coding: utf-8 -*-
+"""Packaging logic for Flake8."""
+import os
+import sys
 
-setup(
-    name="pyage",
-    version="0.1",
-    description="Experimental python implementation age-tool.com",
-    author="Jonas Lieb",
-    author_email="",
-    url="https://github.com/jojonas/pyage",
-    packages=["age"],
-    scripts=["age"],
-    install_requires=[],  # handled by pipenv (?)
-)
+import setuptools
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))  # noqa
+
+if __name__ == "__main__":
+    setuptools.setup()

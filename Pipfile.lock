@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8dada57117ce463ffb23e6dbe20ebfef3fff20ca208481ab5552fc22f059f251"
+            "sha256": "a01755512e5213fd472063bd3dc7c8862a44188ef1becc0b1f5cb3ece2720ddb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -110,7 +110,7 @@
         },
         "pyage": {
             "editable": true,
-            "path": "./src"
+            "path": "."
         },
         "pycparser": {
             "hashes": [
