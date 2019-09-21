@@ -15,9 +15,10 @@ sphinx-autodoc-typehints = "*"
 
 [packages]
 cryptography = ">=2.7"
-pyage = {editable = true,path = "."}
+pyage = {editable = true,path = "./src"}
 bcrypt = "*"
 pynacl = "*"
+click = "*"
 
 [requires]
 python_version = "3.7"

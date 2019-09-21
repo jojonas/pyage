@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "15684c8212f021bbead0c737adf9955c6f6da957ffb8746957fc5296748d8d49"
+            "sha256": "8dada57117ce463ffb23e6dbe20ebfef3fff20ca208481ab5552fc22f059f251"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -78,6 +78,14 @@
             ],
             "version": "==1.12.3"
         },
+        "click": {
+            "hashes": [
+                "sha256:2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13",
+                "sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"
+            ],
+            "index": "pypi",
+            "version": "==7.0"
+        },
         "cryptography": {
             "hashes": [
                 "sha256:24b61e5fcb506424d3ec4e18bca995833839bf13c59fc43e530e488f28d46b8c",
@@ -102,7 +110,7 @@
         },
         "pyage": {
             "editable": true,
-            "path": "."
+            "path": "./src"
         },
         "pycparser": {
             "hashes": [
@@ -206,6 +214,7 @@
                 "sha256:2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13",
                 "sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"
             ],
+            "index": "pypi",
             "version": "==7.0"
         },
         "doc8": {
