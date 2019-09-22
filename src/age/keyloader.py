@@ -4,12 +4,11 @@ import os.path
 import re
 import typing
 
+import requests
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import ed25519 as crypto_ed25519
 from cryptography.hazmat.primitives.asymmetric import rsa as crypto_rsa
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
-
-import requests
 
 from age.keys.agekey import AgePrivateKey, AgePublicKey
 from age.keys.base import DecryptionKey, EncryptionKey
@@ -29,7 +28,7 @@ def load_keys_txt(filename="~/.config/age/keys.txt") -> typing.Collection[Decryp
     with open(filename, "r") as file:
         for line in file:
             line = line.strip()
-            if line.startswith("#"):
+            if not line or line.startswith("#"):
                 # ignore comments
                 continue
 
@@ -40,6 +39,11 @@ def load_keys_txt(filename="~/.config/age/keys.txt") -> typing.Collection[Decryp
 
 
 def load_ssh_private_key(filename, password=None) -> typing.Optional[DecryptionKey]:
+    filename = os.path.expanduser(filename)
+
+    if not os.path.isfile(filename):
+        return None
+
     with open(filename, "rb") as file:
         pem_data = file.read()
 
@@ -85,7 +89,7 @@ def load_aliases(filename="~/.config/age/aliases.txt") -> AliasDict:
         with open(filename, "r") as file:
             for line in file:
                 line = line.strip()
-                if line.startswith("#"):
+                if not line or line.startswith("#"):
                     continue
 
                 label, _, values = line.partition(":")

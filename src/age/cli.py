@@ -8,9 +8,9 @@ import sys
 import click
 
 from age.file import File, LockedFile
-from age.keyloader import resolve_public_key, load_keys_txt, load_ssh_keys, load_aliases
-from age.keys.password import PasswordKey
+from age.keyloader import load_aliases, load_keys_txt, load_ssh_keys, resolve_public_key
 from age.keys.agekey import AgePrivateKey
+from age.keys.password import PasswordKey
 
 
 @click.group()

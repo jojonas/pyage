@@ -5,7 +5,8 @@
         "**/__pycache__": true,
         "**/.*_cache": true,
         "**/.ropeproject": true,
-        "**/*.egg-info": true
+        "**/*.egg-info": true,
+        "**/pip-wheel-metadata": true,
     },
     "python.analysis.openFilesOnly": false,
     "python.linting.pylintEnabled": false,

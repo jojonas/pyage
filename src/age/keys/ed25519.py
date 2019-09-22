@@ -79,6 +79,14 @@ class Ed25519PublicKey(EncryptionKey):
         clsname = self.__class__.__name__
         return f"<{clsname} {self.fingerprint()}>"
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and (
+            other.binary_encoding() == self.binary_encoding()
+        )
+
+    def __hash__(self):
+        return hash(self.binary_encoding())
+
     @classmethod
     def from_ssh_public_key(cls, ssh_public_key_data: bytes):
         """Load RSA public key encoded according to :rfc:`4253`"""

@@ -18,6 +18,12 @@ class AgePrivateKey(DecryptionKey):
         clsname = self.__class__.__name__
         return f"<{clsname} {self.public_key().public_string()}>"
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and (other.private_bytes() == self.private_bytes())
+
+    def __hash__(self):
+        return hash(self.private_bytes())
+
     @classmethod
     def generate(cls):
         """Generate a new age key"""
@@ -64,6 +70,12 @@ class AgePublicKey(EncryptionKey):
     def __repr__(self):
         clsname = self.__class__.__name__
         return f"<{clsname} {self.public_string()}>"
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and (other.public_bytes() == self.public_bytes())
+
+    def __hash__(self):
+        return hash(self.public_bytes())
 
     @classmethod
     def from_public_string(cls, data: str):

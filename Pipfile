@@ -12,6 +12,8 @@ flake8 = "*"
 sphinx = "*"
 doc8 = "*"
 sphinx-autodoc-typehints = "*"
+coverage = "*"
+pytest-cov = "*"
 
 [packages]
 cryptography = ">=2.7"
@@ -22,3 +24,6 @@ click = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
