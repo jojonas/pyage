@@ -14,6 +14,14 @@ Subpackages
 Submodules
 ----------
 
+age.cli module
+--------------
+
+.. automodule:: age.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 age.exceptions module
 ---------------------
 
@@ -22,10 +30,18 @@ age.exceptions module
    :undoc-members:
    :show-inheritance:
 
-age.header module
------------------
+age.file module
+---------------
 
-.. automodule:: age.header
+.. automodule:: age.file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+age.keyloader module
+--------------------
+
+.. automodule:: age.keyloader
    :members:
    :undoc-members:
    :show-inheritance:
@@ -34,14 +50,6 @@ age.openssh\_keys module
 ------------------------
 
 .. automodule:: age.openssh_keys
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-age.parser module
------------------
-
-.. automodule:: age.parser
    :members:
    :undoc-members:
    :show-inheritance:

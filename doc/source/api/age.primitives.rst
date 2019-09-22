@@ -4,14 +4,6 @@ age.primitives package
 Submodules
 ----------
 
-age.primitives.eccsnacks\_x25519 module
----------------------------------------
-
-.. automodule:: age.primitives.eccsnacks_x25519
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 age.primitives.encode module
 ----------------------------
 

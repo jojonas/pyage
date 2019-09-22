@@ -8,3 +8,4 @@ tests
 doc/build
 pip-wheel-metadata/
 .coverage
+htmlcov

@@ -20,5 +20,15 @@
     "python.formatting.provider": "black",
     "python.linting.flake8Enabled": true,
     "restructuredtext.confPath": "${workspaceFolder}/doc/source",
-    "files.trimTrailingWhitespace": true
+    "files.trimTrailingWhitespace": true,
+    "[python]": {
+        "editor.rulers": [
+            100,
+        ]
+    },
+    "[restructuredtext]": {
+        "editor.rulers": [
+            79,
+        ]
+    }
 }

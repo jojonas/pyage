@@ -79,11 +79,11 @@ To remove pipenv installation:
 
 
 ## Development
-* Enforce PEP8 with [black](https://github.com/psf/black) and [flake8](http://flake8.pycqa.org/en/latest/)
-* Run unit tests ([pytest](https://docs.pytest.org/en/latest/))
+* Enforce PEP8 with [black](https://github.com/psf/black), [flake8](http://flake8.pycqa.org/en/latest/) and [isort](https://timothycrosley.github.io/isort/)
+* Run unit tests ([pytest](https://docs.pytest.org/en/latest/)) with coverage testing
 * Hint native types ([Python typing](https://docs.python.org/3/library/typing.html)), enforce with [mypy](http://mypy-lang.org/)
+* Documentation with [Sphinx](https://www.sphinx-doc.org/en/master/)
 
 ## TODO
-* Implement ;)
-* Command line interface
-* Documentation with [Sphinx](https://www.sphinx-doc.org/en/master/)
+* Error handling
+* Proper logging (to stderr)

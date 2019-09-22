@@ -20,6 +20,14 @@ age.keys.base module
    :undoc-members:
    :show-inheritance:
 
+age.keys.ed25519 module
+-----------------------
+
+.. automodule:: age.keys.ed25519
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 age.keys.password module
 ------------------------
 

@@ -12,10 +12,26 @@ age.recipients.base module
    :undoc-members:
    :show-inheritance:
 
+age.recipients.helpers module
+-----------------------------
+
+.. automodule:: age.recipients.helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 age.recipients.scrypt module
 ----------------------------
 
 .. automodule:: age.recipients.scrypt
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+age.recipients.ssh\_ed25519 module
+----------------------------------
+
+.. automodule:: age.recipients.ssh_ed25519
    :members:
    :undoc-members:
    :show-inheritance:

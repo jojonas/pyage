@@ -12,6 +12,14 @@ age.algorithms.scrypt module
    :undoc-members:
    :show-inheritance:
 
+age.algorithms.ssh\_ed25519 module
+----------------------------------
+
+.. automodule:: age.algorithms.ssh_ed25519
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 age.algorithms.ssh\_rsa module
 ------------------------------
 
