@@ -14,7 +14,7 @@ So:
 ## Installation
 Install using pipenv:
 
-    $ pipenv install --dev --skip-lock
+    $ pipenv install --skip-lock
 
 To remove pipenv installation:
 
