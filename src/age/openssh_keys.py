@@ -193,11 +193,6 @@ def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> A
     # https://github.com/openssh/openssh-portable/blob/master/sshkey.c
     # sshkey_parse_private2, sshkey_private_deserialize, sshkey_private_serialize_opt
 
-    if False:  # passphrase:
-        raise NotImplementedError(
-            "Decoding of encrypted OpenSSH private keys is not yet implemented"
-        )
-
     openssh_data = openssh_data.strip()
 
     if not openssh_data.startswith(OPENSSH_HEADER):
@@ -257,7 +252,7 @@ def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> A
     key_type = _sshbuf_get_cstring(decrypted_stream)
     if key_type == b"ssh-rsa":
         key = _deserialize_rsa_private_key(decrypted_stream)
-    elif key_type == b"ecdsa-sha2-nistp256":
+    elif key_type.startswith(b"ecdsa-"):
         key = _deserialize_ecdsa_private_key(decrypted_stream)
     elif key_type == b"ssh-dss":
         key = _deserialize_dsa_private_key(decrypted_stream)

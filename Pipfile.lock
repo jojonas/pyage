@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "75b76e4c821981b8b500bf262880636fc834fd1b4edfc7c10568d1d90250e6bb"
+            "sha256": "abb8fae5374a1c9855684196fa68c8a56754a9952db31dd6b62dad58c9a892c4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,10 @@
         ]
     },
     "default": {
+        "age": {
+            "editable": true,
+            "path": "."
+        },
         "asn1crypto": {
             "hashes": [
                 "sha256:0b199f211ae690df3db4fd6c1c4ff976497fb1da689193e368eedbadc53d9292",
@@ -129,13 +133,8 @@
             ],
             "version": "==2.8"
         },
-        "pyage": {
-            "editable": true,
-            "path": "."
-        },
         "pycparser": {
             "hashes": [
-                "sha256:408d95677b6e33ac37a8b1f5d9c6a87b04f9afd94e7ca4f3ce775123427f6e24",
                 "sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3"
             ],
             "version": "==2.19"
@@ -481,11 +480,11 @@
         },
         "pytest-cov": {
             "hashes": [
-                "sha256:9b64b54d21bd0fd77f7eb6ccb38638b8daba8d98ab5a51d67c93a133ec8c5ba4",
-                "sha256:a42cb9af7a429b6cd7c97be307cbb4cefca1d50c5b3018711558341979946851"
+                "sha256:cc6742d8bac45070217169f5f72ceee1e0e55b0221f54bcf24845972d3a47f2b",
+                "sha256:cdbdef4f870408ebdbfeb44e63e07eb18bb4619fae852f6e760645fa36172626"
             ],
             "index": "pypi",
-            "version": "==2.8.0"
+            "version": "==2.8.1"
         },
         "pytz": {
             "hashes": [
