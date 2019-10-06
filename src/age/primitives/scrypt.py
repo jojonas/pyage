@@ -1,9 +1,9 @@
-import hashlib
+from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
+from cryptography.hazmat.backends import default_backend
 
 __all__ = ["scrypt"]
 
 
 def scrypt(salt: bytes, N: int, password: bytes) -> bytes:
-    return hashlib.scrypt(
-        password=password, salt=salt, n=N, r=8, p=1, maxmem=1024 * 1024 * 1024, dklen=32
-    )
+    kdf = Scrypt(salt=salt, length=32, n=N, r=8, p=1, backend=default_backend())
+    return kdf.derive(password)

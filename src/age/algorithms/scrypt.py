@@ -11,9 +11,10 @@ __all__ = ["scrypt_encrypt_file_key", "scrypt_decrypt_file_key"]
 def scrypt_encrypt_file_key(
     password: PasswordKey, file_key: bytes
 ) -> typing.Tuple[bytes, int, bytes]:
+    # https://blog.filippo.io/the-scrypt-parameters/
 
-    salt = random(19)
-    cost = 32768  # whats an appropriate cost?
+    salt = random(16)
+    cost = 1 << 20  # whats an appropriate cost?
 
     key = scrypt(salt, cost, password.value)
     assert len(key) == 32
@@ -25,5 +26,8 @@ def scrypt_encrypt_file_key(
 def scrypt_decrypt_file_key(
     password: PasswordKey, salt: bytes, cost: int, encrypted_file_key: bytes
 ) -> bytes:
+    if not (1 <= cost <= 1 << 22):
+        raise ValueError("Invalid scrypt cost")
+
     key = scrypt(salt, cost, password.value)
     return decrypt(key, encrypted_file_key)
