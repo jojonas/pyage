@@ -14,7 +14,7 @@ def scrypt_encrypt_file_key(
     # https://blog.filippo.io/the-scrypt-parameters/
 
     salt = random(16)
-    cost = 1 << 20  # whats an appropriate cost?
+    cost = 1 << 18  # about 1 second
 
     key = scrypt(salt, cost, password.value)
     assert len(key) == 32
