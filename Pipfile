@@ -15,6 +15,7 @@ sphinx-autodoc-typehints = "*"
 coverage = "*"
 pytest-cov = "*"
 sphinxcontrib-programoutput = "*"
+pyfakefs = "*"
 
 [packages]
 age = {editable = true,path = "."}

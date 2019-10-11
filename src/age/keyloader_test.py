@@ -132,4 +132,4 @@ def test_public_key_resolving():
         AgePublicKey.from_public_string("pubkey:jqmfMHBjlb7HoIjjTsCQ9NHIk_q53Uy_ZxmXBhdIpx4")
     ]
     # check here: https://github.com/jojonas.keys
-    assert len(resolve_public_key("github:jojonas")) == 2
+    assert len(resolve_public_key("github:jojonas")) == 3

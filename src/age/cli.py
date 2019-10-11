@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-import datetime
+from datetime import datetime
 import os
 import stat
 import sys
 
 import click
 
-from age.file import File, LockedFile
+from age.file import Encryptor, Decryptor
 from age.keyloader import load_aliases, load_keys_txt, load_ssh_keys, resolve_public_key
 from age.keys.agekey import AgePrivateKey
 from age.keys.password import PasswordKey
@@ -19,8 +19,8 @@ def main():
 
 
 @main.command()
-@click.option("-i", "--infile", type=click.File("rb"), default=sys.stdin.buffer)
-@click.option("-o", "--outfile", type=click.File("wb"), default=sys.stdout.buffer)
+@click.option("-i", "--infile", type=click.File("rb"))
+@click.option("-o", "--outfile", type=click.File("wb"))
 @click.option("-p", "--password", is_flag=True)
 @click.argument("recipients", nargs=-1)
 def encrypt(infile, outfile, password, recipients):
@@ -47,18 +47,21 @@ def encrypt(infile, outfile, password, recipients):
     public key recipients.
 
     """
+
+    if not infile:
+        infile = sys.stdin.buffer
+    if not outfile:
+        outfile = sys.stdout.buffer
+
     if outfile is sys.stdout.buffer and sys.stdout.isatty():
         print("Refusing to encrypt to a TTY.", file=sys.stderr)
         sys.exit(1)
 
     aliases = load_aliases()
 
-    age_file = File.new()
-
+    keys = []
     for recipient in recipients:
-        keys = resolve_public_key(recipient, aliases=aliases)
-        for key in keys:
-            age_file.add_recipient(key)
+        keys.extend(resolve_public_key(recipient, aliases=aliases))
 
     if password:
         if recipients:
@@ -69,19 +72,19 @@ def encrypt(infile, outfile, password, recipients):
                 file=sys.stderr,
             )
         password = click.prompt("Type passphrase", hide_input=True).encode("utf-8")
-        age_file.add_recipient(PasswordKey(password))
+        keys.append(PasswordKey(password))
 
-    if not age_file.recipients:
+    if not keys:
         print("You must specify at least one recipient.", file=sys.stderr)
         sys.exit(1)
 
-    age_file.serialize_header(outfile)
-    age_file.encrypt(plaintext_stream=infile, ciphertext_stream=outfile)
+    with Encryptor(keys, outfile) as encryptor:
+        encryptor.write(infile.read())
 
 
 @main.command()
-@click.option("-i", "--infile", type=click.File("rb"), default=sys.stdin.buffer)
-@click.option("-o", "--outfile", type=click.File("wb"), default=sys.stdout.buffer)
+@click.option("-i", "--infile", type=click.File("rb"))
+@click.option("-o", "--outfile", type=click.File("wb"))
 @click.option("-p", "--password", is_flag=True)
 @click.argument("keyfiles", nargs=-1)
 def decrypt(infile, outfile, password, keyfiles):
@@ -100,7 +103,11 @@ def decrypt(infile, outfile, password, keyfiles):
     If the '-p' switch is provided, age will prompt for a password and also
     attempt to decrypt the message with the given password.
     """
-    locked_age_file = LockedFile.from_file(infile)
+
+    if not infile:
+        infile = sys.stdin.buffer
+    if not outfile:
+        outfile = sys.stdout.buffer
 
     keys = []
     keys.extend(load_keys_txt())
@@ -116,14 +123,12 @@ def decrypt(infile, outfile, password, keyfiles):
         print("No keys loaded.", file=sys.stderr)
         sys.exit(1)
 
-    age_file = locked_age_file.unlock(keys)
-    age_file.decrypt(infile, outfile)
+    with Decryptor(keys, infile) as decryptor:
+        outfile.write(decryptor.read())
 
 
 @main.command()
-@click.option(
-    "-o", "--outfile", type=click.File("w"), default=sys.stdout, help="Keypair destination"
-)
+@click.option("-o", "--outfile", type=click.File("w"), help="Keypair destination")
 def generate(outfile):
     """Generate a new age private/public key pair.
 
@@ -132,14 +137,18 @@ def generate(outfile):
     If FILENAME exists, age will warn if the file permissions allow others to read, write or
     execute the file.
     """
+
+    if not outfile:
+        outfile = sys.stdout
+
     key = AgePrivateKey.generate()
 
-    now = datetime.datetime.now()
+    now = datetime.now()
     outfile.write(f"# created: {now:%Y-%m-%dT%H:%M:%S}\n")
     outfile.write("# " + key.public_key().public_string() + "\n")
     outfile.write(key.private_string() + "\n")
 
-    if os.path.isfile(outfile.name):
+    if hasattr(outfile, "name") and os.path.isfile(outfile.name):
         stat_result = os.stat(outfile.name)
         permissions = stat_result[stat.ST_MODE]
         if permissions & stat.S_IRWXO:

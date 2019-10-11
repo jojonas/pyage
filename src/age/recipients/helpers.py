@@ -2,9 +2,9 @@ import typing
 
 from cryptography.exceptions import InvalidTag
 
+from age.exceptions import NoIdentity, UnknownRecipient
 from age.keys.base import DecryptionKey, EncryptionKey
 from age.recipients.base import Recipient
-
 # import following classes for registration at Recipient.__subclasses__
 from age.recipients.scrypt import SCryptRecipient  # noqa: F401
 from age.recipients.ssh_ed25519 import SSHED25519Recipient  # noqa: F401
@@ -26,18 +26,15 @@ def decrypt_file_key(
             except InvalidTag:
                 continue
 
-    raise ValueError("No matching key")
+    raise NoIdentity("No matching key")
 
 
-def parse_recipient_line(line: str) -> Recipient:
-    assert line.startswith("-> ")
-
-    _, tag, *arguments = line.split()
+def get_recipient(type: str, arguments: typing.List[str], body: str) -> Recipient:
     for subclass in Recipient.__subclasses__():
-        if subclass.TAG == tag:
-            return subclass.from_tokens(arguments)
+        if subclass.TAG == type:
+            return subclass.load(arguments, body)
 
-    raise ValueError("Cannot parse recipient line: Unknown recipient type")
+    raise UnknownRecipient("Cannot parse recipient line: Unknown recipient type")
 
 
 def generate_recipient_from_key(key: EncryptionKey, file_key: bytes) -> Recipient:
@@ -45,4 +42,4 @@ def generate_recipient_from_key(key: EncryptionKey, file_key: bytes) -> Recipien
         if isinstance(key, subclass.ENCRYPTION_KEY_TYPE):
             return subclass.generate(key, file_key)
 
-    raise ValueError("Cannot generate recipient: Unknown encryption key type")
+    raise UnknownRecipient("Cannot generate recipient: Unknown encryption key type")

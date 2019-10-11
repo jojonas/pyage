@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "abb8fae5374a1c9855684196fa68c8a56754a9952db31dd6b62dad58c9a892c4"
+            "sha256": "d720f7c97bafc5aa08c4722055c3320d1541791ce15f1f1da90085cbb5731447"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -449,6 +449,14 @@
             ],
             "version": "==2.5.0"
         },
+        "pyfakefs": {
+            "hashes": [
+                "sha256:2654c665500ea8117b55cab51d4683a83ec1c76ddfae13640e509e4aac64b308",
+                "sha256:e85a454bcdab7671243d2b7df386ab6a310f1378bf3317b2b84a7bcf88eff21a"
+            ],
+            "index": "pypi",
+            "version": "==3.6.1"
+        },
         "pyflakes": {
             "hashes": [
                 "sha256:17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0",
@@ -488,10 +496,10 @@
         },
         "pytz": {
             "hashes": [
-                "sha256:26c0b32e437e54a18161324a2fca3c4b9846b74a8dccddd843113109e1116b32",
-                "sha256:c894d57500a4cd2d5c71114aaab77dbab5eabd9022308ce5ac9bb93a60a6f0c7"
+                "sha256:1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d",
+                "sha256:b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be"
             ],
-            "version": "==2019.2"
+            "version": "==2019.3"
         },
         "requests": {
             "hashes": [

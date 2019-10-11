@@ -1,223 +1,123 @@
-import collections
-import enum
-import re
+import io
 import sys
 import typing
 
+from age.exceptions import UnknownRecipient
+from age.format import Header, Recipient, dump_header, load_header
 from age.keys.base import DecryptionKey, EncryptionKey
-from age.primitives.encode import decode, encode
 from age.primitives.hkdf import hkdf
 from age.primitives.hmac import HMAC
 from age.primitives.random import random
-from age.recipients.base import Recipient
-from age.recipients.helpers import (
-    decrypt_file_key,
-    generate_recipient_from_key,
-    parse_recipient_line,
-)
+from age.recipients.helpers import decrypt_file_key, generate_recipient_from_key, get_recipient
 from age.stream import stream_decrypt, stream_encrypt
 
-__all__ = ["LockedFile", "File", "EncryptionAlgorithm"]
+__all__ = ["Encryptor", "Decryptor"]
 
-FILE_SIGNATURE_RE = re.compile(rb"This is a file encrypted with age-tool\.com, version (\d+)")
-
-
-@enum.unique
-class EncryptionAlgorithm(enum.Enum):
-    CHACHAPOLY = "ChaChaPoly"
+HEADER_HKDF_LABEL = b"header"
+PAYLOAD_HKDF_LABEL = b"payload"
 
 
-LockedFileBase = collections.namedtuple(
-    "LockedFileBase",
-    (
-        "age_version",
-        "recipients",
-        "encryption_algorithm",
-        "authentication_tag",
-        "data_to_authenticate",
-    ),
-)
+class Encryptor(io.RawIOBase):
+    def __init__(self, keys: typing.Collection[EncryptionKey], stream: typing.BinaryIO):
+        self._stream: typing.BinaryIO = stream
+        self._file_key: bytes = random(16)
 
+        self._plaintext_buffer: bytes = b""
 
-class LockedFile(LockedFileBase):
-    def unlock(self, keys: typing.Collection[DecryptionKey]):
-        file_key = decrypt_file_key(self.recipients, keys)
-        self._authenticate(file_key)
-        return File(
-            file_key=file_key,
-            recipients=self.recipients,
-            age_version=self.age_version,
-            encryption_algorithm=self.encryption_algorithm,
-        )
+        self._write_header(keys)
 
-    def _authenticate(self, file_key):
-        key = hkdf(b"", b"header", file_key, 32)
-        HMAC(key).verify(self.data_to_authenticate, self.authentication_tag)
+    def writable(self):
+        return True
 
-    @classmethod
-    def from_file(cls, stream: typing.BinaryIO):
-        # I know this parser is a mess!
+    def write(self, data):
+        self._plaintext_buffer += data
+        return len(data)
 
-        # But so far there are some inconsistencies in Filippo's age spec
-        # (concerning the wrapping of encode() and the separation of argument)
-        # So it doesn't yet make sense to implement a proper parser.
-        # Once the spec is solid, one could use something like parsimonious
-        # (https://github.com/erikrose/parsimonious/).
+    def close(self):
+        if not self.closed:
+            self._encrypt_buffer()
+            super().close()
 
-        to_authenticate_buffer = b""
+    def _hkdf(self, label: bytes, salt: bytes = b"") -> bytes:
+        return hkdf(salt, label, self._file_key, 32)
 
-        def read_line():
-            nonlocal stream, to_authenticate_buffer
+    def _write_header(self, keys):
+        header = Header()
 
-            line = stream.readline()
-            to_authenticate_buffer += line
-            return line[:-1]
+        for key in keys:
+            recipient = generate_recipient_from_key(key, self._file_key)
+            recipient_args, recipient_body = recipient.dump()
+            header.recipients.append(Recipient(recipient.TAG, recipient_args, recipient_body))
 
-        first_line = read_line()
-        match = FILE_SIGNATURE_RE.match(first_line)
-        if not match:
-            raise ValueError("Age file signature not found.")
+        header_stream = io.BytesIO()
+        dump_header(header, header_stream, mac=None)
 
-        # this is not officially defined to be an int...
-        age_version = int(match.group(1).decode("ascii"))
+        mac = HMAC(self._hkdf(HEADER_HKDF_LABEL)).generate(header_stream.getvalue())
+        dump_header(header, self._stream, mac=mac)
 
-        joined_lines = []
-
-        buffer = ""
-        while True:
-            line = read_line().decode("utf-8")
-            if line.startswith("-> "):
-                if buffer:
-                    joined_lines.append(buffer)
-                    buffer = ""
-                buffer = line
-            elif line.startswith("--- "):
-                break
-            else:
-                buffer += line
-        joined_lines.append(buffer)
-
-        assert line.startswith("--- ")
-        _, encryption_algorithm_name, encoded_authentication_tag = line.split()
-
-        assert encryption_algorithm_name == "ChaChaPoly"
-        encryption_algorithm = EncryptionAlgorithm(encryption_algorithm_name)
-
-        authentication_tag = decode(encoded_authentication_tag)
-
-        # header (for authentication) is the entire header up to AEAD (= ChaChaPoly) included
-        search = b"\n--- ChaChaPoly"
-        index = to_authenticate_buffer.index(search) + len(search)
-        data_to_authenticate = to_authenticate_buffer[:index]
-
-        recipients = []
-        for line in joined_lines:
-            try:
-                recipient = parse_recipient_line(line)
-            except ValueError:
-                # unknown recipient type, ignore
-                print(f"Ignoring unknown recipient type in line: {line}", file=sys.stderr)
-                continue
-
-            recipients.append(recipient)
-
-        return cls(
-            age_version=age_version,
-            recipients=recipients,
-            encryption_algorithm=encryption_algorithm,
-            authentication_tag=authentication_tag,
-            data_to_authenticate=data_to_authenticate,
-        )
-
-
-class File:
-    """A (decrypted) age file.
-
-    Assumes that the ``file_key`` has been successfully decrypted."""
-
-    def __init__(
-        self,
-        file_key: bytes,
-        recipients: typing.Collection[Recipient],
-        encryption_algorithm: EncryptionAlgorithm,
-        age_version: int,
-    ):
-        self._file_key: bytes = file_key
-        self._recipients: typing.List[Recipient] = list(recipients)
-        self._encryption_algorithm: EncryptionAlgorithm = encryption_algorithm
-        self._age_version: int = age_version
-
-    @classmethod
-    def new(cls):
-        """Create a new age header.
-
-        Generates a new ``file_key``."""
-
-        return cls(random(16), [], EncryptionAlgorithm.CHACHAPOLY, 1)
-
-    def add_recipient(self, key: EncryptionKey):
-        """Add key to the list of recipients"""
-
-        recipient = generate_recipient_from_key(key, self._file_key)
-        self._recipients.append(recipient)
-
-    @property
-    def recipients(self) -> typing.Collection[Recipient]:
-        """Read-only access to the list of recipients"""
-
-        return tuple(self._recipients)
-
-    @property
-    def file_key(self) -> bytes:
-        """Read-only access to the secret file key"""
-
-        return self._file_key
-
-    def serialize_header(self, stream: typing.BinaryIO):
-        """Serialize header to stream"""
-        stream.write(self.serialize_header_to_bytes())
-
-    def serialize_header_to_bytes(self) -> bytes:
-        """Get serialized version of file header"""
-
-        header = self._serialize_until_authentication()
-        authentication_tag = self._authentication_tag(header)
-        return header + b" " + encode(authentication_tag).encode("ascii") + b"\n"
-
-    def _serialize_until_authentication(self) -> bytes:
-        output = f"This is a file encrypted with age-tool.com, version {self._age_version}\n"
-        for recipient in self._recipients:
-            output += recipient.get_recipient_line() + "\n"
-        output += "--- " + self._encryption_algorithm.value
-        return output.encode("ascii")
-
-    def _authentication_tag(self, data) -> bytes:
-        key = hkdf(b"", b"header", self._file_key, 32)
-        return HMAC(key).generate(data)
-
-    def encrypt(self, plaintext_stream: typing.BinaryIO, ciphertext_stream: typing.BinaryIO) -> int:
-        return ciphertext_stream.write(self.encrypt_bytes(plaintext_stream.read()))
-
-    def decrypt(self, ciphertext_stream: typing.BinaryIO, plaintext_stream: typing.BinaryIO) -> int:
-        return plaintext_stream.write(self.decrypt_bytes(ciphertext_stream.read()))
-
-    def decrypt_bytes(self, body: bytes) -> bytes:
-        """Decrypt age file body bytes using the header's ``file_key``."""
-
-        assert self._encryption_algorithm == EncryptionAlgorithm.CHACHAPOLY
-
-        nonce = body[:16]
-        ciphertext = body[16:]
-
-        key = hkdf(nonce, b"payload", self._file_key, 32)
-        return stream_decrypt(key, ciphertext)
-
-    def encrypt_bytes(self, data: bytes) -> bytes:
-        """Encrypt age file body bytes using the header's ``file_key``."""
-
-        assert self._encryption_algorithm == EncryptionAlgorithm.CHACHAPOLY
+    def _encrypt_buffer(self):
+        self._stream.write(b"\n")
 
         nonce = random(16)
-        key = hkdf(nonce, b"payload", self._file_key, 32)
-        ciphertext = stream_encrypt(key, data)
-        return nonce + ciphertext
+        self._stream.write(nonce)
+
+        stream_key = self._hkdf(PAYLOAD_HKDF_LABEL, nonce)
+        ciphertext = stream_encrypt(stream_key, self._plaintext_buffer)
+        self._stream.write(ciphertext)
+
+        self._plaintext_buffer = b""
+
+
+class Decryptor(io.RawIOBase):
+    def __init__(self, identities: typing.Collection[DecryptionKey], stream: typing.BinaryIO):
+        self._stream: typing.BinaryIO = stream
+        self._file_key: typing.Optional[bytes] = None
+        self._plaintext_stream: typing.Optional[typing.BinaryIO] = None
+
+        self._decrypt_header(identities)
+        self._decrypt_body()
+
+    def readable(self):
+        return True
+
+    def read(self, size=-1):
+        assert self._plaintext_stream is not None
+        return self._plaintext_stream.read(size)
+
+    def _hkdf(self, label: bytes, salt: bytes = b"") -> bytes:
+        assert self._file_key is not None
+        return hkdf(salt, label, self._file_key, 32)
+
+    def _decrypt_header(self, identities: typing.Collection[DecryptionKey]):
+        header, mac = load_header(self._stream)
+
+        recipients = []
+        for header_recipient in header.recipients:
+            try:
+                recipient = get_recipient(
+                    header_recipient.type, header_recipient.arguments, header_recipient.body
+                )
+            except UnknownRecipient:
+                print(f"Ignoring unknown recipient type '{header_recipient.type}'", file=sys.stderr)
+            else:
+                recipients.append(recipient)
+
+        self._file_key = decrypt_file_key(recipients, identities)
+
+        header_stream = io.BytesIO()
+        dump_header(header, header_stream, mac=None)
+        HMAC(self._hkdf(HEADER_HKDF_LABEL)).verify(header_stream.getvalue(), mac)
+
+    def _decrypt_body(self):
+        assert self._file_key is not None
+
+        nonce = self._stream.read(16)
+        assert len(nonce) == 16, "Could not read nonce"
+
+        stream_key = self._hkdf(PAYLOAD_HKDF_LABEL, nonce)
+
+        ciphertext = self._stream.read()
+        plaintext = stream_decrypt(stream_key, ciphertext)
+
+        self._plaintext_stream = io.BytesIO(plaintext)
+        self._plaintext_stream.seek(0)

@@ -32,7 +32,7 @@ class HMAC:
         return self.mac.finalize()
 
     def verify(self, message: bytes, tag: bytes) -> None:
-        """Verify authenticaion value for the given message
+        """Verify authentication value for the given message
 
         Raises :class:`cryptography.exceptions.InvalidSignature` on failed validation."""
         self.mac.update(message)

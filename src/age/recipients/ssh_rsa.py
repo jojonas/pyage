@@ -23,11 +23,11 @@ class SSHRSARecipient(Recipient):
         return cls(fingerprint, encrypted_file_key)
 
     @classmethod
-    def from_tokens(cls, tokens: typing.List[str]):
-        return cls(decode(tokens[0]), decode(tokens[1]))
+    def load(cls, args: typing.List[str], body: str):
+        return cls(decode(args[0]), decode(body))
 
-    def get_tokens(self) -> typing.Collection[str]:
-        return (encode(self.fingerprint), encode(self.encrypted_file_key))
+    def dump(self) -> typing.Tuple[typing.List[str], str]:
+        return [encode(self.fingerprint)], encode(self.encrypted_file_key)
 
     def decrypt(self, password_key: DecryptionKey) -> bytes:
         assert isinstance(password_key, RSAPrivateKey)
