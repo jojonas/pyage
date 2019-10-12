@@ -24,6 +24,7 @@ TEST_CIPHERTEXT = (
 
 
 def fake_random(n):
+    # really bad random data
     return b"\xaa" * n
 
 

@@ -38,6 +38,14 @@ age.file module
    :undoc-members:
    :show-inheritance:
 
+age.format module
+-----------------
+
+.. automodule:: age.format
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 age.keyloader module
 --------------------
 

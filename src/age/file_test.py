@@ -1,6 +1,6 @@
 import io
 
-from age.file import Encryptor, Decryptor
+from age.file import Decryptor
 from age.keys.password import PasswordKey
 
 

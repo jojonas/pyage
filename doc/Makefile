@@ -12,7 +12,9 @@ MODULEDIR	  = ../src/
 
 PYTHON_FILES  = $(shell find $(MODULEDIR) -type f -name '*.py')
 
-.DEFAULT_GOAL := html
+.DEFAULT_GOAL := all
+
+all: html ../requirements.txt
 
 .PHONY: Makefile
 
@@ -20,6 +22,10 @@ PYTHON_FILES  = $(shell find $(MODULEDIR) -type f -name '*.py')
 apidoc: $(PYTHON_FILES)
 	rm -rf $(SOURCEDIR)/api/*.rst
 	$(SPHINXAPIDOC)  -f --ext-todo --ext-autodoc -o "$(SOURCEDIR)/api" "$(MODULEDIR)" "$(MODULEDIR)/**/*_test.py"
+
+# Requirements.txt (for RTD)
+../requirements.txt: $(PYTHON_FILES)
+	pip freeze > $@
 
 # Build HTML files
 html: apidoc Makefile
