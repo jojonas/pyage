@@ -103,7 +103,6 @@ class Decryptor(io.RawIOBase):
                 recipients.append(recipient)
 
         self._file_key = decrypt_file_key(recipients, identities)
-
         header_stream = io.BytesIO()
         dump_header(header, header_stream, mac=None)
         HMAC(self._hkdf(HEADER_HKDF_LABEL)).verify(header_stream.getvalue(), mac)
@@ -115,7 +114,6 @@ class Decryptor(io.RawIOBase):
         assert len(nonce) == 16, "Could not read nonce"
 
         stream_key = self._hkdf(PAYLOAD_HKDF_LABEL, nonce)
-
         ciphertext = self._stream.read()
         plaintext = stream_decrypt(stream_key, ciphertext)
 

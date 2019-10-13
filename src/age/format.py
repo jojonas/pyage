@@ -51,8 +51,8 @@ def load_header(stream: typing.BinaryIO) -> typing.Tuple[Header, bytes]:
             header.recipients[-1].body += line.replace("\n", "")
 
     assert line.startswith(FOOTER_PREFIX)
-    _, aead, encoded_mac = line.split()
-    assert aead == AEAD
+    prefix, encoded_mac = line.split()
+    assert prefix == FOOTER_PREFIX
     mac = decode(encoded_mac)
 
     return header, mac
@@ -67,7 +67,7 @@ def dump_header(header: Header, stream: typing.BinaryIO, mac: bytes = None):
         if recipient.body:
             stream.write(recipient.body.encode("utf-8") + b"\n")
 
-    footer = FOOTER_PREFIX + " " + AEAD
+    footer = FOOTER_PREFIX
     if mac:
         footer += " " + encode(mac)
 

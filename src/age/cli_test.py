@@ -16,9 +16,9 @@ TEST_KEY_RAW = bytes.fromhex("d8b501c669cfacb1dcc174f462eb5787ce3a444ead0b915559
 
 TEST_PLAINTEXT = b"Hello World!"
 TEST_CIPHERTEXT = (
-    b"This is a file encrypted with age-tool.com, version 1\n-> X25519 FMqeTTh7zPNXRuBAfaqsxrKKT4RF71pRWIlNuYPiQHA\nUsVP7CmlQh5YiCrnp69U9D09TNi4c3rIZ7rRYq8syaE\n--- ChaChaPoly tUUkULljiVEgXojWKkd-ktUHaMRiN1W_PHY1wKYY70s\n"
+    b"This is a file encrypted with age-tool.com, version 1\n-> X25519 FMqeTTh7zPNXRuBAfaqsxrKKT4RF71pRWIlNuYPiQHA\nUsVP7CmlQh5YiCrnp69U9D09TNi4c3rIZ7rRYq8syaE\n--- Wg6sarbap6UrC0rkyj2pGYvXbQ9j1uVHSJQ7O6SyWDI\n"
     + bytes.fromhex(
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab729efb2de683cf2516653f82af53e5cce2c7d4301907dbebb3dc17b"
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacb589584a3b51348f292714ab0d51537e404d9882f9b03aa3d7fedfd"
     )
 )
 
@@ -45,6 +45,8 @@ def test_encrypt():
     with mock.patch("os.urandom", fake_random):
         result = runner.invoke(main, ["encrypt", TEST_KEY_PUBLIC], input=TEST_PLAINTEXT)
         assert result.exit_code == 0
+        print(result.stdout)
+        print(result.stdout_bytes.hex())
         assert result.stdout_bytes == TEST_CIPHERTEXT
 
 

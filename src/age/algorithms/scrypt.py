@@ -14,20 +14,22 @@ def scrypt_encrypt_file_key(
     # https://blog.filippo.io/the-scrypt-parameters/
 
     salt = random(16)
-    cost = 1 << 18  # about 1 second
+    log_cost = 18  # about 1 second
+    cost = 1 << log_cost
 
     key = scrypt(salt, cost, password.value)
     assert len(key) == 32
     encrypted_file_key = encrypt(key, file_key)
 
-    return salt, cost, encrypted_file_key
+    return salt, log_cost, encrypted_file_key
 
 
 def scrypt_decrypt_file_key(
-    password: PasswordKey, salt: bytes, cost: int, encrypted_file_key: bytes
+    password: PasswordKey, salt: bytes, log_cost: int, encrypted_file_key: bytes
 ) -> bytes:
-    if not (1 <= cost <= 1 << 22):
+    if not (2 <= log_cost <= 22):
         raise ValueError("Invalid scrypt cost")
 
+    cost = 1 << log_cost
     key = scrypt(salt, cost, password.value)
     return decrypt(key, encrypted_file_key)
