@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
 import os
 import stat
 import sys
+from datetime import datetime
 
 import click
 
-from age.file import Encryptor, Decryptor
+from age.file import Decryptor, Encryptor
 from age.keyloader import load_aliases, load_keys_txt, load_ssh_keys, resolve_public_key
 from age.keys.agekey import AgePrivateKey
 from age.keys.password import PasswordKey

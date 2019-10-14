@@ -1,4 +1,3 @@
-import io
 import typing
 
 from age.exceptions import ParserError

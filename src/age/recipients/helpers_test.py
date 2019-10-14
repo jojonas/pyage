@@ -2,7 +2,7 @@ import os
 
 from pytest import raises
 
-from age.exceptions import UnknownRecipient, NoIdentity
+from age.exceptions import NoIdentity, UnknownRecipient
 from age.keys.agekey import AgePrivateKey
 from age.keys.base import EncryptionKey
 from age.recipients.helpers import decrypt_file_key, generate_recipient_from_key, get_recipient

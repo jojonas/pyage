@@ -1,12 +1,11 @@
 import datetime
 import os.path
-
-from click.testing import CliRunner
 from unittest import mock
 
+from click.testing import CliRunner
 from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
-from age.cli import main
 
+from age.cli import main
 
 runner = CliRunner(mix_stderr=False)
 
