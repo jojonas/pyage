@@ -19,6 +19,8 @@ import sys
 # Import libnacl libs
 from nacl import __version__  # noqa: F401
 
+from age.utils.env import IS_SPHINX
+
 __SONAMES = (18, 17, 13, 10, 5, 4)
 
 
@@ -93,10 +95,7 @@ class CryptError(Exception):
     """
 
 
-_IS_SPHINX = ("sphinx" in sys.modules) or os.environ.get("READTHEDOCS", False)
-
-if _IS_SPHINX:
-    print("Detected sphinx documentation generator, setting nacl to None", file=sys.stderr)
+if IS_SPHINX:
     nacl = None
 else:
     nacl = _get_nacl()
@@ -1091,7 +1090,7 @@ def crypto_sign_ed25519_sk_to_curve25519(ed25519_sk):
 #          Modifications added for pyage
 # ================================================
 
-if not _IS_SPHINX:
+if not IS_SPHINX:
     crypto_core_ed25519_SCALARBYTES = nacl.crypto_core_ed25519_scalarbytes()
     crypto_core_ed25519_NONREDUCEDSCALARBYTES = nacl.crypto_core_ed25519_nonreducedscalarbytes()
 
