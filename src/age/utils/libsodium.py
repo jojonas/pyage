@@ -93,9 +93,10 @@ class CryptError(Exception):
     """
 
 
-_IS_SPHINX = ("sphinx-build" in os.path.basename(sys.argv[0]))
+_IS_SPHINX = ("sphinx" in sys.modules) or os.environ.get("READTHEDOCS", False)
 
 if _IS_SPHINX:
+    print("Detected sphinx documentation generator, setting nacl to None", file=sys.stderr)
     nacl = None
 else:
     nacl = _get_nacl()
@@ -520,18 +521,12 @@ def crypto_sign_verify_detached(sig, msg, vk):
 def crypto_secretbox(message, nonce, key):
     """Encrypts and authenticates a message using the given secret key, and nonce
 
-    Args:
-        message (bytes): a message to encrypt
-        nonce (bytes): nonce, does not have to be confidential must be
-            `crypto_secretbox_NONCEBYTES` in length
-        key (bytes): secret key, must be `crypto_secretbox_KEYBYTES` in
-            length
-
-    Returns:
-        bytes: the ciphertext
-
-    Raises:
-        ValueError: if arguments' length is wrong or the operation has failed.
+    :param bytes message: a message to encrypt
+    :param bytes nonce: nonce, does not have to be confidential must be `crypto_secretbox_NONCEBYTES` in length
+    :param bytes key: secret key, must be `crypto_secretbox_KEYBYTES` in length
+    :returns: the ciphertext
+    :rtype: bytes
+    :raises ValueError: if arguments' length is wrong or the operation has failed.
     """
     if len(key) != crypto_secretbox_KEYBYTES:
         raise ValueError("Invalid key")
@@ -572,19 +567,13 @@ def crypto_secretbox_open(ctxt, nonce, key):
 def crypto_aead_aes256gcm_encrypt(message, aad, nonce, key):
     """Encrypts and authenticates a message with public additional data using the given secret key, and nonce
 
-    Args:
-        message (bytes): a message to encrypt
-        aad  (bytes): additional public data to authenticate
-        nonce (bytes): nonce, does not have to be confidential must be
-            `crypto_aead_aes256gcm_NPUBBYTES` in length
-        key (bytes): secret key, must be `crypto_aead_aes256gcm_KEYBYTES` in
-            length
-
-    Returns:
-        bytes: the ciphertext
-
-    Raises:
-        ValueError: if arguments' length is wrong or the operation has failed.
+    :param bytes message: a message to encrypt
+    :param bytes aad: additional public data to authenticate
+    :param bytes nonce: nonce, does not have to be confidential must be `crypto_aead_aes256gcm_NPUBBYTES` in length
+    :param bytes key: secret key, must be `crypto_aead_aes256gcm_KEYBYTES` in length
+    :return: the ciphertext
+    :rtype: bytes
+    :raises ValueError: if arguments' length is wrong or the operation has failed.
     """
     if not HAS_AEAD_AES256GCM:
         raise ValueError("Underlying Sodium library does not support AES256-GCM AEAD")
@@ -617,19 +606,13 @@ def crypto_aead_aes256gcm_encrypt(message, aad, nonce, key):
 def crypto_aead_chacha20poly1305_ietf_encrypt(message, aad, nonce, key):
     """Encrypts and authenticates a message with public additional data using the given secret key, and nonce
 
-    Args:
-        message (bytes): a message to encrypt
-        aad  (bytes): additional public data to authenticate
-        nonce (bytes): nonce, does not have to be confidential must be
-            `crypto_aead_chacha20poly1305_ietf_NPUBBYTES` in length
-        key (bytes): secret key, must be `crypto_aead_chacha20poly1305_ietf_KEYBYTES` in
-            length
-
-    Returns:
-        bytes: the ciphertext
-
-    Raises:
-        ValueError: if arguments' length is wrong or the operation has failed.
+    :param bytes message: a message to encrypt
+    :param bytes aad: additional public data to authenticate
+    :param bytes nonce: nonce, does not have to be confidential must be `crypto_aead_chacha20poly1305_ietf_NPUBBYTES` in length
+    :param bytes key: secret key, must be `crypto_aead_chacha20poly1305_ietf_KEYBYTES` in length
+    :returns: the ciphertext
+    :rtype: bytes
+    :raises ValueError: if arguments' length is wrong or the operation has failed.
     """
     if not HAS_AEAD_CHACHA20POLY1305_IETF:
         raise ValueError(
@@ -831,17 +814,12 @@ def crypto_onetimeauth_verify(token, message, key):
     Verifies, in constant time, that ``token`` is a correct authenticator for
     the message using the secret key.
 
-    Args:
-        token (bytes): an authenticator of crypto_onetimeauth_BYTES length.
-        message (bytes): The message to authenticate.
-        key: key (bytes): secret key - must be of crypto_onetimeauth_KEYBYTES
-            length.
-
-    Returns:
-        bytes: secret key - must be of crypto_onetimeauth_KEYBYTES length.
-
-    Raises:
-        ValueError: if arguments' length is wrong or verification has failed.
+    :param bytes token: an authenticator of crypto_onetimeauth_BYTES length.
+    :param bytes message: The message to authenticate.
+    :param bytes key: secret key - must be of crypto_onetimeauth_KEYBYTES length.
+    :returns: secret key - must be of crypto_onetimeauth_KEYBYTES length.
+    :rtype: bytes
+    :raises ValueError: if arguments' length is wrong or verification has failed.
     """
     if len(key) != crypto_onetimeauth_KEYBYTES:
         raise ValueError("Invalid secret key")
