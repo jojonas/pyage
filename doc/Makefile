@@ -8,7 +8,7 @@ SPHINXBUILD   ?= sphinx-build
 SPHINXAPIDOC  ?= sphinx-apidoc
 SOURCEDIR     = source
 BUILDDIR      = build
-MODULEDIR	  = ../age
+MODULEDIR	  = ../src
 
 PYTHON_FILES  = $(shell find $(MODULEDIR) -type f -name '*.py')
 
