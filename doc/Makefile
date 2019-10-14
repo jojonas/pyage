@@ -8,7 +8,7 @@ SPHINXBUILD   ?= sphinx-build
 SPHINXAPIDOC  ?= sphinx-apidoc
 SOURCEDIR     = source
 BUILDDIR      = build
-MODULEDIR	  = ../src/
+MODULEDIR	  = ../age
 
 PYTHON_FILES  = $(shell find $(MODULEDIR) -type f -name '*.py')
 
@@ -21,7 +21,7 @@ all: html ../requirements.txt
 # Apidoc: automatically generate everything in source/api
 apidoc: $(PYTHON_FILES)
 	rm -rf $(SOURCEDIR)/api/*.rst
-	$(SPHINXAPIDOC)  -f --ext-todo --ext-autodoc -o "$(SOURCEDIR)/api" "$(MODULEDIR)" "$(MODULEDIR)/**/*_test.py"
+	$(SPHINXAPIDOC) -f --ext-todo --ext-autodoc -o "$(SOURCEDIR)/api" "$(MODULEDIR)" "$(MODULEDIR)/**/*_test.py"
 
 # Requirements.txt (for RTD)
 ../requirements.txt: $(PYTHON_FILES)
@@ -30,8 +30,9 @@ apidoc: $(PYTHON_FILES)
 
 # Build HTML files
 html: apidoc Makefile
-	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	$(SPHINXBUILD) -T -b $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 
 clean:
 	rm -rf $(SOURCEDIR)/api/*.rst
-	rm -rf $(BUILDDIR)/*
+	rm -rf $(BUILDDIR)
+	mkdir -p $(BUILDDIR)

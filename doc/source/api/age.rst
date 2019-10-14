@@ -10,6 +10,7 @@ Subpackages
    age.keys
    age.primitives
    age.recipients
+   age.utils
 
 Submodules
 ----------
