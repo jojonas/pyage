@@ -6,7 +6,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      PATH: $PATH:$HOME/.local/bin
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python 3.7
