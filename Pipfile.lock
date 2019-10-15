@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "32e65736a844120b4f293e002fda7095ed20801185a0a6c1f2a2734227da769d"
+            "sha256": "51af6781959104cce0a2aa9f5e68354037cb9be75108b001125b1b41b2663b07"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,10 +16,6 @@
         ]
     },
     "default": {
-        "age": {
-            "editable": true,
-            "path": "."
-        },
         "asn1crypto": {
             "hashes": [
                 "sha256:5abe83e773026162e4869f4ac16edf7554f661e8cc0bb6d2be3bc6915456731b",
@@ -138,6 +134,7 @@
             "version": "==2.19"
         },
         "pynacl": {
+            "editable": true,
             "git": "https://github.com/pyca/pynacl.git",
             "ref": "3479eaed36a32c6bd91331573a450a5bf099bdd5"
         },
@@ -165,6 +162,10 @@
         }
     },
     "develop": {
+        "age": {
+            "editable": true,
+            "path": "."
+        },
         "alabaster": {
             "hashes": [
                 "sha256:446438bdcca0e05bd45ea2de1668c1d9b032e1a9154c2c259092d77031ddd359",
@@ -413,6 +414,22 @@
             ],
             "version": "==5.4.3"
         },
+        "pipenv": {
+            "hashes": [
+                "sha256:56ad5f5cb48f1e58878e14525a6e3129d4306049cb76d2f6a3e95df0d5fc6330",
+                "sha256:7df8e33a2387de6f537836f48ac6fcd94eda6ed9ba3d5e3fd52e35b5bc7ff49e",
+                "sha256:a673e606e8452185e9817a987572b55360f4d28b50831ef3b42ac3cab3fee846"
+            ],
+            "version": "==2018.11.26"
+        },
+        "pipenv-to-requirements": {
+            "hashes": [
+                "sha256:115390158232f53983f1d989f922d890adbdaaaa95c8b2357a77b9f5fe647862",
+                "sha256:5b7349e76d2c511e8b4a723495311b310e4e33bb716437b30cc18ecb0b0b5e29"
+            ],
+            "index": "pypi",
+            "version": "==0.8.2"
+        },
         "pluggy": {
             "hashes": [
                 "sha256:0db4b7601aae1d35b4a033282da476845aa19185c1e6964b25cf324b5e4ec3e6",
@@ -637,6 +654,20 @@
                 "sha256:9a107b99a5393caf59c7aa3c1249c16e6879447533d0887f4336dde834c7be86"
             ],
             "version": "==1.25.6"
+        },
+        "virtualenv": {
+            "hashes": [
+                "sha256:680af46846662bb38c5504b78bad9ed9e4f3ba2d54f54ba42494fdf94337fe30",
+                "sha256:f78d81b62d3147396ac33fc9d77579ddc42cc2a98dd9ea38886f616b33bc7fb2"
+            ],
+            "version": "==16.7.5"
+        },
+        "virtualenv-clone": {
+            "hashes": [
+                "sha256:532f789a5c88adf339506e3ca03326f20ee82fd08ee5586b44dc859b5b4468c5",
+                "sha256:c88ae171a11b087ea2513f260cdac9232461d8e9369bcd1dc143fc399d220557"
+            ],
+            "version": "==0.5.3"
         },
         "wcwidth": {
             "hashes": [

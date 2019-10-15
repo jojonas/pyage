@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+age = {editable = true,path = "."}
 pytest = "<=5.0.1"
 mypy = "*"
 rope = "*"
@@ -17,14 +18,14 @@ pytest-cov = "*"
 sphinxcontrib-programoutput = "*"
 pyfakefs = "*"
 isort = "*"
+pipenv-to-requirements = "*"
 
 [packages]
-age = {editable = true,path = "."}
 cryptography = ">=2.7"
 bcrypt = "*"
 click = "*"
 requests = "*"
-pynacl = {git = "https://github.com/pyca/pynacl.git",ref = "master"}
+pynacl = {editable = true,git = "https://github.com/pyca/pynacl.git",ref = "master"}
 
 [requires]
 python_version = "3.7"
