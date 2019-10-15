@@ -10,7 +10,6 @@
 # `Pipfile.lock` and then regenerate `requirements*.txt`.
 ################################################################################
 
--e git+https://github.com/pyca/pynacl.git@3479eaed36a32c6bd91331573a450a5bf099bdd5#egg=pynacl
 asn1crypto==1.1.0
 bcrypt==3.1.7
 certifi==2019.9.11
@@ -20,6 +19,7 @@ click==7.0
 cryptography==2.7
 idna==2.8
 pycparser==2.19
+pynacl==1.3.0
 requests==2.22.0
 six==1.12.0
 urllib3==1.25.6
