@@ -1,6 +1,13 @@
 name: Compatibility with FiloSottile/age
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/*'
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   build:
