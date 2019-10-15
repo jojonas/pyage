@@ -9,10 +9,6 @@ jobs:
 
     env:
       SODIUM_INSTALL: system
-      GOPATH: ${env:HOME}/go
-      GOBIN: ${env:HOME}/bin
-      PRIVKEY: ${env:GITHUB_WORKSPACE}/testdata/key.txt
-      PUBKEY: pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
 
     steps:
     - uses: actions/checkout@v1
@@ -25,7 +21,10 @@ jobs:
 
     - name: Install age
       run: |
+        export GOPATH=$HOME/go
+        export GOBIN=$GOPATH/bin
         mkdir -p $GOPATH
+        mkdir -p $GOBIN
         go get -u -v github.com/FiloSottile/age/cmd/age
 
     - name: Set up Python 3.7
@@ -42,17 +41,32 @@ jobs:
 
     - name: "Sanity check: age -> age"
       run: |
+        export GOPATH=$HOME/go
+        export GOBIN=$GOPATH/bin
+        export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
+        export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
         echo "Hello Golang sanity." | $GOBIN/age $PUBKEY | $GOBIN/age -d $KEYFILE
 
     - name: "Sanity check: pyage -> pyage"
       run: |
+        export GOPATH=$HOME/go
+        export GOBIN=$GOPATH/bin
+        export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
+        export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
         echo "Hello Python sanity." | age encrypt $PUBKEY | age decrypt $KEYFILE
 
     - name: age -> pyage
       run: |
+        export GOPATH=$HOME/go
+        export GOBIN=$GOPATH/bin
+        export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
+        export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
         echo "Hello pyage." | $GOBIN/age $PUBKEY | age decrypt $KEYFILE
 
     - name: pyage -> age
       run: |
+        export GOPATH=$HOME/go
+        export GOBIN=$GOPATH/bin
+        export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
+        export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
         echo "Hello (go)age." | age encrypt $PUBKEY | $GOBIN/age -d $KEYFILE
-
