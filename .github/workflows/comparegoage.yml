@@ -10,22 +10,28 @@ jobs:
     env:
       SODIUM_INSTALL: system
       GOPATH: $HOME/go
+      GOBIN: $HOME/bin
       PRIVKEY: $GITHUB_WORKSPACE/testdata/key.txt
       PUBKEY: pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
 
     steps:
     - uses: actions/checkout@v1
 
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
         go-version: 1.13
       id: go
+
+    - name: Install age
+      run: |
+        mkdir -p $GOPATH
+        go get -u -v github.com/FiloSottile/age/cmd/age
+
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
 
     - name: Install pyage
       run: |
@@ -34,14 +40,9 @@ jobs:
         sudo apt install -y libsodium-dev
         pipenv install --deploy --dev
 
-    - name: Install age
-      run: |
-        mkdir -p $GOPATH
-        go get -v github.com/FiloSottile/age/cmd/age
-
     - name: "Sanity check: age -> age"
       run: |
-        echo "Hello Golang sanity." | $GOPATH/bin/age $PUBKEY | $GOPATH/bin/age -d $KEYFILE
+        echo "Hello Golang sanity." | $GOBIN/age $PUBKEY | $GOBIN/age -d $KEYFILE
 
     - name: "Sanity check: pyage -> pyage"
       run: |
@@ -49,9 +50,9 @@ jobs:
 
     - name: age -> pyage
       run: |
-        echo "Hello pyage." | $GOPATH/bin/age $PUBKEY | age decrypt $KEYFILE
+        echo "Hello pyage." | $GOBIN/age $PUBKEY | age decrypt $KEYFILE
 
     - name: pyage -> age
       run: |
-        echo "Hello (go)age." | age encrypt $PUBKEY | $GOPATH/bin/age -d $KEYFILE
+        echo "Hello (go)age." | age encrypt $PUBKEY | $GOBIN/age -d $KEYFILE
 
