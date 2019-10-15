@@ -8,9 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PYTHON_BIN: $HOME/.local/bin
-      PIPENV_DEV: true
-      PIPENV_SEQUENTIAL: true
+      SODIUM_INSTALL: system
 
     steps:
     - uses: actions/checkout@v1
@@ -34,7 +32,6 @@ jobs:
     - name: Test with pytest
       run: |
         pipenv run pytest $GITHUB_WORKSPACE
-      continue-on-error: true
     - name: Collect coverage results
       run: |
         pipenv run coverage report -m --fail-under 85

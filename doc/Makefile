@@ -35,3 +35,5 @@ clean:
 	rm -rf $(SOURCEDIR)/api/*.rst
 	rm -rf $(BUILDDIR)
 	mkdir -p $(BUILDDIR)
+	rm -rf ../requirements.txt
+	rm -rf ../requirements-dev.txt
