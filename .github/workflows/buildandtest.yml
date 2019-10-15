@@ -35,5 +35,5 @@ jobs:
         pipenv run pytest $GITHUB_WORKSPACE
     - name: Collect coverage results
       run: |
-        pipenv run coverage report -m --fail-under 85
+        pipenv run coverage report -m --fail-under 50
       continue-on-error: true

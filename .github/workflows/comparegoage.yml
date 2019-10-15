@@ -53,7 +53,7 @@ jobs:
         export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello Python sanity." | age encrypt $PUBKEY | age decrypt $KEYFILE
+        echo "Hello Python sanity." | pipenv run age encrypt $PUBKEY | pipenv run age decrypt $KEYFILE
 
     - name: age -> pyage
       run: |
@@ -61,7 +61,7 @@ jobs:
         export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello pyage." | $GOBIN/age $PUBKEY | age decrypt $KEYFILE
+        echo "Hello pyage." | $GOBIN/age $PUBKEY | pipenv run age decrypt $KEYFILE
 
     - name: pyage -> age
       run: |
@@ -69,4 +69,4 @@ jobs:
         export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello (go)age." | age encrypt $PUBKEY | $GOBIN/age -d $KEYFILE
+        echo "Hello (go)age." | pipenv run age encrypt $PUBKEY | $GOBIN/age -d $KEYFILE
