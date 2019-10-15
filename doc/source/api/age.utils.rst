@@ -4,10 +4,10 @@ age.utils package
 Submodules
 ----------
 
-age.utils.libsodium module
---------------------------
+age.utils.env module
+--------------------
 
-.. automodule:: age.utils.libsodium
+.. automodule:: age.utils.env
    :members:
    :undoc-members:
    :show-inheritance:

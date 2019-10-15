@@ -22,9 +22,9 @@ isort = "*"
 age = {editable = true,path = "."}
 cryptography = ">=2.7"
 bcrypt = "*"
-pynacl = "*"
 click = "*"
 requests = "*"
+pynacl = {git = "https://github.com/pyca/pynacl.git",ref = "master"}
 
 [requires]
 python_version = "3.7"
