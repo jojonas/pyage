@@ -9,9 +9,9 @@ jobs:
 
     env:
       SODIUM_INSTALL: system
-      GOPATH: $HOME/go
-      GOBIN: $HOME/bin
-      PRIVKEY: $GITHUB_WORKSPACE/testdata/key.txt
+      GOPATH: ${env:HOME}/go
+      GOBIN: ${env:HOME}/bin
+      PRIVKEY: ${env:GITHUB_WORKSPACE}/testdata/key.txt
       PUBKEY: pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
 
     steps:
