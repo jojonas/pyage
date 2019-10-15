@@ -19,12 +19,13 @@ def encrypt(recipients=None, infile=None, outfile=None, password=False):
 
     \b
     RECIPIENTS can be a list of either:
-        * aliases (from ~/.config/age/aliases.txt)
-        * age public keys (starting with "pubkey:")
-        * SSH public keys (starting with "ssh-rsa" or "ssh-ed25519")
-        * Files with one key per line (no aliases allowed)
-        * URLs to files with one key per line (no aliases allowed)
-        * GitHub usernames (will fetch SSH public keys from https://github.com/USERNAME.keys)
+
+    - aliases (from ~/.config/age/aliases.txt)
+    - age public keys (starting with "pubkey:")
+    - SSH public keys (starting with "ssh-rsa" or "ssh-ed25519")
+    - Files with one key per line (no aliases allowed)
+    - URLs to files with one key per line (no aliases allowed)
+    - GitHub usernames (will fetch SSH public keys from https://github.com/USERNAME.keys)
 
     Plaintext data can be passed via the standard input stream or from a file.
     Encryption to the standard output stream is only allowed if the stream
@@ -84,9 +85,10 @@ def decrypt(infile=None, outfile=None, password=False, keyfiles=None):
 
     \b
     Decryption is attempted with keys from the following locations:
-        * Age private keys from 'age generate' in file ~/.config/age/keys.txt
-        * Private SSH keys at ~/.ssh/id_*
-        * Age private keys in files passed via KEYFILES.
+
+    - Age private keys from 'age generate' in file ~/.config/age/keys.txt
+    - Private SSH keys at ~/.ssh/id_*
+    - Age private keys in files passed via KEYFILES.
 
     If the '-p' switch is provided, age will prompt for a password and also
     attempt to decrypt the message with the given password.

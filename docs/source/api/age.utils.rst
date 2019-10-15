@@ -4,6 +4,14 @@ age.utils package
 Submodules
 ----------
 
+age.utils.copy\_doc module
+--------------------------
+
+.. automodule:: age.utils.copy_doc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 age.utils.env module
 --------------------
 
