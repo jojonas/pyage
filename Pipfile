@@ -25,7 +25,7 @@ cryptography = ">=2.7"
 bcrypt = "*"
 click = "*"
 requests = "*"
-pynacl = "*"
+pynacl = {editable = true,git = "https://github.com/pyca/pynacl.git",ref = "master"}
 
 [requires]
 python_version = "3.7"
