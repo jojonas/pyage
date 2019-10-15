@@ -1,6 +1,9 @@
 # pyage
 
-![Build Status](https://github.com/jojonas/pyage/workflows/Build%20and%20Test/badge.svg) [![Documentation Status](https://readthedocs.org/projects/pyage/badge/?version=latest)](https://pyage.readthedocs.io/en/latest/?badge=latest) ![License](https://img.shields.io/github/license/jojonas/pyage)
+[![Build and Test](https://github.com/jojonas/pyage/workflows/Build%20and%20Test/badge.svg)](https://github.com/jojonas/pyage/actions?workflow=Build+and+Test)
+[![Build and Test](https://github.com/jojonas/pyage/workflows/Compatibility+with+FiloSottile%2Fage/badge.svg)](https://github.com/jojonas/pyage/actions?workflow=Compatibility+with+FiloSottile%2Fage)
+[![Documentation Status](https://readthedocs.org/projects/pyage/badge/?version=latest)](https://pyage.readthedocs.io/en/latest/?badge=latest)
+![License](https://img.shields.io/github/license/jojonas/pyage)
 
 pyage is an experimental implementation of @FiloSottile and @Benjojo12 's project "age".
 The spec is currently available as seven-page Google doc at [age-tool.com](https://age-tool.com).

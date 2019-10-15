@@ -1,4 +1,4 @@
-name: Compare with FiloSottile/age
+name: Compatibility with FiloSottile/age
 
 on: [push]
 
