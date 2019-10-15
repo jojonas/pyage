@@ -1,7 +1,6 @@
 import typing
 
 from nacl.bindings import crypto_scalarmult, crypto_scalarmult_base
-
 from nacl.bindings.crypto_core import crypto_core_ed25519_scalar_reduce
 
 __all__ = ["x25519_scalarmult", "x25519_scalarmult_base", "x25519_reduce", "ECScalar", "ECPoint"]
