@@ -1,7 +1,7 @@
 # pyage
 
 [![Build and Test](https://github.com/jojonas/pyage/workflows/Build%20and%20Test/badge.svg)](https://github.com/jojonas/pyage/actions?workflow=Build+and+Test)
-[![Build and Test](https://github.com/jojonas/pyage/workflows/Compatibility+with+FiloSottile%2Fage/badge.svg)](https://github.com/jojonas/pyage/actions?workflow=Compatibility+with+FiloSottile%2Fage)
+[![Compatibility Check](https://github.com/jojonas/pyage/workflows/Compatibility%20with%20FiloSottile/age/badge.svg)](https://github.com/jojonas/pyage/actions?workflow=Compatibility%20with%20FiloSottile/age)
 [![Documentation Status](https://readthedocs.org/projects/pyage/badge/?version=latest)](https://pyage.readthedocs.io/en/latest/?badge=latest)
 ![License](https://img.shields.io/github/license/jojonas/pyage)
 
