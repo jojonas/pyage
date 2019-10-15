@@ -14,7 +14,7 @@ python:
     - requirements: requirements.txt
     - requirements: requirements-dev.txt
     - method: pip
-        path: .
+      path: .
 
 # Configuration for the documentation build process (stable/latest)
 build:
