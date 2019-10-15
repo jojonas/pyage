@@ -1,13 +1,14 @@
 import datetime
+import io
 import os.path
+import sys
+from contextlib import contextmanager
 from unittest import mock
 
-from click.testing import CliRunner
 from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
+from pytest import raises
 
-from age.cli import main
-
-runner = CliRunner(mix_stderr=False)
+from age.cli import decrypt, encrypt, generate
 
 TEST_KEY = "# created: 2019-11-10T10:00:00\n# pubkey:dn0lL3QgN3w92S1yiMsNXyun6K3_Qi2cFkFfnKXnJ3Q\nAGE_SECRET_KEY_2LUBxmnPrLHcwXT0YutXh846RE6tC5FVWXcMp9epkV4\n"
 TEST_KEY_PUBLIC = "pubkey:dn0lL3QgN3w92S1yiMsNXyun6K3_Qi2cFkFfnKXnJ3Q"
@@ -22,12 +23,20 @@ TEST_CIPHERTEXT = (
 )
 
 
+@contextmanager
+def should_exit(code=1):
+    with raises(SystemExit) as wrapped_e:
+        yield
+    assert wrapped_e.type == SystemExit
+    assert wrapped_e.value.code == code
+
+
 def fake_random(n):
     # really bad random data
     return b"\xaa" * n
 
 
-def test_generate():
+def test_generate(capsys):
     gen_func = "cryptography.hazmat.primitives.asymmetric.x25519.X25519PrivateKey.generate"
 
     with mock.patch(gen_func) as mock_generate, mock.patch("age.cli.datetime") as mock_datetime:
@@ -35,55 +44,65 @@ def test_generate():
         mock_datetime.side_effect = lambda *args, **kw: datetime.datetime(*args, **kw)
         mock_generate.return_value = X25519PrivateKey.from_private_bytes(TEST_KEY_RAW)
 
-        result = runner.invoke(main, ["generate"])
-        assert result.exit_code == 0
-        assert result.output == TEST_KEY
+        generate()
+
+        captured = capsys.readouterr()
+        assert captured.out == TEST_KEY
 
 
-def test_encrypt():
+def test_encrypt(capsysbinary, monkeypatch):
     with mock.patch("os.urandom", fake_random):
-        result = runner.invoke(main, ["encrypt", TEST_KEY_PUBLIC], input=TEST_PLAINTEXT)
-        assert result.exit_code == 0
-        print(result.stdout)
-        print(result.stdout_bytes.hex())
-        assert result.stdout_bytes == TEST_CIPHERTEXT
+        encrypt(recipients=[TEST_KEY_PUBLIC], infile=io.BytesIO(TEST_PLAINTEXT))
+        captured = capsysbinary.readouterr()
+        assert captured.out == TEST_CIPHERTEXT
 
 
-def test_encrypt_no_recipient():
-    result = runner.invoke(main, ["encrypt"], input=TEST_PLAINTEXT)
-    assert result.exit_code == 1
-    # assert result.stderr != ""
+def test_encrypt_no_recipient(capsys):
+    with should_exit(1):
+        encrypt(infile=io.BytesIO(TEST_PLAINTEXT))
+    captured = capsys.readouterr()
+    assert captured.err != ""
 
 
-def test_decrypt(fs):
+def test_encrypt_to_tty():
+    with mock.patch("sys.stdout", return_value=False):
+        assert sys.stdout.isatty()
+        with should_exit(1):
+            encrypt([TEST_KEY_PUBLIC], infile=TEST_PLAINTEXT)
+
+
+def test_decrypt(fs, capsysbinary):
     keys_filename = os.path.expanduser("~/.config/age/keys.txt")
     fs.create_file(keys_filename, contents=TEST_KEY)
-    result = runner.invoke(main, ["decrypt"], input=TEST_CIPHERTEXT)
-    assert result.exit_code == 0
-    assert result.stdout_bytes == TEST_PLAINTEXT
+    decrypt(infile=io.BytesIO(TEST_CIPHERTEXT))
+    captured = capsysbinary.readouterr()
+    assert captured.out == TEST_PLAINTEXT
 
 
-def test_decrypt_from_file(fs):
+def test_decrypt_from_file(fs, capsysbinary):
     keys_filename = os.path.expanduser("~/.config/age/keys.txt")
     fs.create_file(keys_filename, contents=TEST_KEY)
 
     ciphertext_filename = "/tmp/test.age"
     fs.create_file(ciphertext_filename, contents=TEST_CIPHERTEXT)
 
-    result = runner.invoke(main, ["decrypt", "-i", ciphertext_filename])
-    assert result.exit_code == 0
-    assert result.stdout_bytes == TEST_PLAINTEXT
+    with open(ciphertext_filename, "rb") as infile:
+        decrypt(infile=infile)
+
+    captured = capsysbinary.readouterr()
+    assert captured.out == TEST_PLAINTEXT
 
 
 def test_decrypt_to_file(fs):
     keys_filename = os.path.expanduser("~/.config/age/keys.txt")
     fs.create_file(keys_filename, contents=TEST_KEY)
 
-    plaintext_filename = "/tmp/test.txt"
-    fs.create_file(plaintext_filename, contents=TEST_CIPHERTEXT)
+    ciphertext_filename = "/tmp/test.age"
+    fs.create_file(ciphertext_filename, contents=TEST_CIPHERTEXT)
 
-    result = runner.invoke(main, ["decrypt", "-o", plaintext_filename], input=TEST_CIPHERTEXT)
+    plaintext_filename = "/tmp/test.txt"
+    with open(plaintext_filename, "wb") as outfile, open(ciphertext_filename, "rb") as infile:
+        decrypt(outfile=outfile, infile=infile)
 
     with open(plaintext_filename, "rb") as plaintext_file:
-        assert result.exit_code == 0
         assert plaintext_file.read() == TEST_PLAINTEXT

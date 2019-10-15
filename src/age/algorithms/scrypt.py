@@ -7,14 +7,21 @@ from age.primitives.scrypt import scrypt
 
 __all__ = ["scrypt_encrypt_file_key", "scrypt_decrypt_file_key"]
 
+MAX_LOG_COST = 22
+
 
 def scrypt_encrypt_file_key(
-    password: PasswordKey, file_key: bytes
+    password: PasswordKey, file_key: bytes, log_cost: int = None
 ) -> typing.Tuple[bytes, int, bytes]:
     # https://blog.filippo.io/the-scrypt-parameters/
 
+    if log_cost is None:
+        log_cost = 18  # about 1 second
+
+    if not (0 <= log_cost <= MAX_LOG_COST):
+        raise ValueError("Invalid scrypt cost")
+
     salt = random(16)
-    log_cost = 18  # about 1 second
     cost = 1 << log_cost
 
     key = scrypt(salt, cost, password.value)
@@ -27,7 +34,7 @@ def scrypt_encrypt_file_key(
 def scrypt_decrypt_file_key(
     password: PasswordKey, salt: bytes, log_cost: int, encrypted_file_key: bytes
 ) -> bytes:
-    if not (2 <= log_cost <= 22):
+    if not (0 <= log_cost <= MAX_LOG_COST):
         raise ValueError("Invalid scrypt cost")
 
     cost = 1 << log_cost

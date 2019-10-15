@@ -11,19 +11,10 @@ from age.file import Decryptor, Encryptor
 from age.keyloader import load_aliases, load_keys_txt, load_ssh_keys, resolve_public_key
 from age.keys.agekey import AgePrivateKey
 from age.keys.password import PasswordKey
+from age.utils.copy_doc import copy_doc
 
 
-@click.group()
-def main():
-    pass
-
-
-@main.command()
-@click.option("-i", "--infile", type=click.File("rb"))
-@click.option("-o", "--outfile", type=click.File("wb"))
-@click.option("-p", "--password", is_flag=True)
-@click.argument("recipients", nargs=-1)
-def encrypt(infile, outfile, password, recipients):
+def encrypt(recipients=None, infile=None, outfile=None, password=False):
     """Encrypt data for the given recipients.
 
     \b
@@ -52,6 +43,8 @@ def encrypt(infile, outfile, password, recipients):
         infile = sys.stdin.buffer
     if not outfile:
         outfile = sys.stdout.buffer
+    if not recipients:
+        recipients = []
 
     if outfile is sys.stdout.buffer and sys.stdout.isatty():
         print("Refusing to encrypt to a TTY.", file=sys.stderr)
@@ -82,12 +75,7 @@ def encrypt(infile, outfile, password, recipients):
         encryptor.write(infile.read())
 
 
-@main.command()
-@click.option("-i", "--infile", type=click.File("rb"))
-@click.option("-o", "--outfile", type=click.File("wb"))
-@click.option("-p", "--password", is_flag=True)
-@click.argument("keyfiles", nargs=-1)
-def decrypt(infile, outfile, password, keyfiles):
+def decrypt(infile=None, outfile=None, password=False, keyfiles=None):
     """Decrypt a file encrypted with 'age encrypt'.
 
     Ciphertext can be passed from the standard input stream and from a file.
@@ -108,6 +96,8 @@ def decrypt(infile, outfile, password, keyfiles):
         infile = sys.stdin.buffer
     if not outfile:
         outfile = sys.stdout.buffer
+    if not keyfiles:
+        keyfiles = []
 
     keys = []
     keys.extend(load_keys_txt())
@@ -127,9 +117,7 @@ def decrypt(infile, outfile, password, keyfiles):
         outfile.write(decryptor.read())
 
 
-@main.command()
-@click.option("-o", "--outfile", type=click.File("w"), help="Keypair destination")
-def generate(outfile):
+def generate(outfile=None):
     """Generate a new age private/public key pair.
 
     If no FILENAME is given, the command outputs the key pair to the standard output stream.
@@ -156,6 +144,38 @@ def generate(outfile):
                 f"Warning: The file permissions indicate that other users may have access to the key file '{outfile.name}'.",
                 file=sys.stderr,
             )
+
+
+@click.group()
+def main():
+    pass
+
+
+@main.command("encrypt")
+@click.option("-i", "--infile", type=click.File("rb"))
+@click.option("-o", "--outfile", type=click.File("wb"))
+@click.option("-p", "--password", is_flag=True)
+@click.argument("recipients", nargs=-1)
+@copy_doc(encrypt)
+def cli_encrypt(infile, outfile, password, recipients):
+    return encrypt(recipients=recipients, infile=infile, outfile=outfile, password=password)
+
+
+@main.command("decrypt")
+@click.option("-i", "--infile", type=click.File("rb"))
+@click.option("-o", "--outfile", type=click.File("wb"))
+@click.option("-p", "--password", is_flag=True)
+@click.argument("keyfiles", nargs=-1)
+@copy_doc(decrypt)
+def cli_decrypt(infile, outfile, password, keyfiles):
+    return decrypt(infile=infile, outfile=outfile, password=password, keyfiles=keyfiles)
+
+
+@main.command("generate")
+@click.option("-o", "--outfile", type=click.File("w"), help="Keypair destination")
+@copy_doc(generate)
+def cli_generate(outfile):
+    return generate(outfile=outfile)
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ import sys
 # Import libnacl libs
 from nacl import __version__  # noqa: F401
 
-from age.utils.env import IS_SPHINX
+from age.utils.env import is_sphinx
 
 __SONAMES = (18, 17, 13, 10, 5, 4)
 
@@ -88,7 +88,7 @@ def _get_nacl():  # noqa: C901
         raise OSError(msg)
 
 
-if not IS_SPHINX:
+if not is_sphinx():
     nacl = _get_nacl()
 
     sodium_init = nacl.sodium_init
