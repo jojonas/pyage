@@ -1,0 +1,34 @@
+default_stages: [push]
+default_language_version:
+  python: python3.7
+repos:
+- repo: local
+  hooks:
+  - id: black
+    stages: [commit,push]
+    name: Format source using black
+    entry: pipenv run black -q
+    files: "^src/.*\\.py$"
+    require_serial: true
+    language: system
+  - id: isort
+    stages: [commit,push]
+    name: Sort imports
+    entry: pipenv run isort -rc
+    files: "^src/.*\\.py$"
+    require_serial: true
+    language: system
+  - id: flake8
+    stages: [commit,push]
+    name: Check for programming errors
+    entry: pipenv run flake8
+    files: "^src/.*\\.py$"
+    require_serial: true
+    language: system
+  - id: mypy
+    stages: [commit,push]
+    name: Check for type errors
+    entry: pipenv run mypy --no-error-summary
+    files: "^src/.*\\.py$"
+    require_serial: true
+    language: system
