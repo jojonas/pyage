@@ -5,7 +5,6 @@ from cryptography.exceptions import InvalidTag
 from age.exceptions import NoIdentity, UnknownRecipient
 from age.keys.base import DecryptionKey, EncryptionKey
 from age.recipients.base import Recipient
-# import following classes for registration at Recipient.__subclasses__
 from age.recipients.scrypt import SCryptRecipient  # noqa: F401
 from age.recipients.ssh_ed25519 import SSHED25519Recipient  # noqa: F401
 from age.recipients.ssh_rsa import SSHRSARecipient  # noqa: F401
