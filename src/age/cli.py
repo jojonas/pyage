@@ -3,6 +3,7 @@
 import os
 import stat
 import sys
+import typing
 from datetime import datetime
 
 import click
@@ -10,16 +11,21 @@ import click
 from age.file import Decryptor, Encryptor
 from age.keyloader import load_aliases, load_keys_txt, load_ssh_keys, resolve_public_key
 from age.keys.agekey import AgePrivateKey
+from age.keys.base import DecryptionKey
 from age.keys.password import PasswordKey
 from age.utils.copy_doc import copy_doc
 
 
-def encrypt(recipients=None, infile=None, outfile=None, password=False):
+def encrypt(
+    recipients: typing.List[str] = None,
+    infile: typing.BinaryIO = None,
+    outfile: typing.BinaryIO = None,
+    ask_password: bool = False,
+) -> None:
     """Encrypt data for the given recipients.
 
     \b
     RECIPIENTS can be a list of either:
-
     - aliases (from ~/.config/age/aliases.txt)
     - age public keys (starting with "pubkey:")
     - SSH public keys (starting with "ssh-rsa" or "ssh-ed25519")
@@ -57,7 +63,7 @@ def encrypt(recipients=None, infile=None, outfile=None, password=False):
     for recipient in recipients:
         keys.extend(resolve_public_key(recipient, aliases=aliases))
 
-    if password:
+    if ask_password:
         if recipients:
             print(
                 "Using password recipient in addition to public keys. "
@@ -76,7 +82,12 @@ def encrypt(recipients=None, infile=None, outfile=None, password=False):
         encryptor.write(infile.read())
 
 
-def decrypt(infile=None, outfile=None, password=False, keyfiles=None):
+def decrypt(
+    infile: typing.BinaryIO = None,
+    outfile: typing.BinaryIO = None,
+    ask_password: bool = False,
+    keyfiles: typing.List[str] = None,
+) -> None:
     """Decrypt a file encrypted with 'age encrypt'.
 
     Ciphertext can be passed from the standard input stream and from a file.
@@ -85,7 +96,6 @@ def decrypt(infile=None, outfile=None, password=False, keyfiles=None):
 
     \b
     Decryption is attempted with keys from the following locations:
-
     - Age private keys from 'age generate' in file ~/.config/age/keys.txt
     - Private SSH keys at ~/.ssh/id_*
     - Age private keys in files passed via KEYFILES.
@@ -101,13 +111,13 @@ def decrypt(infile=None, outfile=None, password=False, keyfiles=None):
     if not keyfiles:
         keyfiles = []
 
-    keys = []
+    keys: typing.List[DecryptionKey] = []
     keys.extend(load_keys_txt())
     keys.extend(load_ssh_keys())
     for keyfile in keyfiles:
         keys.extend(load_keys_txt(keyfile))
 
-    if password:
+    if ask_password:
         password = click.prompt("Type passphrase", hide_input=True).encode("utf-8")
         keys.append(PasswordKey(password))
 
@@ -119,7 +129,7 @@ def decrypt(infile=None, outfile=None, password=False, keyfiles=None):
         outfile.write(decryptor.read())
 
 
-def generate(outfile=None):
+def generate(outfile: typing.TextIO = None) -> None:
     """Generate a new age private/public key pair.
 
     If no FILENAME is given, the command outputs the key pair to the standard output stream.
@@ -160,7 +170,7 @@ def main():
 @click.argument("recipients", nargs=-1)
 @copy_doc(encrypt)
 def cli_encrypt(infile, outfile, password, recipients):
-    return encrypt(recipients=recipients, infile=infile, outfile=outfile, password=password)
+    return encrypt(recipients=recipients, infile=infile, outfile=outfile, ask_password=password)
 
 
 @main.command("decrypt")
@@ -170,7 +180,7 @@ def cli_encrypt(infile, outfile, password, recipients):
 @click.argument("keyfiles", nargs=-1)
 @copy_doc(decrypt)
 def cli_decrypt(infile, outfile, password, keyfiles):
-    return decrypt(infile=infile, outfile=outfile, password=password, keyfiles=keyfiles)
+    return decrypt(infile=infile, outfile=outfile, ask_password=password, keyfiles=keyfiles)
 
 
 @main.command("generate")

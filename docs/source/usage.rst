@@ -79,7 +79,7 @@ Encryption to a list of recipients
 ----------------------------------
 
 Instead of providing a public key directly, ``age`` can read recipients from a
-file or an URL. Note that in this case, `aliases <#encryption-to-an-alias>` are
+file or an URL. Note that in this case, :ref:`aliases <examples-alias>` are
 *not* further expanded.
 
 ::
@@ -159,4 +159,3 @@ Key Generation
 --------------
 
 .. command-output:: age generate --help
-

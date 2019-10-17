@@ -47,20 +47,18 @@ def test_repeated():
     # Computation intensive extension:
 
     # while i < 1000:
-    #     k, u = x25519(k, u), k
+    #     k, u = x25519_scalarmult(k, u), k
     #     i += 1
 
     # assert i == 1000
-    # assert k == bytes.fromhex(
-    #     "684cf59ba83309552800ef566f2f4d3c1c3887c49360e3875f2eb94d99532c51")
+    # assert k == bytes.fromhex("684cf59ba83309552800ef566f2f4d3c1c3887c49360e3875f2eb94d99532c51")
 
     # while i < 1000000:
-    #     k, u = x25519(k, u), k
+    #     k, u = x25519_scalarmult(k, u), k
     #     i += 1
 
     # assert i == 1000000
-    # assert k == bytes.fromhex(
-    #     "7c3911e0ab2586fd864497297e575e6f3bc601c0883c30df5f4dd2d24f665424")
+    # assert k == bytes.fromhex("7c3911e0ab2586fd864497297e575e6f3bc601c0883c30df5f4dd2d24f665424")
 
 
 def test_private_public():

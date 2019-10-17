@@ -112,7 +112,7 @@ def crypto_sign_ed25519_pk_to_curve25519(ed25519_pk: bytes) -> bytes:
     """
     Convert an Ed25519 public key to a Curve25519 public key
     """
-    if not isinstance(ed25519_pk, bytes) or len(ed25519_pk) != crypto_sign_ed25519_PUBLICKEYBYTES:
+    if len(ed25519_pk) != crypto_sign_ed25519_PUBLICKEYBYTES:
         raise TypeError("Invalid Ed25519 Key")
 
     curve25519_pk = ctypes.create_string_buffer(crypto_scalarmult_curve25519_BYTES)
@@ -126,7 +126,7 @@ def crypto_sign_ed25519_sk_to_curve25519(ed25519_sk: bytes) -> bytes:
     """
     Convert an Ed25519 secret key to a Curve25519 secret key
     """
-    if not isinstance(ed25519_sk, bytes) or len(ed25519_sk) != crypto_sign_ed25519_SECRETKEYBYTES:
+    if len(ed25519_sk) != crypto_sign_ed25519_SECRETKEYBYTES:
         raise TypeError("Invalid Ed25519 Key")
 
     curve25519_sk = ctypes.create_string_buffer(crypto_scalarmult_curve25519_BYTES)
@@ -137,7 +137,7 @@ def crypto_sign_ed25519_sk_to_curve25519(ed25519_sk: bytes) -> bytes:
 
 
 def crypto_core_ed25519_scalar_reduce(s: bytes) -> bytes:
-    if not isinstance(s, bytes) or len(s) != crypto_core_ed25519_NONREDUCEDSCALARBYTES:
+    if len(s) != crypto_core_ed25519_NONREDUCEDSCALARBYTES:
         raise TypeError("Invalid reduce() input")
 
     r = ctypes.create_string_buffer(crypto_core_ed25519_SCALARBYTES)

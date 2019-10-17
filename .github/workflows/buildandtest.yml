@@ -35,6 +35,9 @@ jobs:
       run: |
         pipenv run isort -c -q
       continue-on-error: true
+    - name: Check for type errors with mypy
+      run: |
+        mypy $GITHUB_WORKSPACE/src/age
     - name: Test with pytest
       run: |
         pipenv run pytest $GITHUB_WORKSPACE

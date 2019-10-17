@@ -38,8 +38,7 @@ def _read_struct(stream: typing.BinaryIO, fmt: str) -> tuple:
 
 
 def _sshbuf_get_cstring(stream: typing.BinaryIO) -> bytes:
-    # read data in the format: 32-bit length, data[length]
-    length, = _read_struct(stream, ">I")
+    (length,) = _read_struct(stream, ">I")  # read data in the format: 32-bit length, data[length]
     return stream.read(length)
 
 
@@ -165,7 +164,7 @@ def _decrypt_key(
 
     kdf_stream = io.BytesIO(kdf_metadata)
     salt = _sshbuf_get_cstring(kdf_stream)
-    rounds, = _read_struct(kdf_stream, ">I")
+    (rounds,) = _read_struct(kdf_stream, ">I")
 
     # ignore_few_rounds prevents a warning when called with <50 rounds
     bcrypt_result = bcrypt.kdf(
@@ -217,16 +216,16 @@ def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> A
     ciphername = _sshbuf_get_cstring(decoded_stream)
     kdfname = _sshbuf_get_cstring(decoded_stream)
     kdf_metadata = _sshbuf_get_cstring(decoded_stream)
-
-    key_count, = _read_struct(decoded_stream, ">I")
+    (key_count,) = _read_struct(decoded_stream, ">I")
     if key_count != 1:
         raise InvalidKeyFile("Only one private key per file supported")
 
     # skip public key
     _sshbuf_get_cstring(decoded_stream)
-
-    # read length of encrypted part (even if unencrypted file)
-    encrypted_length, = _read_struct(decoded_stream, ">I")
+    (
+        # read length of encrypted part (even if unencrypted file)
+        encrypted_length,
+    ) = _read_struct(decoded_stream, ">I")
     remaining_bytes = len(decoded) - decoded_stream.tell()
 
     # encrypted_length must exactly match the remaining data
@@ -267,7 +266,7 @@ def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> A
     # check deterministic padding: \x01\x02\x03\x04.. up til max. \x07
     for i in range(1, 8):
         try:
-            pad, = _read_struct(decrypted_stream, "B")
+            (pad,) = _read_struct(decrypted_stream, "B")
         except struct.error:
             # EOF
             break

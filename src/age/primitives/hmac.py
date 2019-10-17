@@ -27,21 +27,33 @@ class HMAC:
         )
 
     def generate(self, message: bytes) -> bytes:
-        """Generate authentication value for the given message"""
+        """Generate authentication value for the given message
+
+        :param message: Message to authenticate
+        :returns: 32-byte authentication tag (HMAC)
+        """
+
         self.mac.update(message)
         return self.mac.finalize()
 
     def verify(self, message: bytes, tag: bytes) -> None:
-        """Verify authentication value for the given message
+        """Verify authentication value for the given message (raising an exception on failure)
 
-        Raises :class:`cryptography.exceptions.InvalidSignature` on failed validation."""
+        :param message: Message to authenticate
+        :param tag: Authentication tag from :meth:`generate`
+        :raises cryptography.exceptions.InvalidSignature: on failed validation
+        """
+
         self.mac.update(message)
         self.mac.verify(tag)
 
     def is_valid(self, message: bytes, tag: bytes) -> bool:
-        """Check whether authentication value for the given message is correct
+        """Check whether authentication value for the given message is correct (returning the authentication result)
 
-        :returns: `True` if validation succeeds, `False` otherwise"""
+        :param message: Message to authenticate
+        :param tag: Authentication tag from :meth:`generate`
+        :returns: `True` if validation succeeds, `False` otherwise
+        """
         try:
             self.verify(message, tag)
         except InvalidSignature:
