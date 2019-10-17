@@ -32,3 +32,10 @@ repos:
     files: "^src/.*\\.py$"
     require_serial: true
     language: system
+  - id: requirements.txt
+    stages: [commit,push]
+    name: Regenerate requirements[-dev].txt
+    entry: pipenv run pipenv_to_requirements -f
+    files: "^Pipfile(?:.lock)?$"
+    pass_filenames: false
+    language: system
