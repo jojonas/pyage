@@ -5,7 +5,7 @@
 [![Documentation Status](https://readthedocs.org/projects/pyage/badge/?version=latest)](https://pyage.readthedocs.io/en/latest/?badge=latest)
 ![License](https://img.shields.io/github/license/jojonas/pyage)
 
-![pyage screenshot](https://raw.githubusercontent.com/jojonas/pyage/master/docs/source/_static/carbon.svg)
+![pyage screenshot](https://raw.githubusercontent.com/jojonas/pyage/master/docs/source/_static/carbon.png)
 
 pyage is an experimental implementation of @FiloSottile and @Benjojo12 's project "age".
 The spec is currently available as seven-page Google doc at [age-tool.com](https://age-tool.com).
