@@ -106,6 +106,7 @@ class Decryptor(io.RawIOBase):
         header_stream = io.BytesIO()
         dump_header(header, header_stream, mac=None)
         HMAC(self._hkdf(HEADER_HKDF_LABEL)).verify(header_stream.getvalue(), mac)
+        # TODO: Should we try another identity if HMAC validation fails?
 
     def _decrypt_body(self):
         assert self._file_key is not None

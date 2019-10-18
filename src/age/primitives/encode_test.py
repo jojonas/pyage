@@ -26,13 +26,6 @@ def test_encode():
     assert encoded == "SGVsbG8gV29ybGQh"
 
 
-def test_encode_wrap():
-    data = os.urandom(1024)
-    encoded = encode(data)
-    for line in encoded.splitlines():
-        assert len(line) <= 57
-
-
 def test_encode_decode():
     data = os.urandom(256)
     encoded = encode(data)

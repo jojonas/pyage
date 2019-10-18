@@ -1,5 +1,4 @@
 import base64
-import textwrap
 
 __all__ = ["encode", "decode"]
 
@@ -18,9 +17,7 @@ def encode(data: bytes) -> str:
     if not isinstance(data, bytes):
         raise TypeError("Can only encode() bytes.")
 
-    encoded = base64.urlsafe_b64encode(data).decode("ascii").rstrip("=")
-    wrapped = textwrap.fill(encoded, width=57)
-    return wrapped
+    return base64.urlsafe_b64encode(data).decode("ascii").rstrip("=")
 
 
 def decode(data: str) -> bytes:

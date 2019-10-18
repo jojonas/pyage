@@ -1,3 +1,4 @@
+import textwrap
 import typing
 
 from age.exceptions import ParserError
@@ -47,7 +48,7 @@ def load_header(stream: typing.BinaryIO) -> typing.Tuple[Header, bytes]:
         elif line.startswith(FOOTER_PREFIX):
             break
         elif len(header.recipients) > 0:
-            header.recipients[-1].body += line.replace("\n", "")
+            header.recipients[-1].body += line.strip()
 
     assert line.startswith(FOOTER_PREFIX)
     prefix, encoded_mac = line.split()
@@ -64,7 +65,8 @@ def dump_header(header: Header, stream: typing.BinaryIO, mac: bytes = None):
         line = RECIPIENT_PREFIX + " " + recipient.type + " " + " ".join(recipient.arguments) + "\n"
         stream.write(line.encode("utf-8"))
         if recipient.body:
-            stream.write(recipient.body.encode("utf-8") + b"\n")
+            wrapped = textwrap.fill(recipient.body, break_on_hyphens=False, width=56)
+            stream.write(wrapped.encode("utf-8") + b"\n")
 
     footer = FOOTER_PREFIX
     if mac:
