@@ -17,7 +17,7 @@ from age.keys.rsa import RSAPrivateKey, RSAPublicKey
 from age.openssh_keys import InvalidKeyFile, load_openssh_private_key
 
 
-def load_keys_txt(filename="~/.config/age/keys.txt") -> typing.Collection[DecryptionKey]:
+def load_keys_txt(filename="~/.config/age/keys.txt") -> typing.List[DecryptionKey]:
     filename = os.path.expanduser(filename)
 
     if not os.path.isfile(filename):
