@@ -77,3 +77,21 @@ jobs:
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
         echo "Hello (go)age." | pipenv run age encrypt $PUBKEY | $GOBIN/age -d $KEYFILE
+
+    - name: Install SSH-RSA keys
+      run: |
+        mkdir -p $HOME/.ssh
+        cp $GITHUB_WORKSPACE/testdata/test_rsa.pub $HOME/.ssh/id_rsa.pub
+        cp $GITHUB_WORKSPACE/testdata/test_rsa $HOME/.ssh/id_rsa
+
+    - name: "SSH-RSA: age -> pyage"
+      run: |
+        export GOPATH=$HOME/go
+        export GOBIN=$GOPATH/bin
+        echo "Hello pyage SSH." | $GOBIN/age "$(<$HOME/.ssh/id_rsa.pub)" | pipenv run age decrypt
+
+    - name: "SSH-RSA: pyage -> age"
+      run: |
+        export GOPATH=$HOME/go
+        export GOBIN=$GOPATH/bin
+        echo "Hello (go)age SSH." | pipenv run age encrypt $HOME/.ssh/id_rsa.pub | $GOBIN/age -d $HOME/.ssh/id_rsa
