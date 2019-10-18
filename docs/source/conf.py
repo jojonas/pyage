@@ -20,7 +20,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "age"
+project = "pyage"
 copyright = "2019, Jonas Lieb"
 author = "Jonas Lieb"
 
@@ -52,7 +52,17 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "nature"
+html_theme = "alabaster"
+html_theme_options = {
+    # 'logo': 'logo.png',
+    # "body_text_align": "justify",
+    "description": "Actually good encryption.<br>In Python.",
+    "fixed_sidebar": True,
+    "github_button": True,
+    "github_user": "jojonas",
+    "github_repo": "pyage",
+}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

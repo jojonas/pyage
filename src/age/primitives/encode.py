@@ -28,7 +28,7 @@ def decode(data: str) -> bytes:
 
     :param data: Base64-encoded data
     :returns: Raw data
-    :raises TypeError: if `data` is not a string
+    :raises TypeError: if ``data`` is not a string
     :raises ValueError: if base64-decoding fails (e.g. if `data` contains non-base64 characters)
 
     >>> decode('dGVzdA')

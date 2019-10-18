@@ -1,15 +1,17 @@
-Workflows
-=========
+.. _guides:
+
+How-To Guides
+=============
 
 This section outlines a few of the typical workflows which can be achieved with
 ``age``. For further information on the different subcommands, see :ref:`usage`
-below or call ``age`` with the ``--help`` option.
+or call ``age`` with the ``--help`` option.
 
 
-.. _examples-key-generation:
+.. _guide-key-generation:
 
-Key Generation
---------------
+Generate a Key Pair
+-------------------
 
 New age private keys can be generated with the ``age generate`` subcommand. By
 default the key is printed to the standard output stream, but it can also
@@ -25,10 +27,10 @@ directly by stored in a file.
     AGE_SECRET_KEY_yBO1LGytPAYcGPw3Ptu7LJ0xvwO1K9B9itImkvZej3E
 
 
-.. _examples-encryption:
+.. _guide-encryption:
 
-Encryption to a public key
---------------------------
+Encrypt to a Public Key
+-----------------------
 
 Public keys of recipients must be provided in the ``age encrypt`` command. The
 simplest use case is to encrypt to an age public key starting with ``pubkey:``.
@@ -37,15 +39,16 @@ simplest use case is to encrypt to an age public key starting with ``pubkey:``.
 
     $ echo "_o/" | age encrypt -o hello.age pubkey:oHoXjKEvpxAgs9rY2YGbiEfKG5wcFo-WEb_u1Mi3hVQ
 
-.. _examples-decryption:
+.. _guide-decryption:
 
-Decryption using default keys
------------------------------
+Decrypt Using a Private Key
+---------------------------
 
-``age`` will try keys from several locations during decryption (see
-:ref:`usage-decrypt`). The following example works because of the
-``~/.config/age/keys.txt`` file we created earlier (see
-:ref:`examples-key-generation`).
+``age`` will try private keys from several locations during decryption (see
+:ref:`usage-decrypt`). The following example works because the private key is
+stored at
+``~/.config/age/keys.txt`` (see
+:ref:`guide-key-generation`).
 
 ::
 
@@ -53,10 +56,10 @@ Decryption using default keys
     _o/
 
 
-.. _examples-password:
+.. _guide-password:
 
-Encryption using a password
----------------------------
+Encrypt Using a Password
+------------------------
 
 Besides asymmetric cryptography, ``age`` can also encrypt to a password. The
 same password is then required in order to decrypt the file. This can be seen
@@ -73,13 +76,13 @@ characters are not echoed to the terminal.
     Hello Password!
 
 
-.. _examples-recipient-list:
+.. _guide-recipient-list:
 
-Encryption to a list of recipients
-----------------------------------
+Encrypt to a List of Recipients
+-------------------------------
 
 Instead of providing a public key directly, ``age`` can read recipients from a
-file or an URL. Note that in this case, :ref:`aliases <examples-alias>` are
+file or an URL. Note that in this case, :ref:`aliases <guide-alias>` are
 *not* further expanded.
 
 ::
@@ -88,10 +91,10 @@ file or an URL. Note that in this case, :ref:`aliases <examples-alias>` are
     $ echo 'Hello URL!'  | age encrypt -o hello_recipients.age https://example.com/age-keys.txt
 
 
-.. _examples-github:
+.. _guide-github:
 
-Encryption to a GitHub user
----------------------------
+Encrypt to a GitHub User
+------------------------
 
 GitHub serves the SSH public keys `configured
 <https://help.github.com/en/articles/adding-a-new-ssh-key-to-your-github-account>`_
@@ -110,10 +113,10 @@ key is stored in at ``~/.ssh/id_rsa``.
     Hello GitHub!
 
 
-.. _examples-alias:
+.. _guide-alias:
 
-Encryption to an alias
-----------------------
+Use Aliases
+-----------
 
 Aliases can be configured in the file ``~/.config/age/aliases.txt``. The file
 contains one alias per line. The line must start with the alias label followed
@@ -129,33 +132,3 @@ be specified, separated by a space character.
 
     $ echo 'Hello Alias!' | age encrypt -o hello_alias.age jonas
 
-
-.. _usage:
-
-Usage
-=====
-
-.. command-output:: age --help
-
-
-.. _usage-encrypt:
-
-Encryption
-----------
-
-.. command-output:: age encrypt --help
-
-
-.. _usage-decrypt:
-
-Decryption
-----------
-
-.. command-output:: age decrypt --help
-
-.. _usage-generate:
-
-Key Generation
---------------
-
-.. command-output:: age generate --help
