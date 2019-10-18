@@ -5,6 +5,8 @@
 [![Documentation Status](https://readthedocs.org/projects/pyage/badge/?version=latest)](https://pyage.readthedocs.io/en/latest/?badge=latest)
 ![License](https://img.shields.io/github/license/jojonas/pyage)
 
+![pyage screenshot](https://raw.githubusercontent.com/jojonas/pyage/master/docs/source/_static/carbon.svg)
+
 pyage is an experimental implementation of @FiloSottile and @Benjojo12 's project "age".
 The spec is currently available as seven-page Google doc at [age-tool.com](https://age-tool.com).
 
@@ -16,18 +18,28 @@ My original intention was to better understand the spec, find mistakes early and
 So:
 ~~Use at your own risk.~~ *Do not use this project!*
 
-## Installation
+## Quick Start
 Install using pipenv:
 
-    $ pipenv install --skip-lock
+    $ pipenv install
 
-To remove pipenv installation:
+Generate a key pair:
 
-    $ pipenv --rm
+    $ mkdir -p ~/.config/age
+    $ pipenv run age generate > ~/.config/age/keys.txt
+
+Encrypt a file:
+
+    $ pipenv run age encrypt -i hello.txt -o hello.age pubkey:<recipient public key>
+
+Decrypt a file (uses `~/.config/age/keys.txt`):
+
+    $ pipenv run age decrypt -i hello.age
+
+For a real tutorial, see [the Tutorial section in the documentation](https://pyage.readthedocs.io/en/latest/tutorials.html).
 
 ## Documentation
-
-A documentation about pyage's [features](https://pyage.readthedocs.io/en/latest/usage.html) and the [API](https://pyage.readthedocs.io/en/latest/api/age.html) can be found at [pyage.readthedocs.io](https://pyage.readthedocs.io/en/latest/index.html).
+The full documentation can be found at [pyage.readthedocs.io](https://pyage.readthedocs.io/en/latest/index.html).
 
 ## Development
 * Enforce PEP8 with [black](https://github.com/psf/black), [flake8](http://flake8.pycqa.org/en/latest/) and [isort](https://timothycrosley.github.io/isort/)
