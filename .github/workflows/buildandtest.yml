@@ -25,6 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install --upgrade pipenv
+        sudo apt-get update
         sudo apt-get install -y libsodium-dev
         pipenv install --deploy --dev
     - name: Lint with flake8
