@@ -65,7 +65,7 @@ def dump_header(header: Header, stream: typing.BinaryIO, mac: bytes = None):
         line = RECIPIENT_PREFIX + " " + recipient.type + " " + " ".join(recipient.arguments) + "\n"
         stream.write(line.encode("utf-8"))
         if recipient.body:
-            wrapped = textwrap.fill(recipient.body, break_on_hyphens=False, width=56)
+            wrapped = textwrap.fill(recipient.body, break_on_hyphens=False, width=64)
             stream.write(wrapped.encode("utf-8") + b"\n")
 
     footer = FOOTER_PREFIX
