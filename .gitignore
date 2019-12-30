@@ -9,3 +9,4 @@ docs/build
 pip-wheel-metadata/
 .coverage
 htmlcov
+.vscode/tags

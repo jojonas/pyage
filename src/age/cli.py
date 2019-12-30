@@ -13,6 +13,7 @@ from age.keyloader import load_aliases, load_keys_txt, load_ssh_keys, resolve_pu
 from age.keys.agekey import AgePrivateKey
 from age.keys.base import DecryptionKey
 from age.keys.password import PasswordKey
+from age.utils.asciiarmor import AsciiArmoredOutput, AsciiArmoredInput, AGE_PEM_LABEL
 from age.utils.copy_doc import copy_doc
 
 
@@ -21,13 +22,14 @@ def encrypt(
     infile: typing.BinaryIO = None,
     outfile: typing.BinaryIO = None,
     ask_password: bool = False,
+    ascii_armored: bool = False,
 ) -> None:
     """Encrypt data for the given recipients.
 
     \b
     RECIPIENTS can be a list of either:
     - aliases (from ~/.config/age/aliases.txt)
-    - age public keys (starting with "pubkey:")
+    - age public keys (starting with "age1...")
     - SSH public keys (starting with "ssh-rsa" or "ssh-ed25519")
     - Files with one key per line (no aliases allowed)
     - URLs to files with one key per line (no aliases allowed)
@@ -78,6 +80,9 @@ def encrypt(
         print("You must specify at least one recipient.", file=sys.stderr)
         sys.exit(1)
 
+    if ascii_armored:
+        outfile = AsciiArmoredOutput(AGE_PEM_LABEL, outfile)
+
     with Encryptor(keys, outfile) as encryptor:
         encryptor.write(infile.read())
 
@@ -87,6 +92,7 @@ def decrypt(
     outfile: typing.BinaryIO = None,
     ask_password: bool = False,
     keyfiles: typing.List[str] = None,
+    ascii_armored: bool = False,
 ) -> None:
     """Decrypt a file encrypted with 'age encrypt'.
 
@@ -125,6 +131,9 @@ def decrypt(
         print("No keys loaded.", file=sys.stderr)
         sys.exit(1)
 
+    if ascii_armored:
+        infile = AsciiArmoredInput(AGE_PEM_LABEL, infile)
+
     with Decryptor(keys, infile) as decryptor:
         outfile.write(decryptor.read())
 
@@ -162,7 +171,7 @@ def generate(outfile: typing.TextIO = None) -> None:
     # - data is going to a file
     # OR: - data is not going to a tty (e.g. piped)
     if (outfile is not sys.stdout) or (not sys.stdout.isatty()):
-        sys.stderr.write("Public key: " + key.public_key().public_string())
+        print("Public key: " + key.public_key().public_string(), file=sys.stderr)
 
 
 @click.group()
@@ -174,20 +183,34 @@ def main():
 @click.option("-i", "--infile", type=click.File("rb"))
 @click.option("-o", "--outfile", type=click.File("wb"))
 @click.option("-p", "--password", is_flag=True)
+@click.option("-a", "--ascii", is_flag=True)
 @click.argument("recipients", nargs=-1)
 @copy_doc(encrypt)
-def cli_encrypt(infile, outfile, password, recipients):
-    return encrypt(recipients=recipients, infile=infile, outfile=outfile, ask_password=password)
+def cli_encrypt(infile, outfile, password, ascii, recipients):
+    return encrypt(
+        recipients=recipients,
+        infile=infile,
+        outfile=outfile,
+        ask_password=password,
+        ascii_armored=ascii,
+    )
 
 
 @main.command("decrypt")
 @click.option("-i", "--infile", type=click.File("rb"))
 @click.option("-o", "--outfile", type=click.File("wb"))
 @click.option("-p", "--password", is_flag=True)
+@click.option("-a", "--ascii", is_flag=True)
 @click.argument("keyfiles", nargs=-1)
 @copy_doc(decrypt)
-def cli_decrypt(infile, outfile, password, keyfiles):
-    return decrypt(infile=infile, outfile=outfile, ask_password=password, keyfiles=keyfiles)
+def cli_decrypt(infile, outfile, password, ascii, keyfiles):
+    return decrypt(
+        infile=infile,
+        outfile=outfile,
+        ask_password=password,
+        keyfiles=keyfiles,
+        ascii_armored=ascii,
+    )
 
 
 @main.command("generate")

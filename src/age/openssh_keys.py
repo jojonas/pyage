@@ -11,10 +11,10 @@ from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers import algorithms as cipher_algos
 from cryptography.hazmat.primitives.ciphers import modes as cipher_modes
 
+from age.utils.asciiarmor import read_ascii_armored
+
 __all__ = ["load_openssh_private_key", "InvalidKeyFile", "WrongPassphrase"]
 
-OPENSSH_HEADER = b"-----BEGIN OPENSSH PRIVATE KEY-----"
-OPENSSH_FOOTER = b"-----END OPENSSH PRIVATE KEY-----"
 OPENSSH_MAGIC = b"openssh-key-v1\00"
 
 AnyPrivateKey = typing.Union[
@@ -192,18 +192,12 @@ def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> A
     # https://github.com/openssh/openssh-portable/blob/master/sshkey.c
     # sshkey_parse_private2, sshkey_private_deserialize, sshkey_private_serialize_opt
 
-    openssh_data = openssh_data.strip()
-
-    if not openssh_data.startswith(OPENSSH_HEADER):
+    file = io.StringIO(openssh_data.decode("ascii"))
+    for label, decoded in read_ascii_armored(file, strict_line_length=False):
+        if label == "OPENSSH PRIVATE KEY":
+            break
+    else:  # nobreak
         raise InvalidKeyFile("Missing OpenSSH header")
-
-    if not openssh_data.endswith(OPENSSH_FOOTER):
-        raise InvalidKeyFile("Missing OpenSSH footer")
-
-    base64_encoded_part = openssh_data[len(OPENSSH_HEADER) : -len(OPENSSH_FOOTER)].replace(
-        b"\n", b""
-    )
-    decoded = base64.b64decode(base64_encoded_part, validate=True)
 
     if not decoded.startswith(OPENSSH_MAGIC):
         raise InvalidKeyFile("Invalid magic bytes")
