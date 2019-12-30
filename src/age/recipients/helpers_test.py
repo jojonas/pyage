@@ -28,7 +28,7 @@ def test_decrypt_file_key():
 def test_recipient_line_parsing():
     recipient = get_recipient(
         "X25519",
-        ["r8_wQqHknnD7kpTtyt2MHlMFflGplYR-IDtV3mRuaAE"],
+        ["r8_wQqHknnD7kpTtyt2MHlMFflGplYR+IDtV3mRuaAE"],
         "QP2nUlmkrAjvRJXIo1WHS9dyDBuoZa3RPxVOUB3cNfs",
     )
 

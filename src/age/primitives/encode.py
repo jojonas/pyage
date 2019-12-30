@@ -17,7 +17,7 @@ def encode(data: bytes) -> str:
     if not isinstance(data, bytes):
         raise TypeError("Can only encode() bytes.")
 
-    return base64.urlsafe_b64encode(data).decode("ascii").rstrip("=")
+    return base64.b64encode(data).decode("ascii").rstrip("=")
 
 
 def decode(data: str) -> bytes:
@@ -34,4 +34,4 @@ def decode(data: str) -> bytes:
 
     if not isinstance(data, str):
         raise TypeError("Can only decode() strings.")
-    return base64.urlsafe_b64decode(data + "===")
+    return base64.b64decode(data + "===")

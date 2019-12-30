@@ -5,8 +5,8 @@ from age.recipients.x25519 import X25519Recipient
 def test_parse_recipient_line():
     recipient = get_recipient(
         "X25519",
-        ["CJM36AHmTbdHSuOQL-NESqyVQE75f2e610iRdLPEN20"],
-        "C3ZAeY64NXS4QFrksLm3EGz-uPRyI0eQsWw7LWbbYig",
+        ["CJM36AHmTbdHSuOQL+NESqyVQE75f2e610iRdLPEN20"],
+        "C3ZAeY64NXS4QFrksLm3EGz+uPRyI0eQsWw7LWbbYig",
     )
     assert isinstance(recipient, X25519Recipient)
     assert recipient.derived_secret == bytes.fromhex(
