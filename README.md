@@ -50,3 +50,4 @@ The full documentation can be found at [pyage.readthedocs.io](https://pyage.read
 ## TODO
 * Error handling
 * Proper logging (to stderr)
+* ASCII armored format

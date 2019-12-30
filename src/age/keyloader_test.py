@@ -16,9 +16,9 @@ from age.keys.rsa import RSAPrivateKey
 def test_keys_txt():
     with tempfile.NamedTemporaryFile() as file:
         file.write(
-            b"""# created: 2019-09-21T23:04:02
-# pubkey:oHoXjKEvpxAgs9rY2YGbiEfKG5wcFo-WEb_u1Mi3hVQ
-AGE_SECRET_KEY_yBO1LGytPAYcGPw3Ptu7LJ0xvwO1K9B9itImkvZej3E"""
+            b"""# created: 2019-12-30T19:34:52
+# age17v86x0glgp0vls0uaru4h3xpfm79xu6ud6ew3cvd3956m96umf5szty0gd
+AGE-SECRET-KEY-1FP0QEUKLA2GRCFSEZC9JU6WR8RKWPFKM0P3S8TL9NK7PTHMWNALQT7V9DX"""
         )
         file.flush()
 
@@ -115,21 +115,26 @@ def test_aliases():
         file.write(
             b"""# this is a comment
 
-filippo: pubkey:jqmfMHBjlb7HoIjjTsCQ9NHIk_q53Uy_ZxmXBhdIpx4
-ben: pubkey:ZAE2ZnRdItykp0ncAZJ2FAzIIfTvmGcgIx/759QhnQw github:Benjojo"""
+filippo: age17v86x0glgp0vls0uaru4h3xpfm79xu6ud6ew3cvd3956m96umf5szty0gd
+ben: age17v86x0glgp0vls0uaru4h3xpfm79xu6ud6ew3cvd3956m96umf5szty0gd github:Benjojo"""
         )
         file.flush()
 
         aliases = load_aliases(file.name)
         assert aliases == {
-            "filippo": ["pubkey:jqmfMHBjlb7HoIjjTsCQ9NHIk_q53Uy_ZxmXBhdIpx4"],
-            "ben": ["pubkey:ZAE2ZnRdItykp0ncAZJ2FAzIIfTvmGcgIx/759QhnQw", "github:Benjojo"],
+            "filippo": ["age17v86x0glgp0vls0uaru4h3xpfm79xu6ud6ew3cvd3956m96umf5szty0gd"],
+            "ben": [
+                "age17v86x0glgp0vls0uaru4h3xpfm79xu6ud6ew3cvd3956m96umf5szty0gd",
+                "github:Benjojo",
+            ],
         }
 
 
 def test_public_key_resolving():
-    assert resolve_public_key("pubkey:jqmfMHBjlb7HoIjjTsCQ9NHIk_q53Uy_ZxmXBhdIpx4") == [
-        AgePublicKey.from_public_string("pubkey:jqmfMHBjlb7HoIjjTsCQ9NHIk_q53Uy_ZxmXBhdIpx4")
+    assert resolve_public_key("age17v86x0glgp0vls0uaru4h3xpfm79xu6ud6ew3cvd3956m96umf5szty0gd") == [
+        AgePublicKey.from_public_string(
+            "age17v86x0glgp0vls0uaru4h3xpfm79xu6ud6ew3cvd3956m96umf5szty0gd"
+        )
     ]
     # check here: https://github.com/jojonas.keys
-    assert len(resolve_public_key("github:jojonas")) == 3
+    assert len(resolve_public_key("github:jojonas")) == 4

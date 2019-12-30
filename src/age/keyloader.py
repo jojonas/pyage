@@ -143,7 +143,7 @@ def resolve_public_key(
         return resolved_from_url
 
     # resolve "pubkey:" lines
-    if keystr.startswith("pubkey:"):
+    if keystr.startswith(AgePublicKey.PUBLIC_KEY_BECH32_HRP):
         return [AgePublicKey.from_public_string(keystr)]
 
     # resolve "ssh-rsa" lines

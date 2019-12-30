@@ -10,8 +10,8 @@ from pytest import raises
 
 from age.cli import decrypt, encrypt, generate
 
-TEST_KEY = "# created: 2019-11-10T10:00:00\n# pubkey:dn0lL3QgN3w92S1yiMsNXyun6K3_Qi2cFkFfnKXnJ3Q\nAGE_SECRET_KEY_2LUBxmnPrLHcwXT0YutXh846RE6tC5FVWXcMp9epkV4\n"
-TEST_KEY_PUBLIC = "pubkey:dn0lL3QgN3w92S1yiMsNXyun6K3_Qi2cFkFfnKXnJ3Q"
+TEST_KEY = "# created: 2019-11-10T10:00:00\n# age1we7j2tm5yqmhc0we94eg3jcdtu46069dlapzm8qkg90eef08ya6q90qz3l\nAGE-SECRET-KEY-1MZ6SR3NFE7KTRHXPWN6X966HSL8R53ZW459EZ42EWUX204AFJ90QHA8935\n"
+TEST_KEY_PUBLIC = "age1we7j2tm5yqmhc0we94eg3jcdtu46069dlapzm8qkg90eef08ya6q90qz3l"
 TEST_KEY_RAW = bytes.fromhex("d8b501c669cfacb1dcc174f462eb5787ce3a444ead0b915559770ca7d7a9915e")
 
 TEST_PLAINTEXT = b"Hello World!"

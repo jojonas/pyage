@@ -96,14 +96,14 @@ def _deserialize_dsa_private_key(stream: typing.BinaryIO) -> dsa.DSAPrivateKey:
 
 def _deserialize_ecdsa_private_key(stream: typing.BinaryIO) -> ec.EllipticCurvePrivateKey:
     curve_name = _sshbuf_get_cstring(stream)
-    curves: ec.EllipticCurve = {
+    curves: typing.Dict[bytes, ec.EllipticCurve] = {
         b"nistp256": ec.SECP256R1,
         b"nistp521": ec.SECP521R1,
         b"nistp224": ec.SECP224R1,
     }
 
     if curve_name not in curves:
-        raise InvalidKeyFile(f"Unsupported ECDSA curve {curve_name}")
+        raise InvalidKeyFile(f"Unsupported ECDSA curve {curve_name!r}")
 
     curve = curves[curve_name]
 
@@ -146,7 +146,7 @@ def _decrypt_key(
         raise InvalidKeyFile("Encrypted SSH key without KDF function name")
 
     if kdfname != b"bcrypt":
-        raise InvalidKeyFile(f"Unsupported private key encryption KDF {kdfname}")
+        raise InvalidKeyFile(f"Unsupported private key encryption KDF {kdfname!r}")
 
     Suite = collections.namedtuple(
         "Suite", ("algorithm", "mode", "key_bytes", "block_bytes", "iv_bytes")
@@ -158,7 +158,7 @@ def _decrypt_key(
     }
 
     if ciphername not in suites:
-        raise NotImplementedError(f"Unsupported private key encryption cipher {ciphername}")
+        raise NotImplementedError(f"Unsupported private key encryption cipher {ciphername!r}")
 
     suite = suites[ciphername]
 
@@ -245,7 +245,7 @@ def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> A
 
     # retval
     # we don't do early returns because we need to validate the rest of the file (e.g. padding)
-    key: AnyPrivateKey = None
+    key: typing.Optional[AnyPrivateKey] = None
 
     # read private key type
     key_type = _sshbuf_get_cstring(decrypted_stream)
@@ -258,7 +258,7 @@ def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> A
     elif key_type == b"ssh-ed25519":
         key = _deserialize_ed25519_private_key(decrypted_stream)
     else:
-        raise NotImplementedError(f"SSH key type {key_type} not implemented yet.")
+        raise NotImplementedError(f"SSH key type {key_type!r} not implemented yet.")
 
     # discard key comment
     _sshbuf_get_cstring(decrypted_stream)

@@ -2,12 +2,13 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey, X25519PublicKey
 
 from age.keys.base import DecryptionKey, EncryptionKey
-from age.primitives.encode import decode, encode
 from age.primitives.x25519 import ECPoint, ECScalar
+from age.primitives.bech32 import bech32_decode, bech32_encode
 
 
 class AgePrivateKey(DecryptionKey):
-    PRIVATE_KEY_PREFIX = "AGE_SECRET_KEY_"
+    # HRP = human-readable part
+    PRIVATE_KEY_BECH32_HRP = "age-secret-key-"
 
     def __init__(self, key: X25519PrivateKey):
         """Do not call directly"""
@@ -32,11 +33,11 @@ class AgePrivateKey(DecryptionKey):
     @classmethod
     def from_private_string(cls, data: str):
         """Read an age key from a private key string"""
-        if not data.startswith(cls.PRIVATE_KEY_PREFIX):
-            raise ValueError(f"Private keys must start with '{cls.PRIVATE_KEY_PREFIX}'.")
+        data = data.lower()
 
-        key = data[len(cls.PRIVATE_KEY_PREFIX) :]
-        bytes_ = decode(key)
+        hrp, bytes_ = bech32_decode(data)
+        if hrp != cls.PRIVATE_KEY_BECH32_HRP or len(bytes_) != 32:
+            raise ValueError("invalid age private key")
 
         return cls.from_private_bytes(ECScalar(bytes_))
 
@@ -46,13 +47,15 @@ class AgePrivateKey(DecryptionKey):
 
     def private_string(self) -> str:
         """Generate a private (secret) key string for this key"""
-        return self.PRIVATE_KEY_PREFIX + encode(self.private_bytes())
+        return bech32_encode(self.PRIVATE_KEY_BECH32_HRP, self.private_bytes()).upper()
 
     def private_bytes(self) -> ECScalar:
-        return self._key.private_bytes(
-            encoding=serialization.Encoding.Raw,
-            format=serialization.PrivateFormat.Raw,
-            encryption_algorithm=serialization.NoEncryption(),
+        return ECScalar(
+            self._key.private_bytes(
+                encoding=serialization.Encoding.Raw,
+                format=serialization.PrivateFormat.Raw,
+                encryption_algorithm=serialization.NoEncryption(),
+            )
         )
 
     def public_key(self):
@@ -60,7 +63,8 @@ class AgePrivateKey(DecryptionKey):
 
 
 class AgePublicKey(EncryptionKey):
-    PUBLIC_KEY_PREFIX = "pubkey:"
+    # HRP = human-readable part
+    PUBLIC_KEY_BECH32_HRP = "age"
 
     def __init__(self, key: X25519PublicKey):
         """Do not call directly"""
@@ -80,13 +84,13 @@ class AgePublicKey(EncryptionKey):
     @classmethod
     def from_public_string(cls, data: str):
         """Read an age public key from a public key string"""
-        if not data.startswith(cls.PUBLIC_KEY_PREFIX):
-            raise ValueError(f"Public keys must start with '{cls.PUBLIC_KEY_PREFIX}'.")
+        data = data.lower()
 
-        key = data[len(cls.PUBLIC_KEY_PREFIX) :]
-        bytes_ = decode(key)
+        hrp, key = bech32_decode(data)
+        if hrp != cls.PUBLIC_KEY_BECH32_HRP:
+            raise ValueError("invalid age public key")
 
-        return cls.from_public_bytes(ECPoint(bytes_))
+        return cls.from_public_bytes(ECPoint(key))
 
     @classmethod
     def from_public_bytes(cls, data: ECPoint):
@@ -94,9 +98,12 @@ class AgePublicKey(EncryptionKey):
 
     def public_string(self) -> str:
         """Generate a public key string for this key"""
-        return self.PUBLIC_KEY_PREFIX + encode(self.public_bytes())
+        return bech32_encode(self.PUBLIC_KEY_BECH32_HRP, self.public_bytes())
 
     def public_bytes(self) -> ECPoint:
-        return self._key.public_bytes(
-            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+        return ECPoint(
+            self._key.public_bytes(
+                encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+            )
         )
+

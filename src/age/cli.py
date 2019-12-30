@@ -149,6 +149,7 @@ def generate(outfile: typing.TextIO = None) -> None:
     outfile.write(key.private_string() + "\n")
 
     if hasattr(outfile, "name") and os.path.isfile(outfile.name):
+        # check permissions if the key is stored in a file
         stat_result = os.stat(outfile.name)
         permissions = stat_result[stat.ST_MODE]
         if permissions & stat.S_IRWXO:
@@ -156,6 +157,12 @@ def generate(outfile: typing.TextIO = None) -> None:
                 f"Warning: The file permissions indicate that other users may have access to the key file '{outfile.name}'.",
                 file=sys.stderr,
             )
+
+    # print public key to stderr if:
+    # - data is going to a file
+    # OR: - data is not going to a tty (e.g. piped)
+    if (outfile is not sys.stdout) or (not sys.stdout.isatty()):
+        sys.stderr.write("Public key: " + key.public_key().public_string())
 
 
 @click.group()

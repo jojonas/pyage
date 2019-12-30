@@ -28,7 +28,7 @@ requests = "*"
 pynacl = ">=1.3.0"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
