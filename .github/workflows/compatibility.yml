@@ -30,11 +30,10 @@ jobs:
 
     - name: Install age
       run: |
-        export GOPATH=$HOME/go
-        export GOBIN=$GOPATH/bin
-        mkdir -p $GOPATH
-        mkdir -p $GOBIN
-        go get -u -v github.com/FiloSottile/age/cmd/age
+        cd $HOME
+        git clone https://filippo.io/age
+        cd age
+        go build -o . filippo.io/age/cmd/...
 
     - name: Set up Python 3.8
       uses: actions/setup-python@v1
@@ -51,11 +50,9 @@ jobs:
 
     - name: "Sanity check: age -> age"
       run: |
-        export GOPATH=$HOME/go
-        export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello Golang sanity." | $GOBIN/age $PUBKEY | $GOBIN/age -d $KEYFILE
+        echo "Hello Golang sanity." | $HOME/age/age $PUBKEY | $HOME/age/age -d $KEYFILE
 
     - name: "Sanity check: pyage -> pyage"
       run: |
@@ -71,7 +68,7 @@ jobs:
         export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello pyage." | $GOBIN/age $PUBKEY | pipenv run age decrypt $KEYFILE
+        echo "Hello pyage." | $HOME/age/age $PUBKEY | pipenv run age decrypt $KEYFILE
 
     - name: pyage -> age
       run: |
@@ -79,7 +76,7 @@ jobs:
         export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello (go)age." | pipenv run age encrypt $PUBKEY | $GOBIN/age -d $KEYFILE
+        echo "Hello (go)age." | pipenv run age encrypt $PUBKEY | $HOME/age/age -d $KEYFILE
 
     - name: Install SSH-RSA keys
       run: |
@@ -91,10 +88,10 @@ jobs:
       run: |
         export GOPATH=$HOME/go
         export GOBIN=$GOPATH/bin
-        echo "Hello pyage SSH." | $GOBIN/age "$(<$HOME/.ssh/id_rsa.pub)" | pipenv run age decrypt
+        echo "Hello pyage SSH." | $HOME/age/age "$(<$HOME/.ssh/id_rsa.pub)" | pipenv run age decrypt
 
     - name: "SSH-RSA: pyage -> age"
       run: |
         export GOPATH=$HOME/go
         export GOBIN=$GOPATH/bin
-        echo "Hello (go)age SSH." | pipenv run age encrypt $HOME/.ssh/id_rsa.pub | $GOBIN/age -d $HOME/.ssh/id_rsa
+        echo "Hello (go)age SSH." | pipenv run age encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d $HOME/.ssh/id_rsa
