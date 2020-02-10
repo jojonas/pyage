@@ -64,13 +64,13 @@ jobs:
       run: |
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
-        echo "Hello pyage." | $HOME/age/age $PUBKEY | pipenv run pyage decrypt $KEYFILE
+        echo "Hello pyage." | $HOME/age/age -r $PUBKEY | pipenv run pyage decrypt $KEYFILE
 
     - name: pyage -> age
       run: |
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
         export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
-        echo "Hello (go)age." | pipenv run pyage encrypt $PUBKEY | $HOME/age/age -d $KEYFILE
+        echo "Hello (go)age." | pipenv run pyage encrypt $PUBKEY | $HOME/age/age -d -i $KEYFILE
 
     - name: Install SSH-RSA keys
       run: |
@@ -80,8 +80,8 @@ jobs:
 
     - name: "SSH-RSA: age -> pyage"
       run: |
-        echo "Hello pyage SSH." | $HOME/age/age "$(<$HOME/.ssh/id_rsa.pub)" | pipenv run pyage decrypt
+        echo "Hello pyage SSH." | $HOME/age/age -r "$(<$HOME/.ssh/id_rsa.pub)" | pipenv run pyage decrypt
 
     - name: "SSH-RSA: pyage -> age"
       run: |
-        echo "Hello (go)age SSH." | pipenv run pyage encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d $HOME/.ssh/id_rsa
+        echo "Hello (go)age SSH." | pipenv run pyage encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d -i $HOME/.ssh/id_rsa
