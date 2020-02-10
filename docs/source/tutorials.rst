@@ -15,19 +15,19 @@ On Debian or Ubuntu, use:
 
 ::
 
-    $ sudo apt install python3 pipenv
+    $ sudo apt install python3 pipenv libsodium-dev
 
 On Arch, install them as
 
 ::
 
-    $ sudo pacman -S python python-pipenv
+    $ sudo pacman -S python python-pipenv libsodium
 
 On Fedora, use
 
 ::
 
-    $ sudo dnf install python3 pipenv
+    $ sudo dnf install python3 pipenv libsodium-devel
 
 
 Installing pyage
@@ -66,15 +66,15 @@ And it's just as exciting!
 ::
 
     $ mkdir -p ~/.config/age
-    $ age generate | tee ~/.config/age/keys.txt
+    $ pyage generate | tee ~/.config/age/keys.txt
 
 You should see something like:
 
 ::
 
-    # created: 2019-10-19T12:34:56
-    # pubkey:Vn5D1ZdwXiEtO3xZ_81psWqTgEyngXZfiBH_4kddWS0
-    AGE_SECRET_KEY_uBE1QNrUFq4dSrmKyAiDWKDd9HCuasETsF7RsIcuh2E
+    # created: 2020-02-10T13:34:27
+    # age1luj4yjndx48me58dalx200cs65qg9jhtcehjylnp8h9e2c9gduqqq8kduu
+    AGE-SECRET-KEY-1TPGEV9GPP6N39Z40RXTQQJMUHU40EJGDDWEFJDJFWVMY0F9FR9NSQRKGQL
 
 Take note of the part starting with ``pubkey:<gibberish>``. This is your public
 key. It serves as your new "address" and you may distribute it to your friends
@@ -96,7 +96,7 @@ Encrypt the file to the public key obtained earlier:
 
 ::
 
-    $ age encrypt -i hello.txt -o hello.age pubkey:Vn5D1ZdwXiEtO3xZ_81psWqTgEyngXZfiBH_4kddWS0
+    $ pyage encrypt -i hello.txt -o hello.age age1luj4yjndx48me58dalx200cs65qg9jhtcehjylnp8h9e2c9gduqqq8kduu
 
 The encrypted file is now stored at ``hello.age``.
 
@@ -108,6 +108,6 @@ In order to decrypt the file, all you need to do is to call
 
 ::
 
-    $ age decrypt -i hello.age
+    $ pyage decrypt -i hello.age
 
 If all went well, your terminal will print out "Hello World". Hello!

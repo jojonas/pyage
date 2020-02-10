@@ -4,7 +4,7 @@
 Command Line Interface (CLI)
 ============================
 
-.. command-output:: age --help
+.. command-output:: pyage --help
 
 
 .. _usage-encrypt:
@@ -12,7 +12,7 @@ Command Line Interface (CLI)
 Encryption
 ----------
 
-.. command-output:: age encrypt --help
+.. command-output:: pyage encrypt --help
 
 
 .. _usage-decrypt:
@@ -20,11 +20,11 @@ Encryption
 Decryption
 ----------
 
-.. command-output:: age decrypt --help
+.. command-output:: pyage decrypt --help
 
 .. _usage-generate:
 
 Key Generation
 --------------
 
-.. command-output:: age generate --help
+.. command-output:: pyage generate --help

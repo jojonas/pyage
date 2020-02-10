@@ -19,12 +19,12 @@ directly by stored in a file.
 
 ::
 
-    $ age generate >> ~/.config/age/keys.txt
+    $ pyage generate >> ~/.config/age/keys.txt
 
     $ cat ~/.config/age/keys.txt
-    # created: 2019-09-21T23:04:02
-    # pubkey:oHoXjKEvpxAgs9rY2YGbiEfKG5wcFo-WEb_u1Mi3hVQ
-    AGE_SECRET_KEY_yBO1LGytPAYcGPw3Ptu7LJ0xvwO1K9B9itImkvZej3E
+    # created: 2020-02-10T13:34:27
+    # age1luj4yjndx48me58dalx200cs65qg9jhtcehjylnp8h9e2c9gduqqq8kduu
+    AGE-SECRET-KEY-1TPGEV9GPP6N39Z40RXTQQJMUHU40EJGDDWEFJDJFWVMY0F9FR9NSQRKGQL
 
 
 .. _guide-encryption:
@@ -33,11 +33,11 @@ Encrypt to a Public Key
 -----------------------
 
 Public keys of recipients must be provided in the ``age encrypt`` command. The
-simplest use case is to encrypt to an age public key starting with ``pubkey:``.
+simplest use case is to encrypt to an age public key starting with ``age1``.
 
 ::
 
-    $ echo "_o/" | age encrypt -o hello.age pubkey:oHoXjKEvpxAgs9rY2YGbiEfKG5wcFo-WEb_u1Mi3hVQ
+    $ echo "_o/" | pyage encrypt -o hello.age age1luj4yjndx48me58dalx200cs65qg9jhtcehjylnp8h9e2c9gduqqq8kduu
 
 .. _guide-decryption:
 
@@ -52,7 +52,7 @@ stored at
 
 ::
 
-    $ age decrypt -i hello.age
+    $ pyage decrypt -i hello.age
     _o/
 
 
@@ -68,10 +68,10 @@ characters are not echoed to the terminal.
 
 ::
 
-    $ echo 'Hello Password!' | age encrypt -p -o hello_password.age
+    $ echo 'Hello Password!' | pyage encrypt -p -o hello_password.age
     Type passphrase:
 
-    $ age decrypt -p -i hello_password.age
+    $ pyage decrypt -p -i hello_password.age
     Type passphrase:
     Hello Password!
 
@@ -87,8 +87,8 @@ file or an URL. Note that in this case, :ref:`aliases <guide-alias>` are
 
 ::
 
-    $ echo 'Hello file!' | age encrypt -o hello_recipients.age recipients.txt
-    $ echo 'Hello URL!'  | age encrypt -o hello_recipients.age https://example.com/age-keys.txt
+    $ echo 'Hello file!' | pyage encrypt -o hello_recipients.age recipients.txt
+    $ echo 'Hello URL!'  | pyage encrypt -o hello_recipients.age https://example.com/age-keys.txt
 
 
 .. _guide-github:
@@ -107,9 +107,9 @@ key is stored in at ``~/.ssh/id_rsa``.
 
 ::
 
-    $ echo 'Hello GitHub!' | age encrypt -o hello_github.age github:jojonas
+    $ echo 'Hello GitHub!' | pyage encrypt -o hello_github.age github:jojonas
 
-    $ age decrypt -i hello_github.age
+    $ pyage decrypt -i hello_github.age
     Hello GitHub!
 
 
@@ -126,9 +126,9 @@ be specified, separated by a space character.
 ::
 
     $ cat ~/.config/age/aliases.txt
-    filippo: pubkey:jqmfMHBjlb7HoIjjTsCQ9NHIk_q53Uy_ZxmXBhdIpx4
-    ben: pubkey:ZAE2ZnRdItykp0ncAZJ2FAzIIfTvmGcgIx/759QhnQw github:Benjojo
-    jonas: pubkey:oHoXjKEvpxAgs9rY2YGbiEfKG5wcFo-WEb_u1Mi3hVQ github:jojonas
+    filippo: age1luj4yjndx48me58dalx200cs65qnotarealkeyjylnp8h9e2c9gduqqq8kduu
+    ben: age1luj4yjndx48me58dalx200cs65qnotarealkeyjylnp8h9e2c9gduqqq8kduu github:Benjojo
+    jonas: age1luj4yjndx48me58dalx200cs65qg9jhtcehjylnp8h9e2c9gduqqq8kduu github:jojonas
 
-    $ echo 'Hello Alias!' | age encrypt -o hello_alias.age jonas
+    $ echo 'Hello Alias!' | pyage encrypt -o hello_alias.age jonas
 
