@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import io
 import os
 import stat
 import sys
@@ -159,17 +160,19 @@ def generate(outfile: typing.TextIO = None) -> None:
     outfile.write("# " + key.public_key().public_string() + "\n")
     outfile.write(key.private_string() + "\n")
 
-    stat_result = None
-
     # check permissions if the key is stored in a file
-    stat_result = os.stat(outfile.fileno())
-    mode = stat_result[stat.ST_MODE]
-    if mode & stat.S_IFREG and (mode & stat.S_IRWXO or mode & stat.S_IRWXG):
-        perms = mode & 0o777
-        print(
-            f"Warning: The file permissions ({perms:o}) indicate that other users may have access to the output.",
-            file=sys.stderr,
-        )
+    try:
+        stat_result = os.stat(outfile.fileno())
+    except io.UnsupportedOperation:
+        pass
+    else:
+        mode = stat_result[stat.ST_MODE]
+        if mode & stat.S_IFREG and (mode & stat.S_IRWXO or mode & stat.S_IRWXG):
+            perms = mode & 0o777
+            print(
+                f"Warning: The file permissions ({perms:o}) indicate that other users may have access to the output.",
+                file=sys.stderr,
+            )
 
     # print public key to stderr if:
     # - data is going to a file
