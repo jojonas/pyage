@@ -16,7 +16,7 @@ TEST_KEY_RAW = bytes.fromhex("d8b501c669cfacb1dcc174f462eb5787ce3a444ead0b915559
 
 TEST_PLAINTEXT = b"Hello World!"
 TEST_CIPHERTEXT = (
-    b"This is a file encrypted with age-tool.com, version 1\n-> X25519 FMqeTTh7zPNXRuBAfaqsxrKKT4RF71pRWIlNuYPiQHA\nUsVP7CmlQh5YiCrnp69U9D09TNi4c3rIZ7rRYq8syaE\n--- Wg6sarbap6UrC0rkyj2pGYvXbQ9j1uVHSJQ7O6SyWDI\n"
+    b"age-encryption.org/v1\n-> X25519 FMqeTTh7zPNXRuBAfaqsxrKKT4RF71pRWIlNuYPiQHA\nCtufbJCyj2JplnG6Rg3RHy6rJOUOE+Rqv8RGWoYWXlg\n--- gY9WMTjF1pksYSXC7xCFZGpiQH8frzkzKj1EG6Ql+gI\n"
     + bytes.fromhex(
         "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacb589584a3b51348f292714ab0d51537e404d9882f9b03aa3d7fedfd"
     )

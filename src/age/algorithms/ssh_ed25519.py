@@ -7,7 +7,7 @@ from age.primitives.hashes import sha256
 from age.primitives.hkdf import hkdf
 from age.primitives.x25519 import ECPoint, ECScalar, x25519_reduce, x25519_scalarmult
 
-AGE_ED25519_LABEL = b"age-tool.com ssh-ed25519"
+AGE_ED25519_LABEL = b"age-encryption.org/v1/ssh-ed25519"
 
 
 def _tweak(ssh_key: bytes) -> ECScalar:

@@ -25,7 +25,7 @@ class Header:
         self.recipients: typing.List[Recipient] = recipients
 
 
-MAGIC = "This is a file encrypted with age-tool.com, version 1"
+AGE_INTRO = "age-encryption.org/v1"
 RECIPIENT_PREFIX = "->"
 FOOTER_PREFIX = "---"
 AEAD = "ChaChaPoly"
@@ -34,7 +34,7 @@ AEAD = "ChaChaPoly"
 def load_header(stream: typing.BinaryIO) -> typing.Tuple[Header, bytes]:
     first_line = stream.readline().strip()
 
-    if first_line.decode("utf-8", "replace") != MAGIC:
+    if first_line.decode("utf-8", "replace") != AGE_INTRO:
         raise ParserError("File signature not found.")
 
     header = Header()
@@ -59,7 +59,7 @@ def load_header(stream: typing.BinaryIO) -> typing.Tuple[Header, bytes]:
 
 
 def dump_header(header: Header, stream: typing.BinaryIO, mac: bytes = None):
-    stream.write(MAGIC.encode("utf-8") + b"\n")
+    stream.write(AGE_INTRO.encode("utf-8") + b"\n")
 
     for recipient in header.recipients:
         line = RECIPIENT_PREFIX + " " + recipient.type + " " + " ".join(recipient.arguments) + "\n"

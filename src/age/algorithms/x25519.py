@@ -8,7 +8,7 @@ from age.primitives.x25519 import ECPoint, ECScalar, x25519_scalarmult, x25519_s
 
 __all__ = ["x25519_encrypt_file_key", "x25519_decrypt_file_key"]
 
-AGE_X25519_HKDF_LABEL = b"age-tool.com X25519"
+AGE_X25519_HKDF_LABEL = b"age-encryption.org/v1/X25519"
 
 
 def x25519_encrypt_file_key(
@@ -16,14 +16,14 @@ def x25519_encrypt_file_key(
 ) -> typing.Tuple[ECPoint, bytes]:
     """Encrypt ``file_key`` with ``public_key``
 
-    From the specification from `age-tool.com <https://age-tool.com>`_ : ::
+    From the specification from `age-encryption.org/v1 <https://age-encryption.org/v1>`_ : ::
 
         -> X25519 encode(X25519(ephemeral secret, basepoint))
             encode(encrypt[HKDF[salt, label](X25519(ephemeral secret, public key), 32)](file key))
 
     where ``ephemeral secret`` is :func:`age.primitives.random` (32) and MUST be new for every new file key,
     ``salt`` is :func:`age.primitives.X25519` (``ephemeral secret``, ``basepoint``) || ``public key``,
-    and ``label`` is ``b"age-tool.com X25519"``.
+    and ``label`` is ``b"age-encryption.org/v1/X25519"``.
 
     :returns: ``derived_secret``, ``encrypted_file_key``
     """
@@ -76,7 +76,7 @@ def x25519_decrypt_file_key(
 
         file key = decrypt[hkdf[salt, label](x25519(private key, derived_secret), 32)](encrypted file key)
 
-    where ``salt`` is ``derived_secret`` || ``public key``, ``label`` is ``b"age-tool.com X25519"``
+    where ``salt`` is ``derived_secret`` || ``public key``, ``label`` is ``b"age-encryption.org/v1/X25519"``
     and ``derived_secret`` is the first parameter returned by :func:`x25519_encrypt_file_key`.
     """
 

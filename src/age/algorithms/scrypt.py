@@ -8,6 +8,7 @@ from age.primitives.scrypt import scrypt
 __all__ = ["scrypt_encrypt_file_key", "scrypt_decrypt_file_key"]
 
 MAX_LOG_COST = 22
+AGE_SCRYPT_LABEL = b"age-encryption.org/v1/scrypt"
 
 
 def scrypt_encrypt_file_key(
@@ -24,7 +25,7 @@ def scrypt_encrypt_file_key(
     salt = random(16)
     cost = 1 << log_cost
 
-    key = scrypt(salt, cost, password.value)
+    key = scrypt(AGE_SCRYPT_LABEL + salt, cost, password.value)
     assert len(key) == 32
     encrypted_file_key = encrypt(key, file_key)
 
@@ -38,5 +39,5 @@ def scrypt_decrypt_file_key(
         raise ValueError("Invalid scrypt cost")
 
     cost = 1 << log_cost
-    key = scrypt(salt, cost, password.value)
+    key = scrypt(AGE_SCRYPT_LABEL + salt, cost, password.value)
     return decrypt(key, encrypted_file_key)

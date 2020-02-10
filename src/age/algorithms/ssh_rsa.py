@@ -4,7 +4,7 @@ from age.keys.rsa import RSAPrivateKey, RSAPublicKey
 from age.primitives.hashes import sha256
 from age.primitives.rsa_oaep import rsa_decrypt, rsa_encrypt
 
-AGE_RSA_PADDING_LABEL = b"age-tool.com ssh-rsa"
+AGE_RSA_PADDING_LABEL = b"age-encryption.org/v1/ssh-rsa"
 
 
 def ssh_rsa_encrypt_file_key(
