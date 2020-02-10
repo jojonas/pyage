@@ -1,4 +1,3 @@
-import base64
 import collections
 import io
 import struct
@@ -91,12 +90,15 @@ def _deserialize_dsa_private_key(stream: typing.BinaryIO) -> dsa.DSAPrivateKey:
     parameter_numbers = dsa.DSAParameterNumbers(p=dsa_p, q=dsa_q, g=dsa_g)
     public_numbers = dsa.DSAPublicNumbers(y=dsa_pub_key, parameter_numbers=parameter_numbers)
     private_numbers = dsa.DSAPrivateNumbers(x=dsa_priv_key, public_numbers=public_numbers)
-    return private_numbers.private_key(backend=default_backend())
+
+    # ignoring mypy error that DSAPrivateNumbers does not have private_key() - it does.
+    return private_numbers.private_key(backend=default_backend())  # type: ignore
 
 
 def _deserialize_ecdsa_private_key(stream: typing.BinaryIO) -> ec.EllipticCurvePrivateKey:
     curve_name = _sshbuf_get_cstring(stream)
-    curves: typing.Dict[bytes, ec.EllipticCurve] = {
+
+    curves: typing.Dict[bytes, typing.Type[ec.EllipticCurve]] = {
         b"nistp256": ec.SECP256R1,
         b"nistp521": ec.SECP521R1,
         b"nistp224": ec.SECP224R1,
@@ -270,11 +272,11 @@ def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> A
     return key
 
 
-if __name__ == "__main__":
-    import sys
-    from cryptography.hazmat.primitives.serialization import Encoding, NoEncryption, PrivateFormat
+# if __name__ == "__main__":
+#     import sys
+#     from cryptography.hazmat.primitives.serialization import Encoding, NoEncryption, PrivateFormat
 
-    data = sys.stdin.buffer.read()
-    key = load_openssh_private_key(data)
-    serialized = key.private_bytes(Encoding.PEM, PrivateFormat.TraditionalOpenSSL, NoEncryption())
-    sys.stdout.buffer.write(serialized)
+#     data = sys.stdin.buffer.read()
+#     key = load_openssh_private_key(data)
+#     serialized = key.private_bytes(Encoding.PEM, PrivateFormat.TraditionalOpenSSL, NoEncryption())
+#     sys.stdout.buffer.write(serialized)

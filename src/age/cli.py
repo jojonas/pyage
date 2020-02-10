@@ -81,7 +81,8 @@ def encrypt(
         sys.exit(1)
 
     if ascii_armored:
-        outfile = AsciiArmoredOutput(AGE_PEM_LABEL, outfile)
+        # ignoring mypy error because RawIOBase satisfies BinaryIO (doesn't it?)
+        outfile = AsciiArmoredOutput(AGE_PEM_LABEL, outfile)  # type: ignore
 
     with Encryptor(keys, outfile) as encryptor:
         encryptor.write(infile.read())
@@ -132,7 +133,8 @@ def decrypt(
         sys.exit(1)
 
     if ascii_armored:
-        infile = AsciiArmoredInput(AGE_PEM_LABEL, infile)
+        # ignoring mypy error because RawIOBase satisfies BinaryIO (doesn't it?)
+        infile = AsciiArmoredInput(AGE_PEM_LABEL, infile)  # type: ignore
 
     with Decryptor(keys, infile) as decryptor:
         outfile.write(decryptor.read())
