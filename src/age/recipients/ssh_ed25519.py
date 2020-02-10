@@ -31,7 +31,10 @@ class SSHED25519Recipient(Recipient):
         return cls(decode(args[0]), ECPoint(decode(args[1])), decode(body))
 
     def dump(self) -> typing.Tuple[typing.List[str], str]:
-        return [encode(self.fingerprint)], encode(self.encrypted_file_key)
+        return (
+            [encode(self.fingerprint), encode(self.derived_secret)],
+            encode(self.encrypted_file_key),
+        )
 
     def decrypt(self, password_key: DecryptionKey) -> bytes:
         assert isinstance(password_key, Ed25519PrivateKey)
