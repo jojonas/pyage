@@ -10,8 +10,15 @@
 # `Pipfile.lock` and then regenerate `requirements*.txt`.
 ################################################################################
 
-bcrypt
-click
-cryptography>=2.7
-pynacl>=1.3.0
-requests
+bcrypt==3.1.7
+certifi==2019.11.28
+cffi==1.14.0
+chardet==3.0.4
+click==7.0
+cryptography==2.8
+idna==2.8
+pycparser==2.19
+pynacl==1.3.0
+requests==2.22.0
+six==1.14.0
+urllib3==1.25.8

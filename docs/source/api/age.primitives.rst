@@ -4,6 +4,14 @@ age.primitives package
 Submodules
 ----------
 
+age.primitives.bech32 module
+----------------------------
+
+.. automodule:: age.primitives.bech32
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 age.primitives.encode module
 ----------------------------
 
