@@ -51,32 +51,26 @@ jobs:
     - name: "Sanity check: age -> age"
       run: |
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
-        export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello Golang sanity." | $HOME/age/age $PUBKEY | $HOME/age/age -d $KEYFILE
+        export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
+        echo "Hello Golang sanity." | $HOME/age/age -r $PUBKEY | $HOME/age/age -d -i $KEYFILE
 
     - name: "Sanity check: pyage -> pyage"
       run: |
-        export GOPATH=$HOME/go
-        export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
-        export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello Python sanity." | pipenv run age encrypt $PUBKEY | pipenv run age decrypt $KEYFILE
+        export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
+        echo "Hello Python sanity." | pipenv run pyage encrypt $PUBKEY | pipenv run pyage decrypt $KEYFILE
 
     - name: age -> pyage
       run: |
-        export GOPATH=$HOME/go
-        export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
-        export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello pyage." | $HOME/age/age $PUBKEY | pipenv run age decrypt $KEYFILE
+        export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
+        echo "Hello pyage." | $HOME/age/age $PUBKEY | pipenv run pyage decrypt $KEYFILE
 
     - name: pyage -> age
       run: |
-        export GOPATH=$HOME/go
-        export GOBIN=$GOPATH/bin
         export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
-        export PUBKEY=pubkey:Gs5tngphdkkOIWhw7KyK3A-QBnzNwPqsjesi5SIilCw
-        echo "Hello (go)age." | pipenv run age encrypt $PUBKEY | $HOME/age/age -d $KEYFILE
+        export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
+        echo "Hello (go)age." | pipenv run pyage encrypt $PUBKEY | $HOME/age/age -d $KEYFILE
 
     - name: Install SSH-RSA keys
       run: |
@@ -86,12 +80,8 @@ jobs:
 
     - name: "SSH-RSA: age -> pyage"
       run: |
-        export GOPATH=$HOME/go
-        export GOBIN=$GOPATH/bin
-        echo "Hello pyage SSH." | $HOME/age/age "$(<$HOME/.ssh/id_rsa.pub)" | pipenv run age decrypt
+        echo "Hello pyage SSH." | $HOME/age/age "$(<$HOME/.ssh/id_rsa.pub)" | pipenv run pyage decrypt
 
     - name: "SSH-RSA: pyage -> age"
       run: |
-        export GOPATH=$HOME/go
-        export GOBIN=$GOPATH/bin
-        echo "Hello (go)age SSH." | pipenv run age encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d $HOME/.ssh/id_rsa
+        echo "Hello (go)age SSH." | pipenv run pyage encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d $HOME/.ssh/id_rsa
