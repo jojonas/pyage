@@ -6,6 +6,8 @@ on:
       - master
     paths:
       - 'src/**'
+      - '.github/workflows/**'
+      - 'Pipfile*'
 
 jobs:
   build:

@@ -32,7 +32,7 @@ def should_exit(code=1):
 
 
 def fake_random(n):
-    # really bad random data
+    # really bad random data (n times 0xaa byte)
     return b"\xaa" * n
 
 
