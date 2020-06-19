@@ -15,13 +15,10 @@ from cryptography.hazmat.primitives.serialization import (
     load_pem_private_key,
     load_ssh_public_key,
 )
+from nacl.bindings import crypto_sign_ed25519_pk_to_curve25519, crypto_sign_ed25519_sk_to_curve25519
 
 from age.keys.agekey import AgePrivateKey, AgePublicKey
 from age.openssh_keys import load_openssh_private_key
-from age.utils.libsodium import (
-    crypto_sign_ed25519_pk_to_curve25519,
-    crypto_sign_ed25519_sk_to_curve25519,
-)
 
 from .base import DecryptionKey, EncryptionKey
 
