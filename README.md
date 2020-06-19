@@ -16,7 +16,7 @@ This project is still work-in-progress.
 My original intention was to better understand the spec, find mistakes early and provide a redundant implementation for validation. I'm not a cryptographer (IANAC) and did not (yet) spend any time on security (e.g. constant-time implementations).
 
 So:
-~~Use at your own risk.~~ *Do not use this project!*
+*Use at your own risk.*
 
 ## Quick Start
 Install using pipenv:

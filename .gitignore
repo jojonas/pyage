@@ -10,3 +10,5 @@ pip-wheel-metadata/
 .coverage
 htmlcov
 .vscode/tags
+dist/
+build/
