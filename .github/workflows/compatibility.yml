@@ -16,9 +16,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    env:
-      SODIUM_INSTALL: system
-
     steps:
     - uses: actions/checkout@v1
 

@@ -15,19 +15,19 @@ On Debian or Ubuntu, use:
 
 ::
 
-    $ sudo apt install python3 pipenv libsodium-dev
+    $ sudo apt install python3 pipenv
 
 On Arch, install them as
 
 ::
 
-    $ sudo pacman -S python python-pipenv libsodium
+    $ sudo pacman -S python python-pipenv
 
 On Fedora, use
 
 ::
 
-    $ sudo dnf install python3 pipenv libsodium-devel
+    $ sudo dnf install python3 pipenv
 
 
 Installing pyage

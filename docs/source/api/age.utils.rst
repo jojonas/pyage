@@ -28,15 +28,6 @@ age.utils.env module
    :undoc-members:
    :show-inheritance:
 
-age.utils.libsodium module
---------------------------
-
-.. automodule:: age.utils.libsodium
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 Module contents
 ---------------
 
