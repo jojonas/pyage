@@ -13,6 +13,8 @@ python:
   install:
     - method: pip
       path: .
+      extra_requirements:
+        - docs
 
 # Configuration for the documentation build process (stable/latest)
 build:

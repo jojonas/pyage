@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-age = {editable = true, path = ".", extras=["dev", "test", "doc"]}
+age = {editable = true, path = ".", extras=["dev", "test", "docs"]}
 
 [requires]
 python_version = "3.8"
