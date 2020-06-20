@@ -13,7 +13,7 @@ The spec is currently available as seven-page Google doc at [age-encryption.org/
 This project is still work-in-progress.
 
 ⚠️ pyage is not intended to be a secure age implementation!
-My original intention was to better understand the spec, find mistakes early and provide a redundant implementation for validation. I'm not a cryptographer (IANAC) and did not (yet) spend any time on security (e.g. constant-time implementations).
+My original intention was to better understand the spec, find mistakes early and provide a redundant implementation for validation. I'm not a cryptographer (IANAC) and did not (yet) find the time to address  implementation-specific security issues (such as DoS attacks or side-channel attacks).
 
 So:
 *Use at your own risk.*
