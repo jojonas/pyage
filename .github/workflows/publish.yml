@@ -1,6 +1,12 @@
 name: Publish to PyPI and TestPyPI
 
-on: push
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - '.github/workflows/**'
 
 jobs:
   build-n-publish:
