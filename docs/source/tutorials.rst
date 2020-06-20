@@ -36,9 +36,9 @@ You should see something like:
     # age1luj4yjndx48me58dalx200cs65qg9jhtcehjylnp8h9e2c9gduqqq8kduu
     AGE-SECRET-KEY-1TPGEV9GPP6N39Z40RXTQQJMUHU40EJGDDWEFJDJFWVMY0F9FR9NSQRKGQL
 
-Take note of the part starting with ``pubkey:<gibberish>``. This is your public
+Take note of the part starting with ``age1<gibberish>``. This is your public
 key. It serves as your new "address" and you may distribute it to your friends
-and family. But never show your ``AGE_SECRET_KEY_<gibberish>`` line to anyone,
+and family. But never show your ``AGE-SECRET-KEY-<gibberish>`` line to anyone,
 this is your secret key 🔑!
 
 
