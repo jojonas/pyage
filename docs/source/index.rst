@@ -19,7 +19,7 @@ Introduction
 *age* is a command line tool for file encryption. The project was started by
 `Filippo Valsorda (@filosotille) <https://twitter.com/filosottile>`_ and `Ben
 Cox (@benjojo12) <https://twitter.com/benjojo12>`_ at
-`<https://age-tool.com>`_. *pyage* is not an official implementation! Its goal
+`<https://age-encryption.org>`_. *pyage* is not an official implementation! Its goal
 is rather to understand the usage and inner workings of *age*. A more
 "official" version has been implemented by Filippo and is available `on his
 github page <https://github.com/FiloSottile/age>`_.
