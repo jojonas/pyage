@@ -36,7 +36,7 @@ This documentation is structured in four parts:
   to be a starting point, guiding you through the installation process to
   encrypting (and decrypting) your first file.
 
-* :ref:`guides` explains some common day-to-day workflows and
+* :ref:`guides` explain some common day-to-day workflows and
   how to solve them using *pyage*. It's definitely more advanced than the
   :ref:`tutorials`, however, there is no need to know about the inner workings of
   *pyage*.
@@ -60,6 +60,7 @@ Table of Contents
     guides.rst
     reference.rst
     background.rst
+    development.rst
 
 
 Indices and tables

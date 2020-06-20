@@ -14,7 +14,7 @@ PYTHON_FILES  = $(shell find $(MODULEDIR) -type f -name '*.py')
 
 .DEFAULT_GOAL := all
 
-all: html ../requirements.txt
+all: html
 
 .PHONY: Makefile
 
@@ -22,10 +22,6 @@ all: html ../requirements.txt
 apidoc: $(PYTHON_FILES)
 	rm -rf $(SOURCEDIR)/api/*.rst
 	$(SPHINXAPIDOC) -f --ext-todo --ext-autodoc -T -o "$(SOURCEDIR)/api" "$(MODULEDIR)" "$(MODULEDIR)/**/*_test.py" "$(MODULEDIR)/*_test.py"
-
-# Requirements.txt (for RTD)
-../requirements.txt: $(PYTHON_FILES)
-	cd .. && pipenv_to_requirements -f
 
 # Build HTML files
 html: apidoc Makefile
