@@ -12,8 +12,8 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  build:
-
+  test:
+    name: Install pyage and age and compare results
     runs-on: ubuntu-latest
 
     steps:

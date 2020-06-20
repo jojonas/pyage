@@ -37,14 +37,6 @@ repos:
     require_serial: true
     language: system
 
-  - id: pipenv_to_requirements
-    stages: [commit,push]
-    name: Regenerate requirements[-dev].txt
-    entry: pipenv run pipenv_to_requirements -f
-    files: "^Pipfile(?:.lock)?$"
-    pass_filenames: false
-    language: system
-
   # - id: rst-lint
   #   stages: [commit,push]
   #   name: Lint ReStructuredText files
