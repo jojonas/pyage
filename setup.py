@@ -3,12 +3,18 @@
 import fnmatch
 import os
 import sys
+import typing
 
 import setuptools
 
-from setuptools.command.build_py import build_py as build_py_orig
+
+import versioneer
 
 exclude = ["*.*_test", "*.test_*"]
+
+
+cmdclass = versioneer.get_cmdclass()
+versioneer_build_py = cmdclass["build_py"]
 
 # Setuptools does not allow excluding certain Python modules (= Python files) from distribution
 # builds (bdist, bdist_wheel). The following snippet filters the included packages/modules. The
@@ -18,7 +24,7 @@ exclude = ["*.*_test", "*.test_*"]
 # Idea from: https://stackoverflow.com/a/50592100
 
 
-class build_py(build_py_orig):
+class filtered_build_py(versioneer_build_py):  # type: ignore
     def find_package_modules(self, package, package_dir):
         modules = super().find_package_modules(package, package_dir)
         return [
@@ -28,8 +34,9 @@ class build_py(build_py_orig):
         ]
 
 
+cmdclass["build_py"] = filtered_build_py
+
 # add the src directory to PYTHONPATH so we can import the version
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))  # noqa
 
-if __name__ == "__main__":
-    setuptools.setup(cmdclass={"build_py": build_py},)
+setuptools.setup(version=versioneer.get_version(), cmdclass=cmdclass)

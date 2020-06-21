@@ -37,6 +37,7 @@ The following tools may aid the development process:
 * `pytest <https://docs.pytest.org/en/latest/>`_: Unit test framework, extended with coverage statistics
 * `mypy <http://mypy-lang.org/>`_: Static type checking using Python's type hints
 * `sphinx <https://www.sphinx-doc.org/en/master/>`_: HTML documentation generation from reStructuredText and docstrings
+* `versioneer <https://github.com/warner/python-versioneer>`_: Automatically sets package version from Git tags
 
 Running Unit Tests
 ------------------
