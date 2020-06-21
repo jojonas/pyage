@@ -1,16 +1,13 @@
-name: Publish to PyPI and TestPyPI
+name: Publish to PyPI and GitHub
 
 on:
   push:
-    branches:
-      - master
-    paths:
-      - 'src/**'
-      - '.github/workflows/**'
+    tags:
+      - 'v*'
 
 jobs:
-  build-n-publish:
-    name: Build and publish pyage to PyPI and TestPyPI
+  publish-pypi:
+    name: Build and publish pyage to PyPI
     runs-on: ubuntu-latest
 
     steps:
@@ -30,8 +27,22 @@ jobs:
         run: |
           pipenv run python setup.py sdist bdist_wheel --dist-dir dist/
 
-      - name: Publish distribution to Test PyPI
-        uses: pypa/gh-action-pypi-publish@master
+      - name: Publish distribution to PyPI
+            uses: pypa/gh-action-pypi-publish@master
+            with:
+              password: ${{ secrets.pypi_password }}
+
+  publish-github:
+    name: Build and publish pyage to PyPI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          password: ${{ secrets.test_pypi_password }}
-          repository_url: https://test.pypi.org/legacy/
+          tag_name: ${{ github.ref }}
+          release_name: pyage ${{ github.ref }}
