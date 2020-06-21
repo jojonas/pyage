@@ -3,7 +3,6 @@
 import fnmatch
 import os
 import sys
-import typing
 
 import setuptools
 
