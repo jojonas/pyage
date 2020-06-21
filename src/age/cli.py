@@ -9,6 +9,7 @@ from datetime import datetime
 
 import click
 
+from age import __version__ as age_version
 from age.file import Decryptor, Encryptor
 from age.keyloader import load_aliases, load_keys_txt, load_ssh_keys, resolve_public_key
 from age.keys.agekey import AgePrivateKey
@@ -182,6 +183,7 @@ def generate(outfile: typing.TextIO = None) -> None:
 
 
 @click.group()
+@click.version_option(version=age_version)
 def main():
     pass
 
