@@ -127,11 +127,11 @@ def _convertbits(
     elif bits >= frombits:
         # there are still bits in acc, apparently more than one bunch of frombits, but less than one
         # bunch of tobits
-        raise ValueError(f"illegal zero padding")
+        raise ValueError("illegal zero padding")
 
     elif (acc << (tobits - bits)) & maxv:
         # there are still bits in acc (less than one bunch of tobits), but they're not all zero
-        raise ValueError(f"non-zero padding")
+        raise ValueError("non-zero padding")
 
     return ret
 

@@ -2,8 +2,8 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey, X25519PublicKey
 
 from age.keys.base import DecryptionKey, EncryptionKey
-from age.primitives.x25519 import ECPoint, ECScalar
 from age.primitives.bech32 import bech32_decode, bech32_encode
+from age.primitives.x25519 import ECPoint, ECScalar
 
 
 class AgePrivateKey(DecryptionKey):
@@ -106,4 +106,3 @@ class AgePublicKey(EncryptionKey):
                 encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
             )
         )
-

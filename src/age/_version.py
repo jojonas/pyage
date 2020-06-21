@@ -14,7 +14,6 @@ import os
 import re
 import subprocess
 import sys
-import typing
 
 
 def get_keywords():
@@ -41,7 +40,7 @@ def get_config():
     cfg = VersioneerConfig()
     cfg.VCS = "git"
     cfg.style = "pep440"
-    cfg.tag_prefix = ""
+    cfg.tag_prefix = "v"
     cfg.parentdir_prefix = "age-"
     cfg.versionfile_source = "src/age/_version.py"
     cfg.verbose = False
@@ -52,10 +51,11 @@ class NotThisMethod(Exception):
     """Exception raised if a method is not valid for the current scenario."""
 
 
-HANDLERS = {}  # type: typing.Dict[str, typing.Dict[str, typing.Callable]]
+LONG_VERSION_PY = {}
+HANDLERS = {}
 
 
-def register_vcs_handler(vcs: str, method: str) -> typing.Callable:  # decorator
+def register_vcs_handler(vcs, method):  # decorator
     """Decorator to mark a method as the handler for a particular VCS."""
 
     def decorate(f):

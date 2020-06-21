@@ -6,7 +6,6 @@ import sys
 
 import setuptools
 
-
 import versioneer
 
 exclude = ["*.*_test", "*.test_*"]

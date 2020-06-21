@@ -31,7 +31,6 @@ import pytest
 
 import age.primitives.bech32 as bech32
 
-
 VALID_CHECKSUM = [
     "A12UEL5L",
     "a12uel5l",

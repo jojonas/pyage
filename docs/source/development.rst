@@ -62,6 +62,8 @@ corresponding hooks can be set up with
 
     $ pre-commit install
 
+Note that the Git hooks expect an installation with Pipenv.
+
 Build Documentation Locally
 ---------------------------
 

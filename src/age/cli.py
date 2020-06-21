@@ -14,7 +14,7 @@ from age.keyloader import load_aliases, load_keys_txt, load_ssh_keys, resolve_pu
 from age.keys.agekey import AgePrivateKey
 from age.keys.base import DecryptionKey
 from age.keys.password import PasswordKey
-from age.utils.asciiarmor import AsciiArmoredOutput, AsciiArmoredInput, AGE_PEM_LABEL
+from age.utils.asciiarmor import AGE_PEM_LABEL, AsciiArmoredInput, AsciiArmoredOutput
 from age.utils.copy_doc import copy_doc
 
 
