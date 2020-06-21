@@ -1,14 +1,22 @@
+# Python build artifacts
+*.pyc
 *.egg-info/
 __pycache__
-*.pyc
-.mypy_cache
-.pytest_cache
-.vscode/.ropeproject
-tests
-docs/build
-pip-wheel-metadata/
+/dist/
+/build/
+/pip-wheel-metadata/
+
+# Sphinx build artifacts
+/docs/build
+
+# Test/coverage artifacts
 .coverage
-htmlcov
-.vscode/tags
-dist/
-build/
+/htmlcov
+
+# Dev artifacts
+/.mypy_cache
+/.pytest_cache
+/.vscode/.ropeproject
+/.vscode/tags
+
+
