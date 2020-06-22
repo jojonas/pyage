@@ -16,6 +16,10 @@ jobs:
     name: Install pyage and age and compare results
     runs-on: ubuntu-latest
 
+    env:
+      KEYFILE: ${{ github.workspace }}/testdata/key.txt
+      PUBKEY: age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
+
     steps:
     - uses: actions/checkout@v1
 
@@ -45,29 +49,21 @@ jobs:
 
     - name: "Sanity check: age -> age"
       run: |
-        export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
-        export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
         echo "Hello Golang sanity." | $HOME/age/age -r $PUBKEY | $HOME/age/age -d -i $KEYFILE
 
     - name: "Sanity check: pyage -> pyage"
       run: |
-        export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
-        export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
         echo "Hello Python sanity." | pipenv run pyage encrypt $PUBKEY | pipenv run pyage decrypt $KEYFILE
 
     - name: age -> pyage
       run: |
-        export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
-        export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
         echo "Hello pyage." | $HOME/age/age -r $PUBKEY | pipenv run pyage decrypt $KEYFILE
 
     - name: pyage -> age
       run: |
-        export KEYFILE=$GITHUB_WORKSPACE/testdata/key.txt
-        export PUBKEY=age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
         echo "Hello (go)age." | pipenv run pyage encrypt $PUBKEY | $HOME/age/age -d -i $KEYFILE
 
-    - name: Install SSH-RSA keys
+    - name: Install test SSH-RSA keys
       run: |
         mkdir -p $HOME/.ssh
         cp $GITHUB_WORKSPACE/testdata/test_rsa.pub $HOME/.ssh/id_rsa.pub
