@@ -20,6 +20,7 @@ jobs:
       - name: Install pyage
         run: |
           cd $GITHUB_WORKSPACE
+          pip install wheel
           pip install -e .
 
       - name: Build a binary wheel and a source tarball
