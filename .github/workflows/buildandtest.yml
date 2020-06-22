@@ -15,7 +15,7 @@ jobs:
       matrix:
         python-version: ['3.6', '3.7', '3.8']
 
-    name: Build pyage and perform some quality checks (Python ${{ matrix.python-version }})
+    name: Python ${{ matrix.python-version }} - Build and Test
 
     steps:
     - uses: actions/checkout@master
