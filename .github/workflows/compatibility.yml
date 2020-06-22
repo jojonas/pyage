@@ -5,6 +5,7 @@ on:
     branches:
       - master
     paths:
+      - 'setup.*'
       - 'src/**'
       - '.github/workflows/**'
       - 'Pipfile*'
@@ -43,9 +44,8 @@ jobs:
 
     - name: Install pyage
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install --upgrade pipenv
-        pipenv install --deploy --dev
+        cd $GITHUB_WORKSPACE
+        pip install -e '.[dev,test]'
 
     - name: "Sanity check: age -> age"
       run: |
@@ -53,15 +53,15 @@ jobs:
 
     - name: "Sanity check: pyage -> pyage"
       run: |
-        echo "Hello Python sanity." | pipenv run pyage encrypt $PUBKEY | pipenv run pyage decrypt $KEYFILE
+        echo "Hello Python sanity." | pyage encrypt $PUBKEY | pyage decrypt $KEYFILE
 
     - name: age -> pyage
       run: |
-        echo "Hello pyage." | $HOME/age/age -r $PUBKEY | pipenv run pyage decrypt $KEYFILE
+        echo "Hello pyage." | $HOME/age/age -r $PUBKEY | pyage decrypt $KEYFILE
 
     - name: pyage -> age
       run: |
-        echo "Hello (go)age." | pipenv run pyage encrypt $PUBKEY | $HOME/age/age -d -i $KEYFILE
+        echo "Hello (go)age." | pyage encrypt $PUBKEY | $HOME/age/age -d -i $KEYFILE
 
     - name: Install test SSH-RSA keys
       run: |
@@ -71,8 +71,8 @@ jobs:
 
     - name: "SSH-RSA: age -> pyage"
       run: |
-        echo "Hello pyage SSH." | $HOME/age/age -r "$(<$HOME/.ssh/id_rsa.pub)" | pipenv run pyage decrypt
+        echo "Hello pyage SSH." | $HOME/age/age -r "$(<$HOME/.ssh/id_rsa.pub)" | pyage decrypt
 
     - name: "SSH-RSA: pyage -> age"
       run: |
-        echo "Hello (go)age SSH." | pipenv run pyage encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d -i $HOME/.ssh/id_rsa
+        echo "Hello (go)age SSH." | pyage encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d -i $HOME/.ssh/id_rsa
