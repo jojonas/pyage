@@ -21,12 +21,12 @@ jobs:
       PUBKEY: age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
 
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
+    - name: Set up Go 1.14
+      uses: actions/setup-go@v2
       with:
-        go-version: 1.13
+        go-version: 1.14
       id: go
 
     - name: Install age
@@ -37,7 +37,7 @@ jobs:
         go build -o . filippo.io/age/cmd/...
 
     - name: Set up Python 3.8
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: 3.8
 

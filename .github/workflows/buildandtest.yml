@@ -9,16 +9,21 @@ on:
 
 jobs:
   build:
-    name: Build pyage and perform some quality checks
     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v1
+    strategy:
+      matrix:
+        python-version: ['3.6', '3.7', '3.8']
 
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
+    name: Build pyage and perform some quality checks (Python ${{ matrix.python-version }})
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: ${{ matrix.python-version }}
 
     - name: Install pyage
       run: |
