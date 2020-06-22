@@ -29,12 +29,10 @@ jobs:
     - name: Lint with flake8
       run: |
         pipenv run flake8 $GITHUB_WORKSPACE --count --statistics
-      continue-on-error: true
 
     - name: Check import orders with isort
       run: |
         pipenv run isort -c -q
-      continue-on-error: true
 
     - name: Check for type errors with mypy
       run: |
