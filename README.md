@@ -21,32 +21,22 @@ So:
 ## Quick Start
 Install from pip:
 
-    $ pip install age
+    pip install age
 
 Generate a key pair:
 
-    $ mkdir -p ~/.config/age
-    $ pyage generate > ~/.config/age/keys.txt
+    mkdir -p ~/.config/age
+    pyage generate > ~/.config/age/keys.txt
 
 Encrypt a file:
 
-    $ pyage encrypt -i hello.txt -o hello.age pubkey:<recipient public key>
+    pyage encrypt -i hello.txt -o hello.age pubkey:<recipient public key>
 
 Decrypt a file (uses `~/.config/age/keys.txt`):
 
-    $ pyage decrypt -i hello.age
+    pyage decrypt -i hello.age
 
 For a real tutorial, see [the Tutorial section in the documentation](https://pyage.readthedocs.io/en/latest/tutorials.html).
 
 ## Documentation
 The full documentation can be found at [pyage.readthedocs.io](https://pyage.readthedocs.io/en/latest/index.html).
-
-## Development
-* Enforce PEP8 with [black](https://github.com/psf/black), [flake8](https://flake8.pycqa.org/en/latest/) and [isort](https://timothycrosley.github.io/isort/)
-* Run unit tests ([pytest](https://docs.pytest.org/en/latest/)) with coverage testing
-* Hint native types ([Python typing](https://docs.python.org/3/library/typing.html)), enforce with [mypy](http://mypy-lang.org/)
-* Documentation with [Sphinx](https://www.sphinx-doc.org/en/master/), pushed to [pyage.readthedocs.io](https://pyage.readthedocs.io/en/latest/index.html)
-
-## TODO
-* Error handling
-* Proper logging (to stderr)
