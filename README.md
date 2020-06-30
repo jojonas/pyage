@@ -26,15 +26,15 @@ Install from pip:
 Generate a key pair:
 
     $ mkdir -p ~/.config/age
-    $ pipenv run pyage generate > ~/.config/age/keys.txt
+    $ pyage generate > ~/.config/age/keys.txt
 
 Encrypt a file:
 
-    $ pipenv run pyage encrypt -i hello.txt -o hello.age pubkey:<recipient public key>
+    $ pyage encrypt -i hello.txt -o hello.age pubkey:<recipient public key>
 
 Decrypt a file (uses `~/.config/age/keys.txt`):
 
-    $ pipenv run pyage decrypt -i hello.age
+    $ pyage decrypt -i hello.age
 
 For a real tutorial, see [the Tutorial section in the documentation](https://pyage.readthedocs.io/en/latest/tutorials.html).
 
