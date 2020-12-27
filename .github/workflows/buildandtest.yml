@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.6', '3.7', '3.8']
+        python-version: ['3.7', '3.8', '3.9']
 
     name: Python ${{ matrix.python-version }} - Build and Test
 
@@ -37,7 +37,7 @@ jobs:
 
     - name: Check import orders with isort
       run: |
-        isort -c -q
+        isort src/age --check --quiet
 
     - name: Check for type errors with mypy
       run: |
