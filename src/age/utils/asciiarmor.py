@@ -80,7 +80,7 @@ def write_ascii_armored(file: typing.TextIO, label: str, data: bytes) -> None:
     file.write(f"-----END {label}-----\n")
 
 
-class AsciiArmoredOutput(io.RawIOBase):
+class AsciiArmoredOutput(io.RawIOBase, typing.BinaryIO):
     def __init__(self, label: str, stream: typing.BinaryIO):
         self._stream: typing.BinaryIO = stream
         self._text_stream: typing.TextIO = io.TextIOWrapper(stream, "utf-8")
@@ -99,12 +99,24 @@ class AsciiArmoredOutput(io.RawIOBase):
             self._encode_buffer()
             super().close()
 
+    def read(self, n):
+        # Needed to implement typing.BinaryIO
+        raise NotImplementedError()
+
+    def writelines(self, lines):
+        # Needed to implement typing.BinaryIO
+        raise NotImplementedError()
+
+    def __enter__(self):
+        # Needed to implement typing.BinaryIO
+        raise NotImplementedError()
+
     def _encode_buffer(self):
         write_ascii_armored(self._text_stream, self._label, self._plaintext_buffer)
         self._plaintext_buffer = b""
 
 
-class AsciiArmoredInput(io.RawIOBase):
+class AsciiArmoredInput(io.RawIOBase, typing.BinaryIO):
     def __init__(self, label: str, stream: typing.BinaryIO):
         self._stream: typing.BinaryIO = stream
         self._text_stream: typing.TextIO = io.TextIOWrapper(stream, "utf-8")
@@ -119,6 +131,18 @@ class AsciiArmoredInput(io.RawIOBase):
     def read(self, size=-1):
         assert self._plaintext_stream is not None
         return self._plaintext_stream.read(size)
+
+    def write(self, data):
+        # Needed to implement typing.BinaryIO
+        raise NotImplementedError()
+
+    def writelines(self, lines):
+        # Needed to implement typing.BinaryIO
+        raise NotImplementedError()
+
+    def __enter__(self):
+        # Needed to implement typing.BinaryIO
+        raise NotImplementedError()
 
     def _decode_body(self):
         count = 0
