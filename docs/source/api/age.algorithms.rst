@@ -36,7 +36,6 @@ age.algorithms.x25519 module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

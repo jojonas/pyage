@@ -52,7 +52,6 @@ age.recipients.x25519 module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 
