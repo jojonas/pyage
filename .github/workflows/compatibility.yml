@@ -38,10 +38,10 @@ jobs:
           cd age
           go build -o . filippo.io/age/cmd/...
 
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.10
 
       - name: Install pyage
         run: |
