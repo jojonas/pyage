@@ -1,3 +1,4 @@
+from ..primitives.x25519 import ECScalar
 from .agekey import AgePrivateKey, AgePublicKey
 
 SPEC_TEST_BYTES = b"\x42" * 32
@@ -6,7 +7,7 @@ SPEC_TEST_PRIVATE_KEY = "AGE-SECRET-KEY-1GFPYYSJZGFPYYSJZGFPYYSJZGFPYYSJZGFPYYSJ
 
 
 def test_key_encoding():
-    private_key = AgePrivateKey.from_private_bytes(SPEC_TEST_BYTES)
+    private_key = AgePrivateKey.from_private_bytes(ECScalar(SPEC_TEST_BYTES))
     assert private_key.private_string().lower() == SPEC_TEST_PRIVATE_KEY.lower()
     public_key = private_key.public_key()
     assert public_key.public_string().lower() == SPEC_TEST_PUBLIC_KEY.lower()

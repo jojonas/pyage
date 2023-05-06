@@ -41,6 +41,7 @@ def load_header(stream: typing.BinaryIO) -> typing.Tuple[Header, bytes]:
 
     header = Header()
 
+    line = ""
     for raw_line in stream:
         line = raw_line.decode("utf-8")
 

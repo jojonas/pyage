@@ -16,7 +16,7 @@ repos:
   - id: isort
     stages: [commit,push]
     name: Sort imports
-    entry: pipenv run isort -rc
+    entry: pipenv run isort
     files: "^src/.*\\.py$"
     require_serial: true
     language: system

@@ -123,7 +123,9 @@ class AsciiArmoredInput(io.RawIOBase):
     def _decode_body(self):
         count = 0
 
-        data = None
+        data = b""
+        label = ""
+
         for label, decoded in read_ascii_armored(self._text_stream):
             if label == self._label:
                 data = decoded

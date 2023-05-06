@@ -10,7 +10,8 @@ def test_encode_types():
     assert isinstance(data, str)
 
     with raises(TypeError):
-        encode("Hello String :(")
+        # Ignoring typing errors, because that's the point!
+        encode("Hello String :(")  # type: ignore
 
 
 def test_decode_types():
@@ -18,7 +19,8 @@ def test_decode_types():
     assert isinstance(data, bytes)
 
     with raises(TypeError):
-        decode(b"Hello Bytes :(")
+        # Ignoring typing errors, because that's the point!
+        decode(b"Hello Bytes :(")  # type: ignore
 
 
 def test_encode():

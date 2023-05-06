@@ -68,7 +68,7 @@ def test_encrypt_to_tty():
     with mock.patch("sys.stdout", return_value=False):
         assert sys.stdout.isatty()
         with should_exit(1):
-            encrypt([TEST_KEY_PUBLIC], infile=TEST_PLAINTEXT)
+            encrypt([TEST_KEY_PUBLIC], infile=io.BytesIO(TEST_PLAINTEXT))
 
 
 def test_decrypt(fs, capsysbinary):

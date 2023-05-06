@@ -113,11 +113,11 @@ MCWgKOTkI/WNYjDGoOzk1oQhSoY=
 
 def test_load_rsa_key():
     # load private key with self-made function
-    private_key: rsa.RSAPrivateKey = load_openssh_private_key(RSA_PRIVATE_KEY)
+    private_key: rsa.RSAPrivateKey = load_openssh_private_key(RSA_PRIVATE_KEY)  # type: ignore
     assert isinstance(private_key, rsa.RSAPrivateKey)
 
     # load public key separately from string (from ssh-keygen)
-    public_key: rsa.RSAPublicKey = load_ssh_public_key(RSA_PUBLIC_KEY, backend=default_backend())
+    public_key: rsa.RSAPublicKey = load_ssh_public_key(RSA_PUBLIC_KEY, backend=default_backend())  # type: ignore
 
     # compare public numbers
     assert private_key.public_key().public_numbers() == public_key.public_numbers()
@@ -125,23 +125,23 @@ def test_load_rsa_key():
 
 def test_load_dsa_key():
     # load private key with self-made function
-    private_key: dsa.DSAPrivateKey = load_openssh_private_key(DSA_PRIVATE_KEY)
+    private_key: dsa.DSAPrivateKey = load_openssh_private_key(DSA_PRIVATE_KEY)  # type: ignore
     assert isinstance(private_key, dsa.DSAPrivateKey)
 
     # load public key separately from string (from ssh-keygen)
-    public_key: dsa.DSAPublicKey = load_ssh_public_key(DSA_PUBLIC_KEY, backend=default_backend())
+    public_key: dsa.DSAPublicKey = load_ssh_public_key(DSA_PUBLIC_KEY, backend=default_backend())  # type: ignore
 
     # compare public numbers
     assert private_key.public_key().public_numbers() == public_key.public_numbers()
 
 
 def test_load_ecdsa_key():
-    private_key: ec.EllipticCurvePrivateKey = load_openssh_private_key(ECDSA_PRIVATE_KEY)
+    private_key: ec.EllipticCurvePrivateKey = load_openssh_private_key(ECDSA_PRIVATE_KEY)  # type: ignore
     assert isinstance(private_key, ec.EllipticCurvePrivateKey)
 
     # load public key separately from string (from ssh-keygen)
     public_key: ec.EllipticCurvePublicKey = load_ssh_public_key(
-        ECDSA_PUBLIC_KEY, backend=default_backend()
+        ECDSA_PUBLIC_KEY, backend=default_backend()  # type: ignore
     )
 
     # compare public numbers
@@ -149,12 +149,12 @@ def test_load_ecdsa_key():
 
 
 def test_load_ed25519_key():
-    private_key: ed25519.Ed25519PrivateKey = load_openssh_private_key(ED25519_PRIVATE_KEY)
+    private_key: ed25519.Ed25519PrivateKey = load_openssh_private_key(ED25519_PRIVATE_KEY)  # type: ignore
     assert isinstance(private_key, ed25519.Ed25519PrivateKey)
 
     # load public key separately from string (from ssh-keygen)
     public_key: ec.EllipticCurvePublicKey = load_ssh_public_key(
-        ED25519_PUBLIC_KEY, backend=default_backend()
+        ED25519_PUBLIC_KEY, backend=default_backend()  # type: ignore
     )
 
     # compare public numbers
@@ -168,7 +168,7 @@ def test_load_ed25519_key():
 def test_load_encrypted_key():
     password = b"test"
     private_key: rsa.RSAPrivateKey = load_openssh_private_key(
-        ENCRYPTED_RSA_KEY, passphrase=password
+        ENCRYPTED_RSA_KEY, passphrase=password  # type: ignore
     )
     assert isinstance(private_key, rsa.RSAPrivateKey)
 
