@@ -28,7 +28,7 @@ jobs:
       - name: Set up Go 1.15
         uses: actions/setup-go@v2
         with:
-          go-version: 1.15
+          go-version: "1.15"
         id: go
 
       - name: Install age
@@ -41,7 +41,7 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: "3.10"
 
       - name: Install pyage
         run: |
