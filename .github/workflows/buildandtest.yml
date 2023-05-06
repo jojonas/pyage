@@ -3,10 +3,10 @@ name: Build and Test
 on:
   push:
     paths:
-      - 'setup.*'
-      - 'src/**'
-      - '.github/workflows/buildandtest.yml'
-      - 'Pipfile*'
+      - "setup.*"
+      - "src/**"
+      - ".github/workflows/buildandtest.yml"
+      - "Pipfile*"
 
 jobs:
   build:
@@ -14,40 +14,40 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
     name: Python ${{ matrix.python-version }} - Build and Test
 
     steps:
-    - uses: actions/checkout@master
+      - uses: actions/checkout@master
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install pyage
-      run: |
-        cd $GITHUB_WORKSPACE
-        pip install -e '.[dev,test]'
+      - name: Install pyage
+        run: |
+          cd $GITHUB_WORKSPACE
+          pip install -e '.[dev,test]'
 
-    - name: Lint with flake8
-      run: |
-        flake8 $GITHUB_WORKSPACE --count --statistics
+      - name: Lint with flake8
+        run: |
+          flake8 $GITHUB_WORKSPACE --count --statistics
 
-    - name: Check import orders with isort
-      run: |
-        isort src/age --check --quiet
+      - name: Check import orders with isort
+        run: |
+          isort src/age --check --quiet
 
-    - name: Check for type errors with mypy
-      run: |
-        mypy $GITHUB_WORKSPACE/src/age
+      - name: Check for type errors with mypy
+        run: |
+          mypy $GITHUB_WORKSPACE/src/age
 
-    - name: Test with pytest
-      run: |
-        pytest $GITHUB_WORKSPACE
+      - name: Test with pytest
+        run: |
+          pytest $GITHUB_WORKSPACE
 
-    - name: Collect coverage results
-      run: |
-        coverage report -m --fail-under 50
-      continue-on-error: true
+      - name: Collect coverage results
+        run: |
+          coverage report -m --fail-under 50
+        continue-on-error: true

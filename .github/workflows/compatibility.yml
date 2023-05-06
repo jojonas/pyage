@@ -5,12 +5,12 @@ on:
     branches:
       - master
     paths:
-      - 'setup.*'
-      - 'src/**'
-      - '.github/workflows/compatibility.yml'
-      - 'Pipfile*'
+      - "setup.*"
+      - "src/**"
+      - ".github/workflows/compatibility.yml"
+      - "Pipfile*"
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
@@ -23,57 +23,57 @@ jobs:
       PUBKEY: age1m2pjpe8zmldysvpp2esn7jw87m7ywk3lncslfwv07vu8wkht438szyhngp
 
     steps:
-    - uses: actions/checkout@master
+      - uses: actions/checkout@master
 
-    - name: Set up Go 1.15
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.15
-      id: go
+      - name: Set up Go 1.15
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+        id: go
 
-    - name: Install age
-      run: |
-        cd $HOME
-        git clone https://filippo.io/age
-        cd age
-        go build -o . filippo.io/age/cmd/...
+      - name: Install age
+        run: |
+          cd $HOME
+          git clone https://filippo.io/age
+          cd age
+          go build -o . filippo.io/age/cmd/...
 
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
-    - name: Install pyage
-      run: |
-        cd $GITHUB_WORKSPACE
-        pip install -e '.[dev,test]'
+      - name: Install pyage
+        run: |
+          cd $GITHUB_WORKSPACE
+          pip install -e '.[dev,test]'
 
-    - name: "Sanity check: age -> age"
-      run: |
-        echo "Hello Golang sanity." | $HOME/age/age -r $PUBKEY | $HOME/age/age -d -i $KEYFILE
+      - name: "Sanity check: age -> age"
+        run: |
+          echo "Hello Golang sanity." | $HOME/age/age -r $PUBKEY | $HOME/age/age -d -i $KEYFILE
 
-    - name: "Sanity check: pyage -> pyage"
-      run: |
-        echo "Hello Python sanity." | pyage encrypt $PUBKEY | pyage decrypt $KEYFILE
+      - name: "Sanity check: pyage -> pyage"
+        run: |
+          echo "Hello Python sanity." | pyage encrypt $PUBKEY | pyage decrypt $KEYFILE
 
-    - name: age -> pyage
-      run: |
-        echo "Hello pyage." | $HOME/age/age -r $PUBKEY | pyage decrypt $KEYFILE
+      - name: age -> pyage
+        run: |
+          echo "Hello pyage." | $HOME/age/age -r $PUBKEY | pyage decrypt $KEYFILE
 
-    - name: pyage -> age
-      run: |
-        echo "Hello (go)age." | pyage encrypt $PUBKEY | $HOME/age/age -d -i $KEYFILE
+      - name: pyage -> age
+        run: |
+          echo "Hello (go)age." | pyage encrypt $PUBKEY | $HOME/age/age -d -i $KEYFILE
 
-    - name: Install test SSH-RSA keys
-      run: |
-        mkdir -p $HOME/.ssh
-        cp $GITHUB_WORKSPACE/testdata/test_rsa.pub $HOME/.ssh/id_rsa.pub
-        cp $GITHUB_WORKSPACE/testdata/test_rsa $HOME/.ssh/id_rsa
+      - name: Install test SSH-RSA keys
+        run: |
+          mkdir -p $HOME/.ssh
+          cp $GITHUB_WORKSPACE/testdata/test_rsa.pub $HOME/.ssh/id_rsa.pub
+          cp $GITHUB_WORKSPACE/testdata/test_rsa $HOME/.ssh/id_rsa
 
-    - name: "SSH-RSA: age -> pyage"
-      run: |
-        echo "Hello pyage SSH." | $HOME/age/age -r "$(<$HOME/.ssh/id_rsa.pub)" | pyage decrypt
+      - name: "SSH-RSA: age -> pyage"
+        run: |
+          echo "Hello pyage SSH." | $HOME/age/age -r "$(<$HOME/.ssh/id_rsa.pub)" | pyage decrypt
 
-    - name: "SSH-RSA: pyage -> age"
-      run: |
-        echo "Hello (go)age SSH." | pyage encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d -i $HOME/.ssh/id_rsa
+      - name: "SSH-RSA: pyage -> age"
+        run: |
+          echo "Hello (go)age SSH." | pyage encrypt $HOME/.ssh/id_rsa.pub | $HOME/age/age -d -i $HOME/.ssh/id_rsa
