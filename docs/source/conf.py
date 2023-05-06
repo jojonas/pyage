@@ -21,7 +21,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "pyage"
-copyright = "2019, Jonas Lieb"
+copyright = "2019-2023, Jonas Lieb"
 author = "Jonas Lieb"
 
 
