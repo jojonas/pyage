@@ -7,7 +7,7 @@ verify_ssl = true
 age = {editable = true, path = ".", extras=["dev", "test", "docs"]}
 
 [requires]
-python_version = "3.8"
+python_version = "3"
 
 [pipenv]
 allow_prereleases = true
