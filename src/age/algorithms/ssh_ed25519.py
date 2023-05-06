@@ -17,7 +17,6 @@ def _tweak(ssh_key: bytes) -> ECScalar:
 def ssh_ed25519_encrypt_file_key(
     ed25519_public_key: Ed25519PublicKey, file_key: bytes
 ) -> typing.Tuple[bytes, ECPoint, bytes]:
-
     ssh_key = ed25519_public_key.binary_encoding()
     public_key_fingerprint = sha256(ssh_key)[:4]
 

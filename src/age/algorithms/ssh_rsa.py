@@ -10,7 +10,6 @@ AGE_RSA_PADDING_LABEL = b"age-encryption.org/v1/ssh-rsa"
 def ssh_rsa_encrypt_file_key(
     public_key: RSAPublicKey, file_key: bytes
 ) -> typing.Tuple[bytes, bytes]:
-
     public_key_fingerprint = sha256(public_key.binary_encoding())[:4]
     encrypted_file_key = rsa_encrypt(
         public_key=public_key, label=AGE_RSA_PADDING_LABEL, plaintext=file_key

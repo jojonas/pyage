@@ -100,7 +100,11 @@ def load_aliases(filename="~/.config/age/aliases.txt") -> AliasDict:
 
 
 def resolve_public_key(
-    keystr: str, aliases: AliasDict = None, read_aliases=True, read_files=True, read_urls=True
+    keystr: str,
+    aliases: typing.Optional[AliasDict] = None,
+    read_aliases=True,
+    read_files=True,
+    read_urls=True,
 ) -> typing.List[EncryptionKey]:
     # none of the key types like leading/trailing whitespace
     keystr = keystr.strip()

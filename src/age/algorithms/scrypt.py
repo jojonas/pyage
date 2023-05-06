@@ -12,12 +12,9 @@ AGE_SCRYPT_LABEL = b"age-encryption.org/v1/scrypt"
 
 
 def scrypt_encrypt_file_key(
-    password: PasswordKey, file_key: bytes, log_cost: int = None
+    password: PasswordKey, file_key: bytes, log_cost: int = 18
 ) -> typing.Tuple[bytes, int, bytes]:
     # https://blog.filippo.io/the-scrypt-parameters/
-
-    if log_cost is None:
-        log_cost = 18  # about 1 second
 
     if not (0 <= log_cost <= MAX_LOG_COST):
         raise ValueError("Invalid scrypt cost")

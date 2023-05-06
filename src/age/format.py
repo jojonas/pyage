@@ -8,7 +8,9 @@ __all__ = ["Recipient", "Header", "load_header", "dump_header"]
 
 
 class Recipient:
-    def __init__(self, type: str = "", arguments: typing.List[str] = None, body: str = ""):
+    def __init__(
+        self, type: str = "", arguments: typing.Optional[typing.List[str]] = None, body: str = ""
+    ):
         if arguments is None:
             arguments = []
 
@@ -18,7 +20,7 @@ class Recipient:
 
 
 class Header:
-    def __init__(self, recipients: typing.List[Recipient] = None):
+    def __init__(self, recipients: typing.Optional[typing.List[Recipient]] = None):
         if recipients is None:
             recipients = []
 
@@ -58,7 +60,7 @@ def load_header(stream: typing.BinaryIO) -> typing.Tuple[Header, bytes]:
     return header, mac
 
 
-def dump_header(header: Header, stream: typing.BinaryIO, mac: bytes = None):
+def dump_header(header: Header, stream: typing.BinaryIO, mac: typing.Optional[bytes] = None):
     stream.write(AGE_INTRO.encode("utf-8") + b"\n")
 
     for recipient in header.recipients:

@@ -20,9 +20,9 @@ from age.utils.copy_doc import copy_doc
 
 
 def encrypt(
-    recipients: typing.List[str] = None,
-    infile: typing.BinaryIO = None,
-    outfile: typing.BinaryIO = None,
+    recipients: typing.Optional[typing.List[str]] = None,
+    infile: typing.Optional[typing.BinaryIO] = None,
+    outfile: typing.Optional[typing.BinaryIO] = None,
     ask_password: bool = False,
     ascii_armored: bool = False,
 ) -> None:
@@ -50,11 +50,11 @@ def encrypt(
 
     """
 
-    if not infile:
+    if infile is None:
         infile = sys.stdin.buffer
-    if not outfile:
+    if outfile is None:
         outfile = sys.stdout.buffer
-    if not recipients:
+    if recipients is None:
         recipients = []
 
     if outfile is sys.stdout.buffer and sys.stdout.isatty():
@@ -91,10 +91,10 @@ def encrypt(
 
 
 def decrypt(
-    infile: typing.BinaryIO = None,
-    outfile: typing.BinaryIO = None,
+    infile: typing.Optional[typing.BinaryIO] = None,
+    outfile: typing.Optional[typing.BinaryIO] = None,
     ask_password: bool = False,
-    keyfiles: typing.List[str] = None,
+    keyfiles: typing.Optional[typing.List[str]] = None,
     ascii_armored: bool = False,
 ) -> None:
     """Decrypt a file encrypted with 'age encrypt'.
@@ -113,11 +113,11 @@ def decrypt(
     attempt to decrypt the message with the given password.
     """
 
-    if not infile:
+    if infile is None:
         infile = sys.stdin.buffer
-    if not outfile:
+    if outfile is None:
         outfile = sys.stdout.buffer
-    if not keyfiles:
+    if keyfiles is None:
         keyfiles = []
 
     keys: typing.List[DecryptionKey] = []
@@ -142,7 +142,7 @@ def decrypt(
         outfile.write(decryptor.read())
 
 
-def generate(outfile: typing.TextIO = None) -> None:
+def generate(outfile: typing.Optional[typing.TextIO] = None) -> None:
     """Generate a new age private/public key pair.
 
     If no FILENAME is given, the command outputs the key pair to the standard output stream.

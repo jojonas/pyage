@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import typing
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey as RSAPrivateKey_
@@ -40,7 +41,7 @@ class RSAPrivateKey(DecryptionKey):
         return cls(generated_key)
 
     @classmethod
-    def from_pem(cls, pem_data: bytes, password: bytes = None):
+    def from_pem(cls, pem_data: bytes, password: typing.Optional[bytes] = None):
         try:
             private_key = load_pem_private_key(
                 pem_data, password=password, backend=default_backend()

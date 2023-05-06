@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import typing
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (
@@ -43,7 +44,7 @@ class Ed25519PrivateKey(DecryptionKey):
         return cls(Ed25519PrivateKey_.generate())
 
     @classmethod
-    def from_pem(cls, pem_data: bytes, password: bytes = None):
+    def from_pem(cls, pem_data: bytes, password: typing.Optional[bytes] = None):
         try:
             private_key = load_pem_private_key(
                 pem_data, password=password, backend=default_backend()

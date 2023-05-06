@@ -132,12 +132,11 @@ def _deserialize_ed25519_private_key(stream: typing.BinaryIO) -> ed25519.Ed25519
 
 def _decrypt_key(
     encrypted: bytes,
-    passphrase: bytes = None,
+    passphrase: typing.Optional[bytes] = None,
     ciphername: bytes = b"none",
     kdfname: bytes = b"none",
     kdf_metadata: bytes = b"",
 ) -> bytes:
-
     if ciphername == b"none":
         return encrypted
 
@@ -182,7 +181,9 @@ def _decrypt_key(
     return decrypted
 
 
-def load_openssh_private_key(openssh_data: bytes, passphrase: bytes = None) -> AnyPrivateKey:
+def load_openssh_private_key(
+    openssh_data: bytes, passphrase: typing.Optional[bytes] = None
+) -> AnyPrivateKey:
     """Load OpenSSH key in ""PEM"" format.
 
     The files look like PEM, but aren't. OpenSSH keys are "proprietary" and
