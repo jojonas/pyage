@@ -57,7 +57,7 @@ def encrypt(
     if recipients is None:
         recipients = []
 
-    if outfile is sys.stdout.buffer and sys.stdout.isatty():
+    if outfile is sys.stdout.buffer and sys.stdout.isatty() and not ascii_armored:
         print("Refusing to encrypt to a TTY.", file=sys.stderr)
         sys.exit(1)
 
